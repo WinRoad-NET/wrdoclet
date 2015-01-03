@@ -1,20 +1,21 @@
 package net.winroad.wrdoclet;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
+import net.winroad.wrdoclet.utils.TagTree;
 
-import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.builders.AbstractBuilder;
 import com.sun.tools.doclets.internal.toolkit.util.ClassTree;
@@ -22,7 +23,7 @@ import com.sun.tools.doclets.internal.toolkit.util.DocletAbortException;
 
 /**
  * @author AdamsLee
- *
+ * 
  */
 public class HtmlDoclet extends AbstractDoclet {
 
@@ -58,34 +59,24 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	@Override
-	protected void generateWRTagFiles(RootDoc root) {
-		Set<String> wrTags = new HashSet<String>();		
-		ClassDoc[] classes = root.classes();
-		for(int i = 0; i < classes.length; i++) {
-			AnnotationDesc[] annotations =  classes[i].annotations();
-			for(int j = 0; j < annotations.length; j++) {
-				if(annotations[j].toString().compareTo("@Controller") == 0) {
-					Tag[] tags = classes[i].tags(WRTagTaglet.NAME);
-					for(int k = 0; k < tags.length; k++) {
-						wrTags.addAll(WRTagTaglet.splitTags(tags[k].text()));
-					}
-					MethodDoc[] methods = classes[i].methods();
-					for(int l = 0; l < methods.length; l++) {
-						Tag[] methodTags = methods[l].tags(WRTagTaglet.NAME);
-						for(int m = 0; m < methodTags.length; m++) {
-							wrTags.addAll(WRTagTaglet.splitTags(methodTags[m].text()));
-						}						
-					}
-				}
-			}
-		}
-		wrTags.size();
-        Map<String, Set<String>> tagMap = new HashMap<String, Set<String>>();
-        tagMap.put("wrTags", wrTags);
-        
-		this.configuration.getWriterFactory().getFreemarkerWriter().generateHtmlFile(
-				this.configuration.getFreemarkerTemplateFilePath(), "wrTagIndex.ftl", 
-				tagMap, this.configuration.destDirName);
+	protected void generateWRTagIndexFile(RootDoc root, TagTree tagTree) {
+		List<String> tagList = new ArrayList<String>(tagTree.getWRTags());
+		Collections.sort(tagList);
+		Map<String, List<String>> tagMap = new HashMap<String, List<String>>();
+		tagMap.put("wrTags", tagList);
+
+		this.configuration
+				.getWriterFactory()
+				.getFreemarkerWriter()
+				.generateHtmlFile(
+						this.configuration.getFreemarkerTemplateFilePath(),
+						"wrTagIndex.ftl", tagMap,
+						this.configuration.destDirName);
+	}
+
+	@Override
+	protected void generateWRTagFiles(RootDoc root, TagTree tagTree) {
+		
 	}
 	
 	@Override
@@ -121,37 +112,7 @@ public class HtmlDoclet extends AbstractDoclet {
 
 	@Override
 	protected void generatePackageFiles(ClassTree arg0) throws Exception {
-/*
-		PackageDoc[] packages = configuration.packages;
-		if (packages.length > 1) {
-			PackageIndexFrameWriter.generate(configuration);
-		}
-		PackageDoc prev = null, next;
-		for (int i = 0; i < packages.length; i++) {
-			// if -nodeprecated option is set and the package is marked as
-			// deprecated, do not generate the package-summary.html,
-			// package-frame.html
-			// and package-tree.html pages for that package.
-			if (!(configuration.nodeprecated && Util.isDeprecated(packages[i]))) {
-				PackageFrameWriter.generate(configuration, packages[i]);
-				next = (i + 1 < packages.length && packages[i + 1].name()
-						.length() > 0) ? packages[i + 1] : null;
-				// If the next package is unnamed package, skip 2 ahead if
-				// possible
-				next = (i + 2 < packages.length && next == null) ? packages[i + 2]
-						: next;
-				AbstractBuilder packageSummaryBuilder = configuration
-						.getBuilderFactory().getPackageSummaryBuilder(
-								packages[i], prev, next);
-				packageSummaryBuilder.build();
-				if (configuration.createtree) {
-					PackageTreeWriter.generate(configuration, packages[i],
-							prev, next, configuration.nodeprecated);
-				}
-				prev = packages[i];
-			}
-		}
-*/
+
 	}
 
 	public static boolean validOptions(String options[][],
@@ -169,11 +130,13 @@ public class HtmlDoclet extends AbstractDoclet {
 				"-doclet",
 				HtmlDoclet.class.getName(),
 				"-docletpath",
-				"D:/winroad/workspace/wrdoclet/target/classes",
+				new File(System.getProperty("user.dir"), "target/classes")
+						.getAbsolutePath(),
 				"-taglet",
 				WRTagTaglet.class.getName(),
 				"-tagletpath",
-				"D:/winroad/workspace/wrdoclet/target/classes",
+				new File(System.getProperty("user.dir"), "target/classes")
+						.getAbsolutePath(),
 				"-encoding",
 				"utf-8",
 				"-charset",
@@ -184,10 +147,18 @@ public class HtmlDoclet extends AbstractDoclet {
 				"com.pinganfu.mtp.web.controller.p1.packet",
 				"org.springframework.web.bind.annotation",
 				"-classpath",
-				"C:/Users/AdamsLi/.m2/repository/org/springframework/spring-web/3.2.3.RELEASE/spring-web-3.2.3.RELEASE.jar",
-				"-d", 
-				"D:/winroad/mtpdoc" };
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/org/springframework/spring-web/3.2.3.RELEASE/spring-web-3.2.3.RELEASE.jar")
+						.getAbsolutePath(),
+				"-d",
+				new File(System.getProperty("user.dir"), "target/doc")
+						.getAbsolutePath() };
 		com.sun.tools.javadoc.Main.execute(docArgs);
+		
+		System.out.println("Doc generated to: "
+				+ new File(System.getProperty("user.dir"), "target/doc")
+				.getAbsolutePath());
 	}
 
 }

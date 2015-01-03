@@ -65,7 +65,7 @@ public class WRTagTaglet implements Taglet {
 	 * @param tags the String of tags to split.
 	 * @return set of tags.
 	 */
-	public static Set<String> splitTags(String tags) {
+	public static Set<String> getTagSet(String tags) {
 		String[] tagArr = tags.split(SPLITTER);
 		Set<String> tagSet = new HashSet<String>();
 		for(int i = 0; i< tagArr.length; i++) {

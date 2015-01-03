@@ -1,7 +1,6 @@
 package net.winroad.wrdoclet;
 
-import java.io.File;
-import java.util.StringTokenizer;
+import net.winroad.wrdoclet.utils.TagTree;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
@@ -11,9 +10,6 @@ import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.builders.AbstractBuilder;
 import com.sun.tools.doclets.internal.toolkit.builders.BuilderFactory;
 import com.sun.tools.doclets.internal.toolkit.util.ClassTree;
-import com.sun.tools.doclets.internal.toolkit.util.DocletConstants;
-import com.sun.tools.doclets.internal.toolkit.util.PackageListWriter;
-import com.sun.tools.doclets.internal.toolkit.util.Util;
 
 public abstract class AbstractDoclet {
     /**
@@ -68,31 +64,14 @@ public abstract class AbstractDoclet {
                     error("doclet.No_Public_Classes_To_Document");
             return;
         }
-        //这里将 configuration之前set的 RootDoc 解析了下
         configuration.setOptions();
         configuration.getDocletSpecificMsg().notice("doclet.build_version",
                 configuration.getDocletSpecificBuildDate());
         
-        generateWRTagFiles(root);
+        TagTree tagTree = new TagTree(configuration);
         
-        // TODO remove useless code snippet
-        ClassTree classtree = new ClassTree(configuration, configuration.nodeprecated);
-
-        generateClassFiles(root, classtree);
-        if (configuration.sourcepath != null && configuration.sourcepath.length() > 0) {
-            StringTokenizer pathTokens = new StringTokenizer(configuration.sourcepath,
-                    String.valueOf(File.pathSeparatorChar));
-            boolean first = true;
-            while(pathTokens.hasMoreTokens()){
-                Util.copyDocFiles(configuration, pathTokens.nextToken() + File.separator, DocletConstants.DOC_FILES_DIR_NAME, first);
-                first = false;
-            }
-        }
-
-        PackageListWriter.generate(configuration);
-        generatePackageFiles(classtree);
-
-        generateOtherFiles(root, classtree);
+        generateWRTagIndexFile(root, tagTree);
+        
         configuration.tagletManager.printReport();
     }
 
@@ -125,10 +104,18 @@ public abstract class AbstractDoclet {
     protected abstract void generateClassFiles(ClassDoc[] arr, ClassTree classtree);
 
     /**
+     * Generate the wr.tag index documentation.
+     * @param root the RootDoc of source to document.
+     * @param tagTree the data structure representing the tag tree.
+     */
+    protected abstract void generateWRTagIndexFile(RootDoc root, TagTree tagTree);
+    
+    /**
      * Generate the wr.tag documentation.
      * @param root the RootDoc of source to document.
+     * @param tagTree the data structure representing the tag tree.
      */
-    protected abstract void generateWRTagFiles(RootDoc root);
+    protected abstract void generateWRTagFiles(RootDoc root, TagTree tagTree);
     
     /**
      * Iterate through all classes and construct documentation for them.
