@@ -1,6 +1,6 @@
 package net.winroad.wrdoclet;
 
-import net.winroad.wrdoclet.utils.TagTree;
+import net.winroad.wrdoclet.data.WRDoc;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
@@ -68,9 +68,9 @@ public abstract class AbstractDoclet {
         configuration.getDocletSpecificMsg().notice("doclet.build_version",
                 configuration.getDocletSpecificBuildDate());
         
-        TagTree tagTree = new TagTree(configuration);
+        WRDoc wrDoc = new WRDoc(configuration);
         
-        generateWRTagIndexFile(root, tagTree);
+        generateWRTagIndexFile(root, wrDoc);
         
         configuration.tagletManager.printReport();
     }
@@ -106,16 +106,16 @@ public abstract class AbstractDoclet {
     /**
      * Generate the wr.tag index documentation.
      * @param root the RootDoc of source to document.
-     * @param tagTree the data structure representing the tag tree.
+     * @param wrDoc the data structure representing the doc to generate.
      */
-    protected abstract void generateWRTagIndexFile(RootDoc root, TagTree tagTree);
+    protected abstract void generateWRTagIndexFile(RootDoc root, WRDoc wrDoc);
     
     /**
      * Generate the wr.tag documentation.
      * @param root the RootDoc of source to document.
-     * @param tagTree the data structure representing the tag tree.
+     * @param wrDoc the data structure representing the doc to generate.
      */
-    protected abstract void generateWRTagFiles(RootDoc root, TagTree tagTree);
+    protected abstract void generateWRTagFiles(RootDoc root, WRDoc wrDoc);
     
     /**
      * Iterate through all classes and construct documentation for them.

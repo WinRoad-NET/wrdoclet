@@ -7,10 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import net.winroad.wrdoclet.data.WRDoc;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
-import net.winroad.wrdoclet.utils.TagTree;
 
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
@@ -59,8 +58,8 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	@Override
-	protected void generateWRTagIndexFile(RootDoc root, TagTree tagTree) {
-		List<String> tagList = new ArrayList<String>(tagTree.getWRTags());
+	protected void generateWRTagIndexFile(RootDoc root, WRDoc wrDoc) {
+		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		Collections.sort(tagList);
 		Map<String, List<String>> tagMap = new HashMap<String, List<String>>();
 		tagMap.put("wrTags", tagList);
@@ -75,7 +74,7 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	@Override
-	protected void generateWRTagFiles(RootDoc root, TagTree tagTree) {
+	protected void generateWRTagFiles(RootDoc root, WRDoc wrDoc) {
 		
 	}
 	
