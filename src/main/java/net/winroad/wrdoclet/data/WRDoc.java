@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 import com.sun.javadoc.AnnotationDesc;
@@ -30,6 +31,8 @@ public class WRDoc {
 	 * collection of MethodDoc
 	 */
 	private Map<String, Set<MethodDoc>> taggedMethods = new HashMap<String, Set<MethodDoc>>();
+
+	private Map<String, ClassDoc> nonControllerclassDocs = new HashMap<String, ClassDoc>();
 
 	public Set<String> getWRTags() {
 		return this.wrTags;
@@ -56,6 +59,8 @@ public class WRDoc {
 			}
 
 			if (!this.isController(classes[i])) {
+				this.nonControllerclassDocs.put(classes[i].qualifiedTypeName(),
+						classes[i]);
 				continue;
 			}
 
@@ -183,12 +188,62 @@ public class WRDoc {
 		return isActionMethod;
 	}
 
+	private ModificationHistory getModificationHistory(Parameter param) {
+		ModificationHistory history = new ModificationHistory();
+		if (this.nonControllerclassDocs.containsKey(param.type()
+				.qualifiedTypeName())) {
+			ClassDoc classDoc = this.nonControllerclassDocs.get(param.type()
+					.qualifiedTypeName());
+			LinkedList<ModificationRecord> list = this
+					.getModificationRecords(classDoc);
+			history.AddModificationRecords(list);
+		}
+		return history;
+	}
+
+	private LinkedList<ModificationRecord> getModificationRecords(
+			ClassDoc classDoc) {
+		ClassDoc superClass = classDoc.superclass();
+		if(superClass == null) {
+			return new LinkedList<ModificationRecord>();
+		}
+		LinkedList<ModificationRecord> result = this
+				.getModificationRecords(superClass);
+		Tag[] tags = classDoc.tags();
+		for (int i = 0; i < tags.length; i++) {
+			if ("@author".equalsIgnoreCase(tags[i].name())) {
+				ModificationRecord record = new ModificationRecord();
+				record.setModifier(tags[i].text());
+
+				if (i + 1 < tags.length) {
+					if ("@version".equalsIgnoreCase(tags[i + 1].name())) {
+						record.setReleaseVersion(tags[i + 1].text());
+						if (i + 2 < tags.length
+								&& ("@" + WRMemoTaglet.NAME)
+										.equalsIgnoreCase(tags[i + 1].name())) {
+							record.setMemo(tags[i + 2].text());
+						}
+					} else if (("@" + WRMemoTaglet.NAME)
+							.equalsIgnoreCase(tags[i + 1].name())) {
+						record.setMemo(tags[i + 1].text());
+					}
+				}
+				result.add(record);
+			}
+		}
+
+		return result;
+	}
+
 	private APIParameter getRequestBody(MethodDoc method) {
 		APIParameter apiParameter = null;
 		Parameter reqBody = this.getRequestBody(method.parameters());
-		if(reqBody != null) {
+		if (reqBody != null) {
 			apiParameter = new APIParameter();
-			//TODO: reqBody.type());
+			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+			apiParameter.setType(reqBody.type().qualifiedTypeName());
+			// TODO: SET HISTORY
+			apiParameter.setHistory(this.getModificationHistory(reqBody));
 		}
 		return apiParameter;
 	}

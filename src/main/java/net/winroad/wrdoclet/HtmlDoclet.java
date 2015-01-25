@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.winroad.wrdoclet.data.WRDoc;
+import net.winroad.wrdoclet.taglets.WRMemoTaglet;
+import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 import com.sun.javadoc.AnnotationTypeDoc;
@@ -133,6 +135,8 @@ public class HtmlDoclet extends AbstractDoclet {
 						.getAbsolutePath(),
 				"-taglet",
 				WRTagTaglet.class.getName(),
+				WRMemoTaglet.class.getName(),
+				WRReturnCodeTaglet.class.getName(),
 				"-tagletpath",
 				new File(System.getProperty("user.dir"), "target/classes")
 						.getAbsolutePath(),

@@ -6,16 +6,20 @@ public class OpenAPI {
 	 */
 	private String description;
 	private RequestMapping requestMapping;
-	private APIModificationHistory modificationHistory;
+	private ModificationHistory modificationHistory;
 	private APIParameter outParameter;
 	private APIParameter inParameter;
+	/*
+	 * Possible return code list.
+	 */
+	private String returnCode;
 	
-	public APIModificationHistory getModificationHistory() {
+	public ModificationHistory getModificationHistory() {
 		return modificationHistory;
 	}
 
 	public void setModificationHistory(
-			APIModificationHistory modificationHistory) {
+			ModificationHistory modificationHistory) {
 		this.modificationHistory = modificationHistory;
 	}
 
@@ -49,5 +53,13 @@ public class OpenAPI {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getReturnCode() {
+		return returnCode;
+	}
+
+	public void setReturnCode(String returnCode) {
+		this.returnCode = returnCode;
 	}
 }

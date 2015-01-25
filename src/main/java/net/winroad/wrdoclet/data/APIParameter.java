@@ -3,9 +3,9 @@ package net.winroad.wrdoclet.data;
 public class APIParameter {
 	private String name;
 	private String description;
-	private String required;
+	private ParameterOccurs parameterOccurs;
 	private String type;
-	private ParameterAppendHistory history;
+	private ModificationHistory history;
 	
 	public String getName() {
 		return name;
@@ -19,11 +19,11 @@ public class APIParameter {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getRequired() {
-		return required;
+	public ParameterOccurs getParameterOccurs() {
+		return parameterOccurs;
 	}
-	public void setRequired(String required) {
-		this.required = required;
+	public void setParameterOccurs(ParameterOccurs parameterOccurs) {
+		this.parameterOccurs = parameterOccurs;
 	}
 	public String getType() {
 		return type;
@@ -31,10 +31,10 @@ public class APIParameter {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public ParameterAppendHistory getHistory() {
+	public ModificationHistory getHistory() {
 		return history;
 	}
-	public void setHistory(ParameterAppendHistory history) {
+	public void setHistory(ModificationHistory history) {
 		this.history = history;
 	}
 }
