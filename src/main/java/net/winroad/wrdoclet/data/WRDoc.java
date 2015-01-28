@@ -17,6 +17,7 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Tag;
+import com.sun.javadoc.Type;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.util.Util;
 
@@ -97,8 +98,11 @@ public class WRDoc {
 	private OpenAPI buildOpenAPI(MethodDoc methodDoc,
 			Configuration configuration) {
 		OpenAPI openAPI = new OpenAPI();
+		openAPI.setDescription(methodDoc.commentText());
+		openAPI.setModificationHistory(this.getModificationHistory(methodDoc));
 		openAPI.setRequestMapping(this.getRequestMapping(methodDoc));
 		openAPI.setInParameter(this.getRequestBody(methodDoc));
+		openAPI.setOutParameter(this.getReponseBody(methodDoc));
 		return openAPI;
 	}
 
@@ -189,10 +193,13 @@ public class WRDoc {
 	}
 
 	private ModificationHistory getModificationHistory(Parameter param) {
+		return this.getModificationHistory(param.type());
+	}
+
+	private ModificationHistory getModificationHistory(Type type) {
 		ModificationHistory history = new ModificationHistory();
-		if (this.nonControllerclassDocs.containsKey(param.type()
-				.qualifiedTypeName())) {
-			ClassDoc classDoc = this.nonControllerclassDocs.get(param.type()
+		if (this.nonControllerclassDocs.containsKey(type.qualifiedTypeName())) {
+			ClassDoc classDoc = this.nonControllerclassDocs.get(type
 					.qualifiedTypeName());
 			LinkedList<ModificationRecord> list = this
 					.getModificationRecords(classDoc);
@@ -201,15 +208,27 @@ public class WRDoc {
 		return history;
 	}
 
+	private ModificationHistory getModificationHistory(MethodDoc methodDoc) {
+		ModificationHistory history = new ModificationHistory();
+		history.AddModificationRecords(this.getModificationRecords(methodDoc
+				.tags()));
+		return history;
+	}
+
 	private LinkedList<ModificationRecord> getModificationRecords(
 			ClassDoc classDoc) {
 		ClassDoc superClass = classDoc.superclass();
-		if(superClass == null) {
+		if (superClass == null) {
 			return new LinkedList<ModificationRecord>();
 		}
 		LinkedList<ModificationRecord> result = this
 				.getModificationRecords(superClass);
-		Tag[] tags = classDoc.tags();
+		result.addAll(this.getModificationRecords(classDoc.tags()));
+		return result;
+	}
+
+	private LinkedList<ModificationRecord> getModificationRecords(Tag[] tags) {
+		LinkedList<ModificationRecord> result = new LinkedList<ModificationRecord>();
 		for (int i = 0; i < tags.length; i++) {
 			if ("@author".equalsIgnoreCase(tags[i].name())) {
 				ModificationRecord record = new ModificationRecord();
@@ -220,7 +239,7 @@ public class WRDoc {
 						record.setReleaseVersion(tags[i + 1].text());
 						if (i + 2 < tags.length
 								&& ("@" + WRMemoTaglet.NAME)
-										.equalsIgnoreCase(tags[i + 1].name())) {
+										.equalsIgnoreCase(tags[i + 2].name())) {
 							record.setMemo(tags[i + 2].text());
 						}
 					} else if (("@" + WRMemoTaglet.NAME)
@@ -248,6 +267,19 @@ public class WRDoc {
 		return apiParameter;
 	}
 
+	private APIParameter getReponseBody(MethodDoc method) {
+		APIParameter apiParameter = null;
+		if (this.isAnnotatedResponseBody(method)) {
+			apiParameter = new APIParameter();
+			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+			apiParameter.setType(method.returnType().qualifiedTypeName());
+			// TODO: SET HISTORY
+			apiParameter.setHistory(this.getModificationHistory(method
+					.returnType()));
+		}
+		return apiParameter;
+	}
+
 	private Parameter getRequestBody(Parameter[] parameters) {
 		for (int i = 0; i < parameters.length; i++) {
 			AnnotationDesc[] annotations = parameters[i].annotations();
@@ -259,6 +291,19 @@ public class WRDoc {
 			}
 		}
 		return null;
+	}
+
+	private boolean isAnnotatedResponseBody(MethodDoc method) {
+		AnnotationDesc[] annotations = method.annotations();
+		for (int i = 0; i < annotations.length; i++) {
+			for (int j = 0; j < annotations.length; j++) {
+				if (annotations[j].annotationType().name()
+						.equals("ResponseBody")) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private RequestMapping getRequestMapping(MethodDoc method) {
