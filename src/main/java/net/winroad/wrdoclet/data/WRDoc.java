@@ -10,11 +10,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
+import net.winroad.wrdoclet.taglets.WROccursTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.Type;
@@ -28,7 +31,7 @@ public class WRDoc {
 	private Set<String> wrTags = new HashSet<String>();
 
 	/*
-	 * The collection of MethodDoc to build Doc map key: tag name map value:
+	 * The collection of MethodDoc to build Doc. Map key: tag name. Map value:
 	 * collection of MethodDoc
 	 */
 	private Map<String, Set<MethodDoc>> taggedMethods = new HashMap<String, Set<MethodDoc>>();
@@ -41,10 +44,6 @@ public class WRDoc {
 
 	public Map<String, List<OpenAPI>> getTaggedOpenAPIs() {
 		return taggedOpenAPIs;
-	}
-
-	public void setTaggedOpenAPIs(Map<String, List<OpenAPI>> taggedOpenAPIs) {
-		this.taggedOpenAPIs = taggedOpenAPIs;
 	}
 
 	public WRDoc(Configuration configuration) {
@@ -149,16 +148,26 @@ public class WRDoc {
 		}
 
 		Tag[] methodTagArray = method.tags(WRTagTaglet.NAME);
-		for (int m = 0; m < methodTagArray.length; m++) {
-			Set<String> methodTags = WRTagTaglet.getTagSet(methodTagArray[m]
-					.text());
-			wrTags.addAll(methodTags);
-			for (Iterator<String> iter = methodTags.iterator(); iter.hasNext();) {
-				String tag = iter.next();
-				if (!this.taggedMethods.containsKey(tag)) {
-					this.taggedMethods.put(tag, new HashSet<MethodDoc>());
+		if (methodTagArray.length == 0) {
+			String tag = WRTagTaglet.DEFAULT_TAG_NAME;
+			wrTags.add(tag);
+			if (!this.taggedMethods.containsKey(tag)) {
+				this.taggedMethods.put(tag, new HashSet<MethodDoc>());
+			}
+			this.taggedMethods.get(tag).add(method);
+		} else {
+			for (int i = 0; i < methodTagArray.length; i++) {
+				Set<String> methodTags = WRTagTaglet
+						.getTagSet(methodTagArray[i].text());
+				wrTags.addAll(methodTags);
+				for (Iterator<String> iter = methodTags.iterator(); iter
+						.hasNext();) {
+					String tag = iter.next();
+					if (!this.taggedMethods.containsKey(tag)) {
+						this.taggedMethods.put(tag, new HashSet<MethodDoc>());
+					}
+					this.taggedMethods.get(tag).add(method);
 				}
-				this.taggedMethods.get(tag).add(method);
 			}
 		}
 	}
@@ -236,7 +245,7 @@ public class WRDoc {
 
 				if (i + 1 < tags.length) {
 					if ("@version".equalsIgnoreCase(tags[i + 1].name())) {
-						record.setReleaseVersion(tags[i + 1].text());
+						record.setVersion(tags[i + 1].text());
 						if (i + 2 < tags.length
 								&& ("@" + WRMemoTaglet.NAME)
 										.equalsIgnoreCase(tags[i + 2].name())) {
@@ -261,10 +270,70 @@ public class WRDoc {
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
 			apiParameter.setType(reqBody.type().qualifiedTypeName());
-			// TODO: SET HISTORY
+			apiParameter.setName(reqBody.name());
+			for (Tag tag : method.tags("param")) {
+				if (reqBody.name().equals(((ParamTag) tag).parameterName())) {
+					apiParameter.setDescription(((ParamTag) tag)
+							.parameterComment());
+				}
+			}
+			apiParameter.setFields(this.getFields(reqBody.type()));
 			apiParameter.setHistory(this.getModificationHistory(reqBody));
 		}
 		return apiParameter;
+	}
+
+	private List<APIParameter> getFields(ClassDoc classDoc) {
+		List<APIParameter> result = new LinkedList<APIParameter>();
+		if (classDoc != null) {
+			ClassDoc superClassDoc = classDoc.superclass();
+			result.addAll(this.getFields(superClassDoc));
+			FieldDoc[] fieldDocs = classDoc.fields(false);
+			for (FieldDoc fieldDoc : fieldDocs) {
+				APIParameter field = new APIParameter();
+				field.setName(fieldDoc.name());
+				field.setType(fieldDoc.type().qualifiedTypeName());
+				if (!fieldDoc.type().isPrimitive()
+						&& !"java.lang.String".equalsIgnoreCase(fieldDoc.type()
+								.qualifiedTypeName())) {
+					field.setFields(this.getFields(fieldDoc.type()));
+				}
+				field.setHistory(this.getModificationHistory(fieldDoc.type()));
+				field.setDescription(fieldDoc.commentText());
+				field.setParameterOccurs(this.getParameterOccurs(fieldDoc
+						.tags(WROccursTaglet.NAME)));
+				result.add(field);
+			}
+		}
+		return result;
+	}
+
+	private List<APIParameter> getFields(Type type) {
+		if (this.nonControllerclassDocs.containsKey(type.qualifiedTypeName())) {
+			ClassDoc classDoc = this.nonControllerclassDocs.get(type
+					.qualifiedTypeName());
+			return this.getFields(classDoc);
+		}
+		return null;
+	}
+
+	private ParameterOccurs getParameterOccurs(Tag[] tags) {
+		for (int i = 0; i < tags.length; i++) {
+			if (("@" + WROccursTaglet.NAME).equalsIgnoreCase(tags[i].name())) {
+				if (WROccursTaglet.REQUIRED.equalsIgnoreCase(tags[i].text())) {
+					return ParameterOccurs.REQUIRED;
+				} else if (WROccursTaglet.OPTIONAL.equalsIgnoreCase(tags[i]
+						.text())) {
+					return ParameterOccurs.OPTIONAL;
+				} else if (WROccursTaglet.DEPENDS.equalsIgnoreCase(tags[i]
+						.text())) {
+					return ParameterOccurs.DEPENDS;
+				} else {
+					// TODO: WARNING
+				}
+			}
+		}
+		return null;
 	}
 
 	private APIParameter getReponseBody(MethodDoc method) {
@@ -273,7 +342,9 @@ public class WRDoc {
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
 			apiParameter.setType(method.returnType().qualifiedTypeName());
-			// TODO: SET HISTORY
+			for (Tag tag : method.tags("return")) {
+				apiParameter.setDescription(tag.text());
+			}
 			apiParameter.setHistory(this.getModificationHistory(method
 					.returnType()));
 		}

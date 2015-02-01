@@ -1,6 +1,7 @@
 package net.winroad.wrdoclet;
 
 import java.io.File;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,7 +63,8 @@ public class HtmlDoclet extends AbstractDoclet {
 	@Override
 	protected void generateWRTagIndexFile(RootDoc root, WRDoc wrDoc) {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
-		Collections.sort(tagList);
+		Collator cmp = Collator.getInstance(java.util.Locale.CHINA); 
+		Collections.sort(tagList, cmp);
 		Map<String, List<String>> tagMap = new HashMap<String, List<String>>();
 		tagMap.put("wrTags", tagList);
 

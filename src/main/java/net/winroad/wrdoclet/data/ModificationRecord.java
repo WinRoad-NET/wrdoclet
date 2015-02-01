@@ -6,14 +6,25 @@ public class ModificationRecord {
 	 */
 	private String modifier;
 	/*
-	 * Describes when this functionality has first existed. 
-	 * Corresponds to @since.
+	 * Describes when this functionality has first existed. Corresponds to
+	 * @version.
 	 */
-	private String releaseVersion;
+	private String version;
 	/*
 	 * Describes the modification. Corresponds to @wr.memo.
 	 */
 	private String memo;
+
+	/*
+	 * @return Whether this record is modified on specified version. If no
+	 * version specified, returns true.
+	 */
+	public boolean isModifiedOnVersion(String version) {
+		if (version == null || version.isEmpty()) {
+			return true;
+		}
+		return version.equalsIgnoreCase(this.version);
+	}
 
 	public String getModifier() {
 		return modifier;
@@ -23,12 +34,12 @@ public class ModificationRecord {
 		this.modifier = modifier;
 	}
 
-	public String getReleaseVersion() {
-		return releaseVersion;
+	public String getVersion() {
+		return version;
 	}
 
-	public void setReleaseVersion(String releaseVersion) {
-		this.releaseVersion = releaseVersion;
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getMemo() {

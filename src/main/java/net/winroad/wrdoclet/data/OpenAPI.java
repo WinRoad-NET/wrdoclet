@@ -13,13 +13,22 @@ public class OpenAPI {
 	 * Possible return code list.
 	 */
 	private String returnCode;
-	
+
+	/*
+	 * @return Whether this API has modification on specified version. If no
+	 * version specified, returns true.
+	 */
+	public boolean isModifiedOnVersion(String version) {
+		return this.modificationHistory.isModifiedOnVersion(version)
+				|| this.outParameter.isModifiedOnVersion(version)
+				|| this.inParameter.isModifiedOnVersion(version);
+	}
+
 	public ModificationHistory getModificationHistory() {
 		return modificationHistory;
 	}
 
-	public void setModificationHistory(
-			ModificationHistory modificationHistory) {
+	public void setModificationHistory(ModificationHistory modificationHistory) {
 		this.modificationHistory = modificationHistory;
 	}
 

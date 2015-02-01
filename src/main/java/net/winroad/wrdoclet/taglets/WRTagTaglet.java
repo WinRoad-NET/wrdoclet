@@ -9,9 +9,9 @@ import com.sun.tools.doclets.Taglet;
 
 public class WRTagTaglet implements Taglet {
 	public static final String NAME = "wr.tag";
-	
+	public static final String DEFAULT_TAG_NAME = "default";
 	private static final String SPLITTER = ",";
-	
+
 	public String getName() {
 		return NAME;
 	}
@@ -49,45 +49,49 @@ public class WRTagTaglet implements Taglet {
 	}
 
 	public String toString(Tag[] tags) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i< tags.length - 1; i++) {
-            result.append(tags[i].text());
-            result.append(SPLITTER);
-        }
-        if(tags.length > 0) {
-        	result.append(tags[tags.length - 1].text());
-        }
-        return result.toString();
-    }
-	
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < tags.length - 1; i++) {
+			result.append(tags[i].text());
+			result.append(SPLITTER);
+		}
+		if (tags.length > 0) {
+			result.append(tags[tags.length - 1].text());
+		}
+		return result.toString();
+	}
+
 	/**
 	 * Split string to get tag set.
-	 * @param tags the String of tags to split.
+	 * 
+	 * @param tags
+	 *            the String of tags to split.
 	 * @return set of tags.
 	 */
 	public static Set<String> getTagSet(String tags) {
 		String[] tagArr = tags.split(SPLITTER);
 		Set<String> tagSet = new HashSet<String>();
-		for(int i = 0; i< tagArr.length; i++) {
+		for (int i = 0; i < tagArr.length; i++) {
 			String tag = tagArr[i].trim();
-			if(!tag.isEmpty()) {
+			if (!tag.isEmpty()) {
 				tagSet.add(tag);
 			}
 		}
 		return tagSet;
 	}
-			
-    /**
-     * Register this Taglet.
-     * @param tagletMap  the map to register this tag to.
-     */
-    @SuppressWarnings("unchecked")
+
+	/**
+	 * Register this Taglet.
+	 * 
+	 * @param tagletMap
+	 *            the map to register this tag to.
+	 */
+	@SuppressWarnings("unchecked")
 	public static void register(@SuppressWarnings("rawtypes") Map tagletMap) {
-       WRTagTaglet tag = new WRTagTaglet();
-       Taglet t = (Taglet) tagletMap.get(tag.getName());
-       if (t != null) {
-           tagletMap.remove(tag.getName());
-       }
-       tagletMap.put(tag.getName(), tag);
-    }
+		WRTagTaglet tag = new WRTagTaglet();
+		Taglet t = (Taglet) tagletMap.get(tag.getName());
+		if (t != null) {
+			tagletMap.remove(tag.getName());
+		}
+		tagletMap.put(tag.getName(), tag);
+	}
 }
