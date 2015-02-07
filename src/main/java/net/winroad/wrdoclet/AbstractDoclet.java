@@ -1,5 +1,7 @@
 package net.winroad.wrdoclet;
 
+import java.io.IOException;
+
 import net.winroad.wrdoclet.data.WRDoc;
 
 import com.sun.javadoc.ClassDoc;
@@ -71,10 +73,15 @@ public abstract class AbstractDoclet {
         WRDoc wrDoc = new WRDoc(configuration);
         
         generateWRTagIndexFile(root, wrDoc);
+        generateWRURLIndexFiles(root, wrDoc);
+        generateWRAPIDetailFiles(root, wrDoc);
+        generateOtherFiles(root);
         
         configuration.tagletManager.printReport();
     }
 
+    protected abstract void generateOtherFiles(RootDoc root) throws IOException;
+    
     /**
      * Generate additional documentation that is added to the API documentation.
      *
@@ -110,12 +117,14 @@ public abstract class AbstractDoclet {
      */
     protected abstract void generateWRTagIndexFile(RootDoc root, WRDoc wrDoc);
     
+    protected abstract void generateWRURLIndexFiles(RootDoc root, WRDoc wrDoc);
+    
     /**
      * Generate the wr.tag documentation.
      * @param root the RootDoc of source to document.
      * @param wrDoc the data structure representing the doc to generate.
      */
-    protected abstract void generateWRTagFiles(RootDoc root, WRDoc wrDoc);
+    protected abstract void generateWRAPIDetailFiles(RootDoc root, WRDoc wrDoc);
     
     /**
      * Iterate through all classes and construct documentation for them.

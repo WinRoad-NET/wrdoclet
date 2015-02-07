@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 
 import net.winroad.wrdoclet.utils.Logger;
 import net.winroad.wrdoclet.utils.LoggerFactory;
+import net.winroad.wrdoclet.utils.Util;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -27,13 +28,17 @@ public class FreemarkerWriter {
 	}
 
 	public boolean generateHtmlFile(String tmplFilePath, String tmplFileName,
-			@SuppressWarnings("rawtypes") Map propMap, String outputPath) {
+			@SuppressWarnings("rawtypes") Map propMap, String outputPath,
+			String outputFileName) {
 		Writer outputWriter = null;
 		try {
 			Template tmpl = this.getTemplate(tmplFilePath, tmplFileName);
+			Util.ensureDirectoryExist(outputPath);
 			File outputDir = new File(outputPath);
 			File htmlFile = new File(outputDir,
-					this.mapTmplToHtmlFileName(tmplFileName));
+					outputFileName == null || outputFileName.isEmpty() ? this
+							.mapTmplToHtmlFileName(tmplFileName)
+							: outputFileName);
 			outputWriter = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(htmlFile), DEFAULT_ENCODING));
 			tmpl.process(propMap, outputWriter);
