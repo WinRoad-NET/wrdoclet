@@ -6,8 +6,11 @@
 
 <body>
 <#list urls as url>
-      <span>${url.index}</span>
-      <span>${url.filename}</span>
+<ul>
+<li>
+<a href="../APIs/${url.filename}" target="API_DETAIL_FRAME">${url.index}</a>
+</li>
+</ul>
 </#list>
 </body>
 </html>

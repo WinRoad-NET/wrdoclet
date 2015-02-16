@@ -216,13 +216,13 @@ public class HtmlDoclet extends AbstractDoclet {
 				"-docletpath",
 				new File(System.getProperty("user.dir"), "target/classes")
 						.getAbsolutePath(),
-				"-taglet",
-				WRTagTaglet.class.getName(),
-				WRMemoTaglet.class.getName(),
-				WRReturnCodeTaglet.class.getName(),
-				"-tagletpath",
-				new File(System.getProperty("user.dir"), "target/classes")
-						.getAbsolutePath(),
+//				"-taglet",
+//				WRTagTaglet.class.getName(),
+//				WRMemoTaglet.class.getName(),
+//				WRReturnCodeTaglet.class.getName(),
+//				"-tagletpath",
+//				new File(System.getProperty("user.dir"), "target/classes")
+//						.getAbsolutePath(),
 				"-encoding",
 				"utf-8",
 				"-charset",

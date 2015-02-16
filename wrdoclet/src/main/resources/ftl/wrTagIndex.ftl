@@ -6,7 +6,11 @@
 
 <body>
 <#list wrTags as wrTag>
-      <span>${wrTag}</span>
+<ul>
+<li>
+<a href="./tags/${wrTag}.html" target="URL_INDEX_FRAME">${wrTag}</a>
+</li>
+</ul>
 </#list>
 </body>
 </html>
