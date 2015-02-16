@@ -377,9 +377,8 @@ public class WRDoc {
 		return false;
 	}
 
-	private RequestMapping getRequestMapping(MethodDoc method) {
+	private RequestMapping getRequestMapping(AnnotationDesc[] annotations) {
 		RequestMapping requestMapping = null;
-		AnnotationDesc[] annotations = method.annotations();
 		for (int i = 0; i < annotations.length; i++) {
 			if (annotations[i].annotationType().name().equals("RequestMapping")) {
 				requestMapping = new RequestMapping();
@@ -402,6 +401,29 @@ public class WRDoc {
 			}
 		}
 		return requestMapping;
+	}
+
+	private RequestMapping getRequestMapping(MethodDoc method) {
+		ClassDoc controllerClass = method.containingClass();
+		AnnotationDesc[] baseAnnotations = controllerClass.annotations();
+		RequestMapping baseMapping = this.getRequestMapping(baseAnnotations);
+		AnnotationDesc[] annotations = method.annotations();
+		RequestMapping mapping = this.getRequestMapping(annotations);
+		if (mapping == null) {
+			return baseMapping;
+		} else {
+			mapping.setUrl(net.winroad.wrdoclet.utils.Util.urlConcat(
+					baseMapping.getUrl(), mapping.getUrl()));
+			if (baseMapping.getMethodType() != null) {
+				if (mapping.getMethodType() != null) {
+					mapping.setMethodType(baseMapping.getMethodType() + ","
+							+ mapping.getMethodType());
+				} else {
+					mapping.setMethodType(baseMapping.getMethodType());
+				}
+			}
+			return mapping;
+		}
 	}
 
 	private String convertMethodType(String methodType) {

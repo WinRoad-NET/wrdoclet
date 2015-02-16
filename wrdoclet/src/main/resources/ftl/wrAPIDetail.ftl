@@ -14,17 +14,23 @@
       ${openAPI.description}
     </div>
     <div>
+      URL:
+    </div>
+    <div>
       ${openAPI.requestMapping.url}
     </div>
     <div>
       请求
     </div>
+    <#if openAPI.inParameter?? >
     <div>
       ${openAPI.inParameter.name}
     </div>
+    <#if openAPI.inParameter.description?? >
     <div>
       ${openAPI.inParameter.description}
     </div>
+    </#if>
     <#if openAPI.inParameter.fields?? >
       <table>
         <thead>
@@ -64,6 +70,7 @@
           </#list>
         </tbody>
       </table>
+    </#if>
     </#if>
   </body>
 </html>

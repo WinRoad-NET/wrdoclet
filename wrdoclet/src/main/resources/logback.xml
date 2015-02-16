@@ -6,7 +6,7 @@
 
 	<contextName>MacroteaLogging</contextName>
 
-	<property name="logback.logs.path" value="D:\\winroad\\logs" />
+	<property name="logback.logs.path" value="D:\\Git\\wrdoclet\\logs" />
 
 	<timestamp key="byDay" datePattern="yyyyMMdd" />
 

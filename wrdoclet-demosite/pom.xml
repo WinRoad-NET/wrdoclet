@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.winroad</groupId>
-  <artifactId>wrdoclet-demosite</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>demo site</name>
-  <description>demo site for wrdoclet</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.winroad</groupId>
+	<artifactId>wrdoclet-demosite</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>demo site</name>
+	<description>demo site for wrdoclet</description>
 	<properties>
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<jackson.version>1.9.10</jackson.version>
@@ -31,6 +32,42 @@
 			</plugin>
 		</plugins>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.1</version>
+				<reportSets>
+					<reportSet>
+						<id>wrdoclet</id>
+						<configuration>
+							<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
+							<docletPath>D:/Git/wrdoclet/wrdoclet/target/wrdoclet-0.0.1-SNAPSHOT.jar</docletPath>
+							<docletArtifact>
+								<groupId>net.winroad</groupId>
+								<artifactId>wrdoclet</artifactId>
+								<version>0.0.1-SNAPSHOT</version>
+							</docletArtifact>
+							<additionalparam>
+								-encoding utf-8 -charset utf-8 
+							</additionalparam>
+							<!-- For the project-reports page -->
+							<name>API doc</name>
+							<description>demo site api documentation.</description>
+						</configuration>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+		</plugins>
+	</reporting>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -43,25 +80,25 @@
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
- 
+
 		<!-- Jackson JSON Mapper -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
- 		
+
 	</dependencies>
 </project>

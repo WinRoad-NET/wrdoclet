@@ -38,4 +38,17 @@ public class Util {
 		inputStream.close();
 		outputStream.close();
 	}
+
+	public static String urlConcat(String url1, String url2) {
+		if (url1 == null) {
+			return url2;
+		}
+		if (url2 == null) {
+			return url1;
+		}
+		if (!url1.endsWith("/") && !url2.startsWith("/")) {
+			url1 = url1 + "/";
+		}
+		return url1 + url2;
+	}
 }
