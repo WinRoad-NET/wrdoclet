@@ -12,20 +12,38 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	// TODO: handle @PathVariable as request
 	@RequestMapping(value = "{name}", method = RequestMethod.GET)
 	public @ResponseBody
-	Student getStudentInJSON(@PathVariable String name) {
+	Student getStudentInJSON(@PathVariable("name") String name) {
 		Student s = new Student();
 		s.setName(name);
 		s.setAge(11);
-		s.setWeight(100);
 		return s;
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
-	Object addStudent(@RequestBody Student person) {
-		person.setAge(person.getAge() + 10);
-		return person;
+	Object addStudent(@RequestBody Student student) {
+		student.setAge(student.getAge() + 10);
+		student.setName(student.saySomething() + student.getTEast());
+		return student;
 	}
+
+	@RequestMapping(value = "/delete/{name}", method = RequestMethod.POST)
+	public @ResponseBody
+	String delStudent(@RequestBody Student student,
+			@PathVariable("name") String username) {
+		return "delete name:" + username + "/" + student.getName();
+	}
+
+	// TODO: how to handle Object as response?
+	// how to handle request without @RequestBody annotation?
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody
+	Object updateStudent(Student student) {
+		student.setAge(student.getAge() + 100);
+		return student;
+	}
+
 }

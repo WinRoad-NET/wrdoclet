@@ -51,4 +51,26 @@ public class Util {
 		}
 		return url1 + url2;
 	}
+
+	public static String uncapitalize(String str) {
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		int capitalIndex = -1;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z') {
+				capitalIndex = i;
+			} else {
+				break;
+			}
+		}
+		if (capitalIndex < 0) {
+			return str;
+		} else if (capitalIndex == str.length() - 1) {
+			return str.toLowerCase();
+		} else {
+			return str.substring(0, capitalIndex + 1).toLowerCase()
+					+ str.substring(capitalIndex + 1);
+		}
+	}
 }

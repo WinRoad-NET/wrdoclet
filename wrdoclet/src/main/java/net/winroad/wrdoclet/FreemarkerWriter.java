@@ -1,3 +1,4 @@
+
 package net.winroad.wrdoclet;
 
 import java.io.BufferedWriter;
@@ -9,11 +10,12 @@ import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-
 import net.winroad.wrdoclet.utils.Logger;
 import net.winroad.wrdoclet.utils.LoggerFactory;
 import net.winroad.wrdoclet.utils.Util;
+
+import org.apache.commons.io.IOUtils;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 

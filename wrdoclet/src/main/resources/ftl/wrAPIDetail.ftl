@@ -72,5 +72,56 @@
       </table>
     </#if>
     </#if>
+    
+    <div>
+      响应
+    </div>
+    <#if openAPI.outParameter?? >
+    <#if openAPI.outParameter.description?? >
+    <div>
+      ${openAPI.outParameter.description}
+    </div>
+    </#if>
+    <#if openAPI.outParameter.fields?? >
+      <table>
+        <thead>
+          <tr>
+            <th>
+              参数名
+            </th>
+            <th>
+              参数类型
+            </th>
+            <th>
+              描述
+            </th>
+            <th>
+              是否必须
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <#list openAPI.outParameter.fields as field>
+            <tr>
+              <td>
+                ${field.name}
+              </td>
+              <td>
+                ${field.type}
+              </td>
+              <td>
+                ${field.description}
+              </td>
+              <td>
+                <#if field.parameterOccurs??>
+                  ${field.parameterOccurs}
+                </#if>
+              </td>
+            </tr>
+          </#list>
+        </tbody>
+      </table>
+    </#if>
+    </#if>    
   </body>
 </html>

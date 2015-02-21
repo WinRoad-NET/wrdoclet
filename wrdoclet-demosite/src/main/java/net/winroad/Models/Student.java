@@ -1,31 +1,22 @@
 package net.winroad.Models;
 
-public class Student {
-	private String name;
-	private int age;
-	private int weight;
-
-	public String getName() {
-		return name;
+public class Student extends Person {
+	public String getSchoolName() {
+		return schoolName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
 	}
 
-	public int getAge() {
-		return age;
+	public String getSno() {
+		return sno;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setSno(String sno) {
+		this.sno = sno;
 	}
 
-	public int getWeight() {
-		return weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
+	private String schoolName;
+	private String sno;
 }

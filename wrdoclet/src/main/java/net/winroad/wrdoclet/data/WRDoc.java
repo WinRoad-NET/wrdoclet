@@ -24,6 +24,13 @@ import com.sun.javadoc.Type;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.util.Util;
 
+/**
+ * @author AdamsLee NOTE: WRDoc cannot cover API which returning objects whose
+ *         type is unknown on API definition (known until runtime). e.g.
+ * @RequestMapping(value = "/update", method = RequestMethod.POST) public @ResponseBody
+ *                       Object updateStudent(Student student) { return student;
+ *                       }
+ */
 public class WRDoc {
 	private Map<String, List<OpenAPI>> taggedOpenAPIs = new HashMap<String, List<OpenAPI>>();
 
@@ -99,7 +106,7 @@ public class WRDoc {
 		OpenAPI openAPI = new OpenAPI();
 		openAPI.setDescription(methodDoc.commentText());
 		openAPI.setModificationHistory(this.getModificationHistory(methodDoc));
-		openAPI.setRequestMapping(this.getRequestMapping(methodDoc));
+		openAPI.setRequestMapping(this.parseRequestMapping(methodDoc));
 		openAPI.setInParameter(this.getRequestBody(methodDoc));
 		openAPI.setOutParameter(this.getReponseBody(methodDoc));
 		return openAPI;
@@ -201,10 +208,9 @@ public class WRDoc {
 		return isActionMethod;
 	}
 
-	private ModificationHistory getModificationHistory(Parameter param) {
-		return this.getModificationHistory(param.type());
-	}
-
+	/*
+	 * get the modification history of the class.
+	 */
 	private ModificationHistory getModificationHistory(Type type) {
 		ModificationHistory history = new ModificationHistory();
 		if (this.nonControllerclassDocs.containsKey(type.qualifiedTypeName())) {
@@ -217,13 +223,19 @@ public class WRDoc {
 		return history;
 	}
 
+	/*
+	 * get the modification history of the method.
+	 */
 	private ModificationHistory getModificationHistory(MethodDoc methodDoc) {
 		ModificationHistory history = new ModificationHistory();
-		history.AddModificationRecords(this.getModificationRecords(methodDoc
+		history.AddModificationRecords(this.parseModificationRecords(methodDoc
 				.tags()));
 		return history;
 	}
 
+	/*
+	 * get the modification records of the class.
+	 */
 	private LinkedList<ModificationRecord> getModificationRecords(
 			ClassDoc classDoc) {
 		ClassDoc superClass = classDoc.superclass();
@@ -232,11 +244,14 @@ public class WRDoc {
 		}
 		LinkedList<ModificationRecord> result = this
 				.getModificationRecords(superClass);
-		result.addAll(this.getModificationRecords(classDoc.tags()));
+		result.addAll(this.parseModificationRecords(classDoc.tags()));
 		return result;
 	}
 
-	private LinkedList<ModificationRecord> getModificationRecords(Tag[] tags) {
+	/*
+	 * Parse tags to get modification records.
+	 */
+	private LinkedList<ModificationRecord> parseModificationRecords(Tag[] tags) {
 		LinkedList<ModificationRecord> result = new LinkedList<ModificationRecord>();
 		for (int i = 0; i < tags.length; i++) {
 			if ("@author".equalsIgnoreCase(tags[i].name())) {
@@ -263,79 +278,9 @@ public class WRDoc {
 		return result;
 	}
 
-	private APIParameter getRequestBody(MethodDoc method) {
-		APIParameter apiParameter = null;
-		Parameter reqBody = this.getRequestBody(method.parameters());
-		if (reqBody != null) {
-			apiParameter = new APIParameter();
-			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(reqBody.type().qualifiedTypeName());
-			apiParameter.setName(reqBody.name());
-			for (Tag tag : method.tags("param")) {
-				if (reqBody.name().equals(((ParamTag) tag).parameterName())) {
-					apiParameter.setDescription(((ParamTag) tag)
-							.parameterComment());
-				}
-			}
-			apiParameter.setFields(this.getFields(reqBody.type()));
-			apiParameter.setHistory(this.getModificationHistory(reqBody));
-		}
-		return apiParameter;
-	}
-
-	private List<APIParameter> getFields(ClassDoc classDoc) {
-		List<APIParameter> result = new LinkedList<APIParameter>();
-		if (classDoc != null) {
-			ClassDoc superClassDoc = classDoc.superclass();
-			result.addAll(this.getFields(superClassDoc));
-			FieldDoc[] fieldDocs = classDoc.fields(false);
-			for (FieldDoc fieldDoc : fieldDocs) {
-				APIParameter field = new APIParameter();
-				field.setName(fieldDoc.name());
-				field.setType(fieldDoc.type().qualifiedTypeName());
-				if (!fieldDoc.type().isPrimitive()
-						&& !"java.lang.String".equalsIgnoreCase(fieldDoc.type()
-								.qualifiedTypeName())) {
-					field.setFields(this.getFields(fieldDoc.type()));
-				}
-				field.setHistory(this.getModificationHistory(fieldDoc.type()));
-				field.setDescription(fieldDoc.commentText());
-				field.setParameterOccurs(this.getParameterOccurs(fieldDoc
-						.tags(WROccursTaglet.NAME)));
-				result.add(field);
-			}
-		}
-		return result;
-	}
-
-	private List<APIParameter> getFields(Type type) {
-		if (this.nonControllerclassDocs.containsKey(type.qualifiedTypeName())) {
-			ClassDoc classDoc = this.nonControllerclassDocs.get(type
-					.qualifiedTypeName());
-			return this.getFields(classDoc);
-		}
-		return null;
-	}
-
-	private ParameterOccurs getParameterOccurs(Tag[] tags) {
-		for (int i = 0; i < tags.length; i++) {
-			if (("@" + WROccursTaglet.NAME).equalsIgnoreCase(tags[i].name())) {
-				if (WROccursTaglet.REQUIRED.equalsIgnoreCase(tags[i].text())) {
-					return ParameterOccurs.REQUIRED;
-				} else if (WROccursTaglet.OPTIONAL.equalsIgnoreCase(tags[i]
-						.text())) {
-					return ParameterOccurs.OPTIONAL;
-				} else if (WROccursTaglet.DEPENDS.equalsIgnoreCase(tags[i]
-						.text())) {
-					return ParameterOccurs.DEPENDS;
-				} else {
-					// TODO: WARNING
-				}
-			}
-		}
-		return null;
-	}
-
+	/*
+	 * Get response parameter of the MVC action method.
+	 */
 	private APIParameter getReponseBody(MethodDoc method) {
 		APIParameter apiParameter = null;
 		if (this.isAnnotatedResponseBody(method)) {
@@ -345,13 +290,19 @@ public class WRDoc {
 			for (Tag tag : method.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
+			apiParameter.setFields(this.getFields(method.returnType(),
+					ParameterType.Response));
 			apiParameter.setHistory(this.getModificationHistory(method
 					.returnType()));
 		}
 		return apiParameter;
 	}
 
-	private Parameter getRequestBody(Parameter[] parameters) {
+	/*
+	 * Find the Parameter which is annotated with @RequestBody.
+	 */
+	private Parameter findRequestBody(Parameter[] parameters) {
+		//TODO: ONLY ONE PARAM WITHOUT @RequestBody
 		for (int i = 0; i < parameters.length; i++) {
 			AnnotationDesc[] annotations = parameters[i].annotations();
 			for (int j = 0; j < annotations.length; j++) {
@@ -364,20 +315,183 @@ public class WRDoc {
 		return null;
 	}
 
+	/*
+	 * Get request parameter of the MVC action method.
+	 */
+	private APIParameter getRequestBody(MethodDoc method) {
+		APIParameter apiParameter = null;
+		Parameter reqBody = this.findRequestBody(method.parameters());
+		if (reqBody != null) {
+			apiParameter = new APIParameter();
+			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+			apiParameter.setType(reqBody.type().qualifiedTypeName());
+			apiParameter.setName(reqBody.name());
+			for (Tag tag : method.tags("param")) {
+				if (reqBody.name().equals(((ParamTag) tag).parameterName())) {
+					apiParameter.setDescription(((ParamTag) tag)
+							.parameterComment());
+				}
+			}
+			apiParameter.setFields(this.getFields(reqBody.type(),
+					ParameterType.Request));
+			apiParameter
+					.setHistory(this.getModificationHistory(reqBody.type()));
+		}
+		return apiParameter;
+	}
+
+	/*
+	 * get the field name which the getter or setter method to access. NOTE: the
+	 * getter or setter method name should follow the naming convention.
+	 */
+	private String getFieldNameOfAccesser(String methodName) {
+		if (methodName.startsWith("get")) {
+			return net.winroad.wrdoclet.utils.Util.uncapitalize(methodName
+					.replaceFirst("get", ""));
+		} else if (methodName.startsWith("set")) {
+			return net.winroad.wrdoclet.utils.Util.uncapitalize(methodName
+					.replaceFirst("set", ""));
+		} else {
+			return net.winroad.wrdoclet.utils.Util.uncapitalize(methodName
+					.replaceFirst("is", ""));
+		}
+	}
+
+	/*
+	 * is the method a getter method of a field.
+	 */
+	private boolean isGetterMethod(MethodDoc methodDoc) {
+		if (methodDoc.parameters() != null
+				&& methodDoc.parameters().length == 0
+				&& (!"boolean".equalsIgnoreCase(methodDoc.returnType()
+						.qualifiedTypeName()) && methodDoc.name().matches(
+						"^get[A-Z].+"))
+				|| (("boolean".equalsIgnoreCase(methodDoc.returnType()
+						.qualifiedTypeName()) && methodDoc.name().matches(
+						"^is[A-Z].+")))) {
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	 * is the method a setter method of a field.
+	 */
+	private boolean isSetterMethod(MethodDoc methodDoc) {
+		if (methodDoc.parameters() != null
+				&& methodDoc.parameters().length == 1
+				&& methodDoc.name().matches("^set[A-Z].+")) {
+			return true;
+		}
+		return false;
+	}
+
+	private List<APIParameter> getFields(Type type, ParameterType paramType) {
+		if (this.nonControllerclassDocs.containsKey(type.qualifiedTypeName())) {
+			ClassDoc classDoc = this.nonControllerclassDocs.get(type
+					.qualifiedTypeName());
+			return this.getFields(classDoc, paramType);
+		}
+		return null;
+	}
+
+	private List<APIParameter> getFields(ClassDoc classDoc,
+			ParameterType paramType) {
+		List<APIParameter> result = null;
+		ClassDoc superClassDoc = classDoc.superclass();
+		if (superClassDoc != null
+				&& !"java.lang.Object"
+						.equals(superClassDoc.qualifiedTypeName())) {
+			result = this.getFields(superClassDoc, paramType);
+		} else {
+			result = new LinkedList<APIParameter>();
+		}
+
+		FieldDoc[] fieldDocs = classDoc.fields();
+		for (FieldDoc fieldDoc : fieldDocs) {
+			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
+				APIParameter param = new APIParameter();
+				param.setName(fieldDoc.name());
+				// TODO: handle enum to output enum values into doc
+				param.setType(fieldDoc.type().qualifiedTypeName());
+				param.setDescription(fieldDoc.commentText());
+				param.setHistory(this.getModificationHistory(fieldDoc.type()));
+				param.setParameterOccurs(this.parseParameterOccurs(fieldDoc
+						.tags(WROccursTaglet.NAME)));
+				if (!fieldDoc.type().isPrimitive()
+						&& !"java.lang.String".equalsIgnoreCase(fieldDoc.type()
+								.qualifiedTypeName())) {
+					param.setFields(this.getFields(fieldDoc.type(), paramType));
+				}
+				result.add(param);
+			}
+		}
+
+		MethodDoc[] methodDocs = classDoc.methods(false);
+		for (MethodDoc methodDoc : methodDocs) {
+			if ((paramType == ParameterType.Response && this
+					.isGetterMethod(methodDoc))
+					|| (paramType == ParameterType.Request && this
+							.isSetterMethod(methodDoc))) {
+				APIParameter param = new APIParameter();
+				param.setName(this.getFieldNameOfAccesser(methodDoc.name()));
+				param.setType(methodDoc.returnType().qualifiedTypeName());
+				param.setHistory(this.getModificationHistory(methodDoc
+						.returnType()));
+				param.setDescription(methodDoc.commentText());
+				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
+						.tags(WROccursTaglet.NAME)));
+				if (!methodDoc.returnType().isPrimitive()
+						&& !"java.lang.String".equalsIgnoreCase(methodDoc
+								.returnType().qualifiedTypeName())) {
+					param.setFields(this.getFields(methodDoc.returnType(),
+							paramType));
+				}
+				result.add(param);
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * Parse the ParameterOccurs from the tags.
+	 */
+	private ParameterOccurs parseParameterOccurs(Tag[] tags) {
+		for (int i = 0; i < tags.length; i++) {
+			if (("@" + WROccursTaglet.NAME).equalsIgnoreCase(tags[i].name())) {
+				if (WROccursTaglet.REQUIRED.equalsIgnoreCase(tags[i].text())) {
+					return ParameterOccurs.REQUIRED;
+				} else if (WROccursTaglet.OPTIONAL.equalsIgnoreCase(tags[i]
+						.text())) {
+					return ParameterOccurs.OPTIONAL;
+				} else if (WROccursTaglet.DEPENDS.equalsIgnoreCase(tags[i]
+						.text())) {
+					return ParameterOccurs.DEPENDS;
+				} else {
+					// TODO: WARNING in this case
+				}
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * Whether the method is annotated with @ResponseBody.
+	 */
 	private boolean isAnnotatedResponseBody(MethodDoc method) {
 		AnnotationDesc[] annotations = method.annotations();
 		for (int i = 0; i < annotations.length; i++) {
-			for (int j = 0; j < annotations.length; j++) {
-				if (annotations[j].annotationType().name()
-						.equals("ResponseBody")) {
-					return true;
-				}
+			if (annotations[i].annotationType().name().equals("ResponseBody")) {
+				return true;
 			}
 		}
 		return false;
 	}
 
-	private RequestMapping getRequestMapping(AnnotationDesc[] annotations) {
+	/*
+	 * Parse the RequestMapping from the annotations.
+	 */
+	private RequestMapping parseRequestMapping(AnnotationDesc[] annotations) {
 		RequestMapping requestMapping = null;
 		for (int i = 0; i < annotations.length; i++) {
 			if (annotations[i].annotationType().name().equals("RequestMapping")) {
@@ -403,13 +517,18 @@ public class WRDoc {
 		return requestMapping;
 	}
 
-	private RequestMapping getRequestMapping(MethodDoc method) {
+	/*
+	 * Parse the @RequestMapping from the MVC action method.
+	 */
+	private RequestMapping parseRequestMapping(MethodDoc method) {
 		ClassDoc controllerClass = method.containingClass();
 		AnnotationDesc[] baseAnnotations = controllerClass.annotations();
-		RequestMapping baseMapping = this.getRequestMapping(baseAnnotations);
+		RequestMapping baseMapping = this.parseRequestMapping(baseAnnotations);
 		AnnotationDesc[] annotations = method.annotations();
-		RequestMapping mapping = this.getRequestMapping(annotations);
-		if (mapping == null) {
+		RequestMapping mapping = this.parseRequestMapping(annotations);
+		if (baseMapping == null) {
+			return mapping;
+		} else if (mapping == null) {
 			return baseMapping;
 		} else {
 			mapping.setUrl(net.winroad.wrdoclet.utils.Util.urlConcat(
@@ -426,6 +545,9 @@ public class WRDoc {
 		}
 	}
 
+	/*
+	 * Simplify the methodType of @RequestMapping to display.
+	 */
 	private String convertMethodType(String methodType) {
 		return methodType
 				.replace(

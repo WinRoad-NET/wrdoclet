@@ -16,10 +16,10 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.0.5.v20130815</version>
-
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>
 						1.5</source>
@@ -50,7 +50,7 @@
 								<version>0.0.1-SNAPSHOT</version>
 							</docletArtifact>
 							<additionalparam>
-								-encoding utf-8 -charset utf-8 
+								-encoding utf-8 -charset utf-8
 							</additionalparam>
 							<!-- For the project-reports page -->
 							<name>API doc</name>
@@ -65,6 +65,13 @@
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>2.7</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
