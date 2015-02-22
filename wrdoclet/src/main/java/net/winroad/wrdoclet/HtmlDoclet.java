@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+
 import net.winroad.wrdoclet.data.OpenAPI;
 import net.winroad.wrdoclet.data.URLIndex;
 import net.winroad.wrdoclet.data.WRDoc;
@@ -123,6 +125,9 @@ public class HtmlDoclet extends AbstractDoclet {
 				.getResourceAsStream("/html/framesetIndex.html");
 		Util.outputFile(inputStream, Util.combineFilePath(
 				this.configuration.destDirName, "index.html"));
+		File srcDir = new File(HtmlDoclet.class.getResource("/css/").getPath());
+		File destDir = new File(this.configuration.destDirName);
+		FileUtils.copyDirectory(srcDir, destDir);
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {

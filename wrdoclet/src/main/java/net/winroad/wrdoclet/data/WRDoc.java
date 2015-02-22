@@ -302,7 +302,7 @@ public class WRDoc {
 	 * Find the Parameter which is annotated with @RequestBody.
 	 */
 	private Parameter findRequestBody(Parameter[] parameters) {
-		//TODO: ONLY ONE PARAM WITHOUT @RequestBody
+		// TODO: ONLY ONE PARAM WITHOUT @RequestBody
 		for (int i = 0; i < parameters.length; i++) {
 			AnnotationDesc[] annotations = parameters[i].annotations();
 			for (int j = 0; j < annotations.length; j++) {
@@ -435,7 +435,12 @@ public class WRDoc {
 							.isSetterMethod(methodDoc))) {
 				APIParameter param = new APIParameter();
 				param.setName(this.getFieldNameOfAccesser(methodDoc.name()));
-				param.setType(methodDoc.returnType().qualifiedTypeName());
+				if (paramType == ParameterType.Request) {
+					param.setType(methodDoc.parameters()[0].type()
+							.qualifiedTypeName());
+				} else {
+					param.setType(methodDoc.returnType().qualifiedTypeName());
+				}
 				param.setHistory(this.getModificationHistory(methodDoc
 						.returnType()));
 				param.setDescription(methodDoc.commentText());

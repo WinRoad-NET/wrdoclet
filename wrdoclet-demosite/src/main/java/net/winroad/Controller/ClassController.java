@@ -13,9 +13,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ClassController extends BaseController {
+	// 添加课程
+	// @wr.tag Clazz
+	// @author Adams
+	// @version 0.0.1
+	// @wr.memo init create
+	// @author Bob
+	// @version 0.0.2
+	// @wr.memo fix bug
 	@RequestMapping(value = "/class/add", method = RequestMethod.POST)
 	public @ResponseBody
-	Object addClass(@RequestBody Clazz clazz, HttpServletRequest httpRequest,
+	Clazz addClass(@RequestBody Clazz clazz, HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) {
+		return clazz;
+	}
+
+	/**
+	 * 删除课程 
+	 * @wr.tag Class 
+	 * @author Adams 
+	 * @version 0.0.1 
+	 * @wr.memo init add api 
+	 * @author Bob 
+	 * @version 0.0.2 
+	 * @wr.memo fix bug
+	 */
+	@RequestMapping(value = "/class/del", method = RequestMethod.POST)
+	public @ResponseBody
+	Clazz delClass(@RequestBody Clazz clazz, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {
 		return clazz;
 	}

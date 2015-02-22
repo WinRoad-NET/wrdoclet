@@ -27,16 +27,22 @@ public class Util {
 		if (!file.exists()) {
 			file.createNewFile();
 		}
-		OutputStream outputStream = new FileOutputStream(filename);
-		int bytesWritten = 0;
-		int byteCount = 0;
-		byte[] bytes = new byte[1024];
-		while ((byteCount = inputStream.read(bytes)) != -1) {
-			outputStream.write(bytes, bytesWritten, byteCount);
-			bytesWritten += byteCount;
+		OutputStream outputStream = null;
+		try {
+			outputStream = new FileOutputStream(filename);
+			int byteCount = 0;
+			byte[] bytes = new byte[1024];
+			while ((byteCount = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, byteCount);
+			}
+		} finally {
+			if(inputStream != null) {
+				inputStream.close();				
+			}
+			if(outputStream != null) {
+				outputStream.close();
+			}
 		}
-		inputStream.close();
-		outputStream.close();
 	}
 
 	public static String urlConcat(String url1, String url2) {

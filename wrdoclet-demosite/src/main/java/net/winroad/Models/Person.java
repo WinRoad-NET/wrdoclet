@@ -10,6 +10,7 @@ public class Person {
 	private boolean isAdult;
 	private String LOGOURL;
 	private int xIndex;
+	private Address address;
 	
 	public final static String PET_PHRASE = "MY GOD!";
 	public final String hobby = "hot girl";
@@ -86,5 +87,13 @@ public class Person {
 
 	public void setxIndex(int xIndex) {
 		this.xIndex = xIndex;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 }
