@@ -29,4 +29,6 @@ table tbody tr td{font-size:12px; height:20px; border: 1px solid #ccc;}
 	background-color: #999999;
 }
 
-.label-method-POST{background-color: #55aa55;}
+.label-method-type{background-color: #55aa55;}
+.api-paragraph{border-top:2px solid red; width:100%;}
+.tag-paragraph{margin-bottom:25px; }

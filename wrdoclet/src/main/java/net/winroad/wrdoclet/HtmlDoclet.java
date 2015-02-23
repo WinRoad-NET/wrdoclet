@@ -1,7 +1,6 @@
 package net.winroad.wrdoclet;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -14,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-
 import net.winroad.wrdoclet.data.OpenAPI;
 import net.winroad.wrdoclet.data.URLIndex;
 import net.winroad.wrdoclet.data.WRDoc;
@@ -23,6 +20,8 @@ import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.Util;
+
+import org.apache.commons.io.FileUtils;
 
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
@@ -71,6 +70,46 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	@Override
+	protected void generateWRDocFiles(RootDoc root, WRDoc wrDoc)
+			throws Exception {
+		if (this.configuration.noframe) {
+			this.generateWRNoFrameFile(root, wrDoc);
+		} else {
+			this.generateWRFrameFiles(root, wrDoc);
+		}
+	}
+
+	protected void generateWRNoFrameFile(RootDoc root, WRDoc wrDoc)
+			throws Exception {
+		Map<String, Map<String, List<OpenAPI>>> tagMap = new HashMap<String, Map<String, List<OpenAPI>>>();
+		tagMap.put("tagedOpenAPIs", wrDoc.getTaggedOpenAPIs());
+		this.configuration
+				.getWriterFactory()
+				.getFreemarkerWriter()
+				.generateHtmlFile(
+						this.configuration.getFreemarkerTemplateFilePath(),
+						"wrNoFrame.ftl", tagMap,
+						this.configuration.destDirName, "index.html");
+		this.generateCommonFiles(root);
+	}
+
+	protected void generateWRFrameFiles(RootDoc root, WRDoc wrDoc)
+			throws Exception {
+		this.generateWRTagIndexFile(root, wrDoc);
+		this.generateWRURLIndexFiles(root, wrDoc);
+		this.generateWRAPIDetailFiles(root, wrDoc);
+		this.generateFrameIndexFile(root);
+		this.generateCommonFiles(root);
+	}
+
+	/**
+	 * Generate the wr.tag index documentation.
+	 * 
+	 * @param root
+	 *            the RootDoc of source to document.
+	 * @param wrDoc
+	 *            the data structure representing the doc to generate.
+	 */
 	protected void generateWRTagIndexFile(RootDoc root, WRDoc wrDoc) {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		Collator cmp = Collator.getInstance(java.util.Locale.CHINA);
@@ -87,7 +126,6 @@ public class HtmlDoclet extends AbstractDoclet {
 						this.configuration.destDirName, null);
 	}
 
-	@Override
 	protected void generateWRURLIndexFiles(RootDoc root, WRDoc wrDoc) {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		for (String tag : tagList) {
@@ -120,11 +158,16 @@ public class HtmlDoclet extends AbstractDoclet {
 		}
 	}
 
-	protected void generateOtherFiles(RootDoc root) throws IOException {
+	protected void generateFrameIndexFile(RootDoc root) throws Exception {
+		// generate index.html
 		InputStream inputStream = HtmlDoclet.class
 				.getResourceAsStream("/html/framesetIndex.html");
 		Util.outputFile(inputStream, Util.combineFilePath(
 				this.configuration.destDirName, "index.html"));
+	}
+
+	protected void generateCommonFiles(RootDoc root) throws Exception {
+		// copy folders
 		File srcDir = new File(HtmlDoclet.class.getResource("/css/").getPath());
 		File destDir = new File(this.configuration.destDirName);
 		FileUtils.copyDirectory(srcDir, destDir);
@@ -138,7 +181,14 @@ public class HtmlDoclet extends AbstractDoclet {
 				+ ".html";
 	}
 
-	@Override
+	/**
+	 * Generate the wr.tag documentation.
+	 * 
+	 * @param root
+	 *            the RootDoc of source to document.
+	 * @param wrDoc
+	 *            the data structure representing the doc to generate.
+	 */
 	protected void generateWRAPIDetailFiles(RootDoc root, WRDoc wrDoc) {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		for (String tag : tagList) {

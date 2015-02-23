@@ -4,7 +4,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ModificationHistory {
-	private List<ModificationRecord> modificationRecordList = new LinkedList<ModificationRecord>();
+	public ModificationHistory() {
+		this.modificationRecordList = new LinkedList<ModificationRecord>();
+	}
+
+	public ModificationHistory(List<ModificationRecord> modificationRecordList) {
+		this.modificationRecordList = modificationRecordList;
+	}
+
+	private List<ModificationRecord> modificationRecordList;
 
 	public List<ModificationRecord> getModificationRecordList() {
 		return modificationRecordList;

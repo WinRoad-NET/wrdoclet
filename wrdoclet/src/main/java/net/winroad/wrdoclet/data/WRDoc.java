@@ -415,7 +415,8 @@ public class WRDoc {
 				// TODO: handle enum to output enum values into doc
 				param.setType(fieldDoc.type().qualifiedTypeName());
 				param.setDescription(fieldDoc.commentText());
-				param.setHistory(this.getModificationHistory(fieldDoc.type()));
+				param.setHistory(new ModificationHistory(this
+						.parseModificationRecords(fieldDoc.tags())));
 				param.setParameterOccurs(this.parseParameterOccurs(fieldDoc
 						.tags(WROccursTaglet.NAME)));
 				if (!fieldDoc.type().isPrimitive()
@@ -441,8 +442,8 @@ public class WRDoc {
 				} else {
 					param.setType(methodDoc.returnType().qualifiedTypeName());
 				}
-				param.setHistory(this.getModificationHistory(methodDoc
-						.returnType()));
+				param.setHistory(new ModificationHistory(this
+						.parseModificationRecords(methodDoc.tags())));
 				param.setDescription(methodDoc.commentText());
 				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
 						.tags(WROccursTaglet.NAME)));

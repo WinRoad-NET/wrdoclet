@@ -152,6 +152,11 @@ public class ConfigurationImpl extends Configuration {
     public boolean createoverview = false;
 
     /**
+     * True if command line option "-noframe" is used. Default value is false.
+     */
+    public boolean noframe = false;
+    
+    /**
      * Unique Resource Handler for this package.
      */
     public final MessageRetriever standardmessage;
@@ -251,6 +256,8 @@ public class ConfigurationImpl extends Configuration {
                 nooverview = true;
             } else if (opt.equals("-overview")) {
                 overview = true;
+            } else if (opt.equals("-noframe")) {
+                noframe = true;
             }
         }
         if (root.specifiedClasses().length > 0) {
@@ -299,6 +306,7 @@ public class ConfigurationImpl extends Configuration {
             option.equals("-serialwarn") ||
             option.equals("-use") ||
             option.equals("-nonavbar") ||
+            option.equals("-noframe") ||
             option.equals("-nooverview")) {
             return 1;
         } else if (option.equals("-help")) {

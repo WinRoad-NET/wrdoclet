@@ -8,7 +8,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../stylesheet.css" title="Style">
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css" title="Style" />
 
   </head>
 
@@ -87,6 +87,9 @@
                 <th>
                   是否必须
                 </th>
+                <th>
+                  修订记录
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -104,6 +107,39 @@
                   <td>
                     <#if field.parameterOccurs??>
                       ${field.parameterOccurs}
+                    </#if>
+                  </td>
+                  <td>
+                    <#if field.history?? && field.history.modificationRecordList?size != 0 >
+                    <table>
+			            <thead>
+			              <tr>
+			                <th>
+			                  修改人
+			                </th>
+			                <th>
+			                  备注
+			                </th>
+			                <th>
+			                  版本
+			                </th>
+			              </tr>
+			            </thead>                    
+                    <tbody>
+                    <#list field.history.modificationRecordList as record>
+                    <td>
+                    ${record.modifier}
+                    </td>
+                    <td>
+                    ${record.memo}
+                    </td>
+                    <td>
+                    ${record.version}
+                    </td>
+                    </#list>
+                    </tbody>
+                    </table>
+                      
                     </#if>
                   </td>
                 </tr>
@@ -138,6 +174,9 @@
                 <th>
                   是否必须
                 </th>
+                <th>
+                  修订记录
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +196,39 @@
                       ${field.parameterOccurs}
                     </#if>
                   </td>
+                  <td>
+                    <#if field.history?? && field.history.modificationRecordList?size != 0 >
+                    <table>
+			            <thead>
+			              <tr>
+			                <th>
+			                  修改人
+			                </th>
+			                <th>
+			                  备注
+			                </th>
+			                <th>
+			                  版本
+			                </th>
+			              </tr>
+			            </thead>                    
+                    <tbody>
+                    <#list field.history.modificationRecordList as record>
+                    <td>
+                    ${record.modifier}
+                    </td>
+                    <td>
+                    ${record.memo}
+                    </td>
+                    <td>
+                    ${record.version}
+                    </td>
+                    </#list>
+                    </tbody>
+                    </table>
+                      
+                    </#if>
+                  </td>                  
                 </tr>
               </#list>
             </tbody>

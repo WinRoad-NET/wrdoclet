@@ -14,6 +14,14 @@ public class Clazz {
 		return name;
 	}
 
+	/**
+	 * 课程名称
+	 * 
+	 * @author Bob
+	 * @version 0.0.2
+	 * @wr.memo fix bug
+	 * @wr.occurs required
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
