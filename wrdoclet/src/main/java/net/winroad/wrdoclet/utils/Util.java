@@ -5,8 +5,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class Util {
+	protected static Logger logger = LoggerFactory.getLogger(Util.class);
+
 	public static String combineFilePath(String path1, String path2) {
 		return new File(path1, path2).toString();
 	}
@@ -36,11 +46,62 @@ public class Util {
 				outputStream.write(bytes, 0, byteCount);
 			}
 		} finally {
-			if(inputStream != null) {
-				inputStream.close();				
+			if (inputStream != null) {
+				inputStream.close();
 			}
-			if(outputStream != null) {
+			if (outputStream != null) {
 				outputStream.close();
+			}
+		}
+	}
+
+	public static void copyResourceFolder(String resourceFolder, String destDir)
+			throws IOException {
+		final File jarFile = new File(Util.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath());
+		if (jarFile.isFile()) { // Run with JAR file
+			resourceFolder = StringUtils.strip(resourceFolder, "/");
+			final JarFile jar = new JarFile(jarFile);
+			// gives ALL entries in jar
+			final Enumeration<JarEntry> entries = jar.entries();
+			while (entries.hasMoreElements()) {
+				JarEntry element = entries.nextElement();
+				final String name = element.getName();
+				// filter according to the path
+				if (name.startsWith(resourceFolder + "/")) {
+					String resDestDir = Util.combineFilePath(destDir,
+							name.replaceFirst(resourceFolder + "/", ""));
+					if (element.isDirectory()) {
+						File newDir = new File(resDestDir);
+						if (!newDir.exists()) {
+							boolean mkdirRes = newDir.mkdirs();
+							if (!mkdirRes) {
+								logger.equals("Failed to create directory "
+										+ resDestDir);
+							}
+						}
+					} else {
+						InputStream inputStream = Util.class
+								.getResourceAsStream("/" + name);
+						if (inputStream == null) {
+							logger.error("No resource is found:" + name);
+						} else {
+							Util.outputFile(inputStream, resDestDir);
+						}
+					}
+				}
+			}
+			jar.close();
+		} else { // Run with IDE
+			final URL url = Util.class.getResource(resourceFolder);
+			if (url != null) {
+				try {
+					final File src = new File(url.toURI());
+					File dest = new File(destDir);
+					FileUtils.copyDirectory(src, dest);
+				} catch (URISyntaxException ex) {
+					// never happens
+				}
 			}
 		}
 	}

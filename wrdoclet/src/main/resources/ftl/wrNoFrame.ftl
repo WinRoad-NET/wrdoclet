@@ -34,7 +34,7 @@
             ${openAPI.requestMapping.url}
           </p>
           <#if openAPI.modificationHistory?? && (openAPI.modificationHistory.modificationRecordList?size != 0)>
-            <table border="1" cellpadding="3" cellspacing="1">
+            <table class = "">
               <caption>
                 修改历史
               </caption>

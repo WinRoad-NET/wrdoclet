@@ -1,5 +1,6 @@
 package net.winroad.wrdoclet.data;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /*
@@ -13,6 +14,10 @@ public class APIParameter {
 	private String type;
 	private ModificationHistory history;
 	private List<APIParameter> fields;
+	/**
+	 * whether it's type argument for parent (the parent is generic type).
+	 */
+	private boolean isParentTypeArgument;
 
 	/*
 	 * @return Whether this parameter has modification on specified version. If
@@ -81,5 +86,21 @@ public class APIParameter {
 
 	public void setFields(List<APIParameter> fields) {
 		this.fields = fields;
+	}
+
+	public void appendField(APIParameter field) {
+		if (this.fields == null) {
+			this.fields = new LinkedList<APIParameter>();
+		}
+
+		this.fields.add(field);
+	}
+
+	public boolean isParentTypeArgument() {
+		return isParentTypeArgument;
+	}
+
+	public void setParentTypeArgument(boolean isParentTypeArgument) {
+		this.isParentTypeArgument = isParentTypeArgument;
 	}
 }

@@ -19,6 +19,7 @@ import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.Parameter;
+import com.sun.javadoc.ParameterizedType;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.Type;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
@@ -401,7 +402,8 @@ public class WRDoc {
 		ClassDoc superClassDoc = classDoc.superclass();
 		if (superClassDoc != null
 				&& !"java.lang.Object"
-						.equals(superClassDoc.qualifiedTypeName())) {
+						.equals(superClassDoc.qualifiedTypeName())
+				&& !"java.lang.Enum".equals(superClassDoc.qualifiedTypeName())) {
 			result = this.getFields(superClassDoc, paramType);
 		} else {
 			result = new LinkedList<APIParameter>();
@@ -412,18 +414,12 @@ public class WRDoc {
 			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
 				APIParameter param = new APIParameter();
 				param.setName(fieldDoc.name());
-				// TODO: handle enum to output enum values into doc
-				param.setType(fieldDoc.type().qualifiedTypeName());
+				processType(paramType, param, fieldDoc.type());
 				param.setDescription(fieldDoc.commentText());
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(fieldDoc.tags())));
 				param.setParameterOccurs(this.parseParameterOccurs(fieldDoc
 						.tags(WROccursTaglet.NAME)));
-				if (!fieldDoc.type().isPrimitive()
-						&& !"java.lang.String".equalsIgnoreCase(fieldDoc.type()
-								.qualifiedTypeName())) {
-					param.setFields(this.getFields(fieldDoc.type(), paramType));
-				}
 				result.add(param);
 			}
 		}
@@ -436,27 +432,79 @@ public class WRDoc {
 							.isSetterMethod(methodDoc))) {
 				APIParameter param = new APIParameter();
 				param.setName(this.getFieldNameOfAccesser(methodDoc.name()));
+				Type typeToProcess = null;
 				if (paramType == ParameterType.Request) {
-					param.setType(methodDoc.parameters()[0].type()
-							.qualifiedTypeName());
+					// set method only has one parameter.
+					typeToProcess = methodDoc.parameters()[0].type();
 				} else {
-					param.setType(methodDoc.returnType().qualifiedTypeName());
+					typeToProcess = methodDoc.returnType();
 				}
+				processType(paramType, param, typeToProcess);
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(methodDoc.tags())));
 				param.setDescription(methodDoc.commentText());
 				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
 						.tags(WROccursTaglet.NAME)));
-				if (!methodDoc.returnType().isPrimitive()
-						&& !"java.lang.String".equalsIgnoreCase(methodDoc
-								.returnType().qualifiedTypeName())) {
-					param.setFields(this.getFields(methodDoc.returnType(),
-							paramType));
-				}
 				result.add(param);
 			}
 		}
 		return result;
+	}
+
+	private void processType(ParameterType paramType, APIParameter param,
+			Type typeToProcess) {
+		if (!typeToProcess.isPrimitive()
+				&& !"java.lang.String".equalsIgnoreCase(typeToProcess
+						.qualifiedTypeName())) {
+			ParameterizedType pt = typeToProcess.asParameterizedType();
+			if (pt != null && pt.typeArguments().length > 0) {
+				StringBuilder strBuilder = new StringBuilder();
+				strBuilder.append(typeToProcess.qualifiedTypeName());
+				strBuilder.append("<");
+				for (Type arg : pt.typeArguments()) {
+					strBuilder.append(arg.simpleTypeName());
+					strBuilder.append(",");
+					APIParameter tmp = new APIParameter();
+					tmp.setName(arg.simpleTypeName());
+					tmp.setType(arg.qualifiedTypeName());
+					tmp.setDescription("");
+					tmp.setParentTypeArgument(true);
+					tmp.setFields(this.getFields(arg, paramType));
+					param.appendField(tmp);
+				}
+				int len = strBuilder.length();
+				// trim the last ","
+				strBuilder.deleteCharAt(len - 1);
+				strBuilder.append(">");
+				param.setType(strBuilder.toString());
+			} else {
+				param.setType(typeToProcess.qualifiedTypeName());
+				param.setFields(this.getFields(typeToProcess, paramType));
+			}
+		} else {
+			param.setType(typeToProcess.qualifiedTypeName());
+		}
+
+		// handle enum to output enum values into doc
+		if (typeToProcess.asClassDoc() != null) {
+			ClassDoc superClass = typeToProcess.asClassDoc().superclass();
+			if (superClass != null
+					&& "java.lang.Enum".equals(superClass.qualifiedTypeName())) {
+				FieldDoc[] enumConstants = typeToProcess.asClassDoc()
+						.enumConstants();
+				StringBuilder strBuilder = new StringBuilder();
+				strBuilder.append("Enum[");
+				for (FieldDoc enumConstant : enumConstants) {
+					strBuilder.append(enumConstant.name());
+					strBuilder.append(",");
+				}
+				int len = strBuilder.length();
+				// trim the last ","
+				strBuilder.deleteCharAt(len - 1);
+				strBuilder.append("]");
+				param.setType(strBuilder.toString());
+			}
+		}
 	}
 
 	/*

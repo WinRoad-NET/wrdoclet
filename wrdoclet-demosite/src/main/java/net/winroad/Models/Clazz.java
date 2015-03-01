@@ -1,13 +1,16 @@
 package net.winroad.Models;
 
+import java.util.List;
+import java.util.Map;
+
 public class Clazz {
 
 	/**
 	 * 课程名称
 	 * 
-	 * @author Bob
+	 * @author Bob huang
 	 * @version 0.0.2
-	 * @wr.memo fix bug
+	 * @wr.memo fix bla bla bla bla bla bla bla bla bug
 	 * @wr.occurs required
 	 */
 	public String getName() {
@@ -17,7 +20,7 @@ public class Clazz {
 	/**
 	 * 课程名称
 	 * 
-	 * @author Bob
+	 * @author Bob zhong
 	 * @version 0.0.2
 	 * @wr.memo fix bug
 	 * @wr.occurs required
@@ -26,17 +29,18 @@ public class Clazz {
 		this.name = name;
 	}
 
-	/**
-	 * @wr.occurs optional
+	/**选择该门功课的学生列表。
+	 * @return
 	 */
-	public String getTeacherName() {
-		return teacherName;
+	public List<Student> getStudents() {
+		return students;
 	}
 
-	public void setTeacherName(String teacherName) {
-		this.teacherName = teacherName;
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 
 	private String name;
-	private String teacherName;
+	private List<Student> students;
+	public Map.Entry<Address, Person> properties;
 }

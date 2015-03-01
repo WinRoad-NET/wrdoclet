@@ -9,11 +9,11 @@ h2{padding-left:20px; margin-top:15px; width:300px; margin-bottom:8px; font-size
 h3{padding-left:20px; margin-top:8px; margin-bottom:5px; font-size:14px; font-weight: bolder;}
 h4{padding-left:20px; margin-top:5px; margin-bottom:5px; font-size:12px; font-weight: bolder;}
 p{padding-left:20px;}
-table{table-layout: fixed; border-collapse: collapse; border-spacing: 0; width: 80%; margin-left:20px; margin-bottom:20px;border:1px solid #666;border-collapse:collapse;border-spacing:0;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+table{border:1; cellpadding:3; cellspacing:1; table-layout: fixed; border-collapse: collapse; border-spacing: 0; width: 96%; margin-left:20px; margin-bottom:20px;border:1px solid #666;border-collapse:collapse;border-spacing:0;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
 table thead tr th{font-size:12px; font-weight:bolder; background-color:#ef7722; color:#ffffff; border-bottom: 1px solid darkgray;border-left: 1px solid darkgray;border-right: 1px solid darkgray;border-top: 1px solid darkgray;}
 table tbody tr td{font-size:12px; height:20px; border: 1px solid #ccc;}
-.ecUl{list-style:none;margin-left:20px; padding-left:0;}
-.ecUl li{float:left;width:70px;background:#eeeeee; margin-left:3px;line-height:26px; text-align:center; font-family:Arial}
+li{list-style:none;}
+ul{-webkit-padding-start: 10px;}
 
 .label {
 	display: inline-block;
@@ -29,6 +29,13 @@ table tbody tr td{font-size:12px; height:20px; border: 1px solid #ccc;}
 	background-color: #999999;
 }
 
-.label-method-type{background-color: #55aa55;}
+.label-method-type{background-color: #55aa55; color:#ffffff;font-weight: bold;}
 .api-paragraph{border-top:2px solid red; width:100%;}
 .tag-paragraph{margin-bottom:25px; }
+
+.modifyHistoryTable thead tr th {background-color:#f8c05a;}
+.resParamTable thead tr th {background-color:#a86557;}
+
+.innerTable{border:0; margin-left:2px; margin-bottom:2px; width: 98%;}
+.innerTable thead tr th{border:0; color:#000000; font-weight: normal; background-color:#ffffff}
+.innerTable tbody tr td{border:0;}

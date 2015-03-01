@@ -21,8 +21,6 @@ import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.Util;
 
-import org.apache.commons.io.FileUtils;
-
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
@@ -168,9 +166,7 @@ public class HtmlDoclet extends AbstractDoclet {
 
 	protected void generateCommonFiles(RootDoc root) throws Exception {
 		// copy folders
-		File srcDir = new File(HtmlDoclet.class.getResource("/css/").getPath());
-		File destDir = new File(this.configuration.destDirName);
-		FileUtils.copyDirectory(srcDir, destDir);
+		Util.copyResourceFolder("/css/", this.configuration.destDirName);
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {

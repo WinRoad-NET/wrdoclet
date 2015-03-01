@@ -57,6 +57,10 @@ public class Person {
 		return gender;
 	}
 
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+	
 	public String saySomething() {
 		return PET_PHRASE;
 	}

@@ -20,3 +20,6 @@ hs_err_pid*
 .settings//Servers
 /Servers
 .metadata/
+
+# logs
+*.log
