@@ -39,3 +39,5 @@ ul{-webkit-padding-start: 10px;}
 .innerTable{border:0; margin-left:2px; margin-bottom:2px; width: 98%;}
 .innerTable thead tr th{border:0; color:#000000; font-weight: normal; background-color:#ffffff}
 .innerTable tbody tr td{border:0;}
+
+.returnCode {padding-left:20px;margin-top:5px; margin-bottom:5px; }

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
+import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 import com.sun.javadoc.AnnotationDesc;
@@ -110,6 +111,7 @@ public class WRDoc {
 		openAPI.setRequestMapping(this.parseRequestMapping(methodDoc));
 		openAPI.setInParameter(this.getRequestBody(methodDoc));
 		openAPI.setOutParameter(this.getReponseBody(methodDoc));
+		openAPI.setReturnCode(this.getReturnCode(methodDoc));
 		return openAPI;
 	}
 
@@ -209,6 +211,11 @@ public class WRDoc {
 		return isActionMethod;
 	}
 
+	private String getReturnCode(MethodDoc methodDoc) {
+		Tag[] tags = methodDoc.tags(WRReturnCodeTaglet.NAME);
+		return WRReturnCodeTaglet.concat(tags);
+	}
+	
 	/*
 	 * get the modification history of the class.
 	 */

@@ -45,6 +45,10 @@ public class WRReturnCodeTaglet implements Taglet {
 	}
 
 	public String toString(Tag[] tags) {
+		return WRReturnCodeTaglet.concat(tags);
+   }
+	
+	public static String concat(Tag[] tags) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i< tags.length - 1; i++) {
             result.append(tags[i].text());
@@ -53,8 +57,8 @@ public class WRReturnCodeTaglet implements Taglet {
         if(tags.length > 0) {
         	result.append(tags[tags.length - 1].text());
         }
-        return result.toString();
-    }
+        return result.toString();		
+	}
 
     /**
      * Register this Taglet.

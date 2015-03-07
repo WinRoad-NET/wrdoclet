@@ -37,6 +37,7 @@ public class ClassController extends BaseController {
 	 * @author Bob 
 	 * @version 0.0.2 
 	 * @wr.memo fix bug
+	 * @wr.returnCode 400 404 503
 	 */
 	@RequestMapping(value = "/class/del", method = RequestMethod.POST)
 	public @ResponseBody

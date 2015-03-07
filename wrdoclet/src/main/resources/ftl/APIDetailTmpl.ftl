@@ -1,0 +1,53 @@
+<#include "modifyHisTmpl.ftl">
+<#include "paramTableTmpl.ftl">
+    <h3>
+      描述
+    </h3>
+    <p>
+      ${openAPI.description}
+    </p>
+    <h3>
+      地址
+    </h3>
+    <p>
+      URL:
+      <span class="lable label-method-type">
+        ${openAPI.requestMapping.methodType}
+      </span>
+      ${openAPI.requestMapping.url}
+    </p>
+    <#if openAPI.modificationHistory?? && (openAPI.modificationHistory.modificationRecordList?size != 0)>
+      <table class="modifyHistoryTable">
+        <caption>
+          修改历史
+        </caption>
+        <@modifyHistoryMacro modificationRecordList=openAPI.modificationHistory.modificationRecordList />
+      </table>
+    </#if>
+    <h3>
+      请求
+    </h3>
+    <#if openAPI.inParameter?? >
+      <#if openAPI.inParameter.fields?? >
+        <@paramTableMacro param=openAPI.inParameter isRequest=true />
+      </#if>
+    </#if>
+
+    <h3>
+      响应
+    </h3>
+    <#if openAPI.returnCode?? >
+      <span class='returnCode'>
+      <b>响应码：</b>${openAPI.returnCode}
+      </span>
+    </#if>
+    <#if openAPI.outParameter?? >
+      <#if openAPI.outParameter.description?? >
+        <div>
+          ${openAPI.outParameter.description}
+        </div>
+      </#if>
+      <#if openAPI.outParameter.fields?? >
+        <@paramTableMacro param=openAPI.outParameter isRequest=false />
+      </#if>
+    </#if>
