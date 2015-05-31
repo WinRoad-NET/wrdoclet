@@ -11,9 +11,11 @@
     </h3>
     <p>
       URL:
-      <span class="lable label-method-type">
-        ${openAPI.requestMapping.methodType}
-      </span>
+      <#if openAPI.requestMapping.methodType??>
+        <span class="lable label-method-type">
+          ${openAPI.requestMapping.methodType}
+        </span>
+      </#if>
       ${openAPI.requestMapping.url}
     </p>
     <#if openAPI.modificationHistory?? && (openAPI.modificationHistory.modificationRecordList?size != 0)>

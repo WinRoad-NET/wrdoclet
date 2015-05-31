@@ -1,5 +1,8 @@
 package net.winroad.Controller;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,4 +48,25 @@ public class ClassController extends BaseController {
 			HttpServletResponse httpResponse) {
 		return clazz;
 	}
+	
+	/**
+	 * list课程 
+	 * @wr.tag Class 
+	 * @author Adams 
+	 * @version 0.0.1 
+	 * @wr.memo init add api 
+	 * @author Bob 
+	 * @version 0.0.2 
+	 * @wr.memo fix bug
+	 * @wr.returnCode 400 404 503
+	 */
+	@RequestMapping(value = "/class/list", method = RequestMethod.GET)
+	public @ResponseBody
+	List<Clazz> listClass(HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) {
+		LinkedList<Clazz> result = new LinkedList<Clazz>();
+		result.add(new Clazz());
+		return result;
+	}
+	
 }

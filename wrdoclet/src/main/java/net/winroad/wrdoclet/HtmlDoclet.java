@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.winroad.wrdoclet.data.OpenAPI;
 import net.winroad.wrdoclet.data.URLIndex;
 import net.winroad.wrdoclet.data.WRDoc;
@@ -131,8 +133,13 @@ public class HtmlDoclet extends AbstractDoclet {
 			List<OpenAPI> openAPIList = wrDoc.getTaggedOpenAPIs().get(tag);
 			if (openAPIList != null) {
 				for (OpenAPI openAPI : openAPIList) {
-					String index = openAPI.getRequestMapping().getUrl() + "["
-							+ openAPI.getRequestMapping().getMethodType() + "]";
+					String index = openAPI.getRequestMapping().getUrl();
+					if (!StringUtils.isEmpty(openAPI.getRequestMapping()
+							.getMethodType())) {
+						index += "["
+								+ openAPI.getRequestMapping().getMethodType()
+								+ "]";
+					}
 					String filename = generateWRAPIFileName(openAPI
 							.getRequestMapping().getUrl(), openAPI
 							.getRequestMapping().getMethodType());

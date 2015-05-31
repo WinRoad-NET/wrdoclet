@@ -43,7 +43,9 @@ public class WRDoc {
 	 * The collection of MethodDoc to build Doc. Map key: tag name. Map value:
 	 * collection of MethodDoc
 	 */
-	private Map<String, Set<MethodDoc>> taggedMethods = new HashMap<String, Set<MethodDoc>>();
+	private Map<String, Set<MethodDoc>> taggedControllerMethods = new HashMap<String, Set<MethodDoc>>();
+
+	private Map<String, Set<MethodDoc>> taggedServiceMethods = new HashMap<String, Set<MethodDoc>>();
 
 	private Map<String, ClassDoc> nonControllerclassDocs = new HashMap<String, ClassDoc>();
 
@@ -67,16 +69,22 @@ public class WRDoc {
 				continue;
 			}
 
-			if (!this.isController(classes[i])) {
+			if (this.isController(classes[i])) {
+				this.processControllerClass(classes[i], configuration);
+				MethodDoc[] methods = classes[i].methods();
+				for (int l = 0; l < methods.length; l++) {
+					this.processControllerMethod(methods[l], configuration);
+				}
+			} else if (this.isServiceInterface(classes[i])) {
+				this.processServiceClass(classes[i], configuration);
+				MethodDoc[] methods = classes[i].methods();
+				for (int l = 0; l < methods.length; l++) {
+					this.processServiceMethod(methods[l], configuration);
+				}
+			} else {
 				this.nonControllerclassDocs.put(classes[i].qualifiedTypeName(),
 						classes[i]);
 				continue;
-			}
-
-			this.processControllerClass(classes[i], configuration);
-			MethodDoc[] methods = classes[i].methods();
-			for (int l = 0; l < methods.length; l++) {
-				this.processControllerMethod(methods[l], configuration);
 			}
 		}
 
@@ -84,8 +92,15 @@ public class WRDoc {
 	}
 
 	private void buildOpenAPIs(Configuration configuration) {
-		Set<Entry<String, Set<MethodDoc>>> methods = this.taggedMethods
+		Set<Entry<String, Set<MethodDoc>>> methods = this.taggedControllerMethods
 				.entrySet();
+		this.buildOpenAPIs(methods, configuration, APIType.HTTPRestAPI);
+		methods = this.taggedServiceMethods.entrySet();
+		this.buildOpenAPIs(methods, configuration, APIType.SOAPServiceAPI);
+	}
+
+	private void buildOpenAPIs(Set<Entry<String, Set<MethodDoc>>> methods,
+			Configuration configuration, APIType apiMethodType) {
 		for (Iterator<Entry<String, Set<MethodDoc>>> tagMthIter = methods
 				.iterator(); tagMthIter.hasNext();) {
 			Entry<String, Set<MethodDoc>> kv = tagMthIter.next();
@@ -97,22 +112,60 @@ public class WRDoc {
 			for (Iterator<MethodDoc> mthIter = methodDocSet.iterator(); mthIter
 					.hasNext();) {
 				MethodDoc mthDoc = mthIter.next();
-				OpenAPI openAPI = this.buildOpenAPI(mthDoc, configuration);
+				OpenAPI openAPI = this.buildOpenAPI(mthDoc, configuration,
+						apiMethodType);
 				this.taggedOpenAPIs.get(tagName).add(openAPI);
 			}
 		}
 	}
 
 	private OpenAPI buildOpenAPI(MethodDoc methodDoc,
-			Configuration configuration) {
+			Configuration configuration, APIType apiMethodType) {
 		OpenAPI openAPI = new OpenAPI();
 		openAPI.setDescription(methodDoc.commentText());
 		openAPI.setModificationHistory(this.getModificationHistory(methodDoc));
-		openAPI.setRequestMapping(this.parseRequestMapping(methodDoc));
-		openAPI.setInParameter(this.getRequestBody(methodDoc));
-		openAPI.setOutParameter(this.getReponseBody(methodDoc));
+		switch (apiMethodType) {
+		case HTTPRestAPI:
+			openAPI.setRequestMapping(this
+					.parseRESTAPIRequestMapping(methodDoc));
+			openAPI.setInParameter(this.getRequestBody(methodDoc));
+			openAPI.setOutParameter(this.getReponseBody(methodDoc));
+			break;
+		case SOAPServiceAPI:
+			openAPI.setRequestMapping(this
+					.parseSOAPAPIRequestMapping(methodDoc));
+			openAPI.setInParameter(this.getSOAPAPIInputParams(methodDoc));
+			openAPI.setOutParameter(this.getSOAPAPIOutputParams(methodDoc));
+			break;
+		}
 		openAPI.setReturnCode(this.getReturnCode(methodDoc));
 		return openAPI;
+	}
+
+	/*
+	 * Process the tag on the Service.
+	 */
+	private void processServiceClass(ClassDoc service,
+			Configuration configuration) {
+		Tag[] serviceTagArray = service.tags(WRTagTaglet.NAME);
+		for (int i = 0; i < serviceTagArray.length; i++) {
+			Set<String> serviceTags = WRTagTaglet.getTagSet(serviceTagArray[i]
+					.text());
+			for (Iterator<String> iter = serviceTags.iterator(); iter.hasNext();) {
+				String tag = iter.next();
+				if (!this.taggedServiceMethods.containsKey(tag)) {
+					this.taggedServiceMethods
+							.put(tag, new HashSet<MethodDoc>());
+				}
+				// all method of this service should be processed later.
+				for (int j = 0; j < service.methods().length; j++) {
+					this.taggedServiceMethods.get(tag)
+							.add(service.methods()[j]);
+				}
+			}
+
+			wrTags.addAll(serviceTags);
+		}
 	}
 
 	/*
@@ -127,20 +180,53 @@ public class WRDoc {
 			for (Iterator<String> iter = controllerTags.iterator(); iter
 					.hasNext();) {
 				String tag = iter.next();
-				if (!this.taggedMethods.containsKey(tag)) {
-					this.taggedMethods.put(tag, new HashSet<MethodDoc>());
+				if (!this.taggedControllerMethods.containsKey(tag)) {
+					this.taggedControllerMethods.put(tag,
+							new HashSet<MethodDoc>());
 				}
 				// all action method of this controller should be processed
 				// later.
 				for (int j = 0; j < controller.methods().length; j++) {
 					if (isActionMethod(controller.methods()[j])) {
-						this.taggedMethods.get(tag)
-								.add(controller.methods()[j]);
+						this.taggedControllerMethods.get(tag).add(
+								controller.methods()[j]);
 					}
 				}
 			}
 
 			wrTags.addAll(controllerTags);
+		}
+	}
+
+	private void processServiceMethod(MethodDoc method,
+			Configuration configuration) {
+		if (configuration.nodeprecated && Util.isDeprecated(method)) {
+			return;
+		}
+
+		Tag[] methodTagArray = method.tags(WRTagTaglet.NAME);
+		if (methodTagArray.length == 0) {
+			String tag = WRTagTaglet.DEFAULT_TAG_NAME;
+			wrTags.add(tag);
+			if (!this.taggedServiceMethods.containsKey(tag)) {
+				this.taggedServiceMethods.put(tag, new HashSet<MethodDoc>());
+			}
+			this.taggedServiceMethods.get(tag).add(method);
+		} else {
+			for (int i = 0; i < methodTagArray.length; i++) {
+				Set<String> methodTags = WRTagTaglet
+						.getTagSet(methodTagArray[i].text());
+				wrTags.addAll(methodTags);
+				for (Iterator<String> iter = methodTags.iterator(); iter
+						.hasNext();) {
+					String tag = iter.next();
+					if (!this.taggedServiceMethods.containsKey(tag)) {
+						this.taggedServiceMethods.put(tag,
+								new HashSet<MethodDoc>());
+					}
+					this.taggedServiceMethods.get(tag).add(method);
+				}
+			}
 		}
 	}
 
@@ -161,10 +247,10 @@ public class WRDoc {
 		if (methodTagArray.length == 0) {
 			String tag = WRTagTaglet.DEFAULT_TAG_NAME;
 			wrTags.add(tag);
-			if (!this.taggedMethods.containsKey(tag)) {
-				this.taggedMethods.put(tag, new HashSet<MethodDoc>());
+			if (!this.taggedControllerMethods.containsKey(tag)) {
+				this.taggedControllerMethods.put(tag, new HashSet<MethodDoc>());
 			}
-			this.taggedMethods.get(tag).add(method);
+			this.taggedControllerMethods.get(tag).add(method);
 		} else {
 			for (int i = 0; i < methodTagArray.length; i++) {
 				Set<String> methodTags = WRTagTaglet
@@ -173,13 +259,19 @@ public class WRDoc {
 				for (Iterator<String> iter = methodTags.iterator(); iter
 						.hasNext();) {
 					String tag = iter.next();
-					if (!this.taggedMethods.containsKey(tag)) {
-						this.taggedMethods.put(tag, new HashSet<MethodDoc>());
+					if (!this.taggedControllerMethods.containsKey(tag)) {
+						this.taggedControllerMethods.put(tag,
+								new HashSet<MethodDoc>());
 					}
-					this.taggedMethods.get(tag).add(method);
+					this.taggedControllerMethods.get(tag).add(method);
 				}
 			}
 		}
+	}
+
+	private boolean isServiceInterface(ClassDoc classDoc) {
+		return classDoc.isInterface()
+				&& this.isClassDocAnnotatedWith(classDoc, "WebService");
 	}
 
 	/*
@@ -187,9 +279,13 @@ public class WRDoc {
 	 * Controller, although it may not be enough.
 	 */
 	private boolean isController(ClassDoc classDoc) {
+		return this.isClassDocAnnotatedWith(classDoc, "Controller");
+	}
+
+	private boolean isClassDocAnnotatedWith(ClassDoc classDoc, String annotation) {
 		AnnotationDesc[] annotations = classDoc.annotations();
 		for (int i = 0; i < annotations.length; i++) {
-			if (annotations[i].annotationType().name().equals("Controller")) {
+			if (annotations[i].annotationType().name().equals(annotation)) {
 				return true;
 			}
 		}
@@ -215,7 +311,7 @@ public class WRDoc {
 		Tag[] tags = methodDoc.tags(WRReturnCodeTaglet.NAME);
 		return WRReturnCodeTaglet.concat(tags);
 	}
-	
+
 	/*
 	 * get the modification history of the class.
 	 */
@@ -321,6 +417,67 @@ public class WRDoc {
 			}
 		}
 		return null;
+	}
+
+	private APIParameter getSOAPAPIOutputParams(MethodDoc method) {
+		APIParameter apiParameter = null;
+		if (method.returnType() != null) {
+			apiParameter = new APIParameter();
+			// TODO: how to represent @WebResult?
+			/*
+			 * AnnotationDesc[] annotations = method.annotations(); for (int i =
+			 * 0; i < annotations.length; i++) { if
+			 * (annotations[i].annotationType().name().equals("WebResult")) { }
+			 * }
+			 */
+			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+			apiParameter.setType(method.returnType().qualifiedTypeName());
+			for (Tag tag : method.tags("return")) {
+				apiParameter.setDescription(tag.text());
+			}
+			apiParameter.setFields(this.getFields(method.returnType(),
+					ParameterType.Response));
+			apiParameter.setHistory(this.getModificationHistory(method
+					.returnType()));
+		}
+		return apiParameter;
+	}
+
+	private APIParameter getSOAPAPIInputParams(MethodDoc method) {
+		APIParameter apiParameter = null;
+		Parameter[] methodParameters = method.parameters();
+		if (methodParameters.length != 0) {
+			apiParameter = new APIParameter();
+			List<APIParameter> paramList = new LinkedList<APIParameter>();
+			for (int i = 0; i < methodParameters.length; i++) {
+				APIParameter p = new APIParameter();
+				AnnotationDesc[] annotations = methodParameters[i]
+						.annotations();
+				for (int j = 0; j < annotations.length; j++) {
+					if (annotations[j].annotationType().name()
+							.equals("WebParam")) {
+						for (int k = 0; k < annotations[j].elementValues().length; k++) {
+							if ("name".equals(annotations[j].elementValues()[k]
+									.element().name())) {
+								p.setName(annotations[j].elementValues()[k]
+										.value().toString().replace("\"", ""));
+							}
+						}
+					}
+				}
+				if (p.getName() == null) {
+					p.setName("arg" + i);
+				}
+				p.setType(methodParameters[i].type().qualifiedTypeName());
+				// TODO:
+				p.setDescription("");
+				p.setFields(this.getFields(methodParameters[i].type(),
+						ParameterType.Request));
+				paramList.add(p);
+			}
+			apiParameter.setFields(paramList);
+		}
+		return apiParameter;
 	}
 
 	/*
@@ -578,10 +735,16 @@ public class WRDoc {
 		return requestMapping;
 	}
 
+	private RequestMapping parseSOAPAPIRequestMapping(MethodDoc method) {
+		RequestMapping mapping = new RequestMapping();
+		mapping.setUrl(method.name());
+		return mapping;
+	}
+
 	/*
 	 * Parse the @RequestMapping from the MVC action method.
 	 */
-	private RequestMapping parseRequestMapping(MethodDoc method) {
+	private RequestMapping parseRESTAPIRequestMapping(MethodDoc method) {
 		ClassDoc controllerClass = method.containingClass();
 		AnnotationDesc[] baseAnnotations = controllerClass.annotations();
 		RequestMapping baseMapping = this.parseRequestMapping(baseAnnotations);
