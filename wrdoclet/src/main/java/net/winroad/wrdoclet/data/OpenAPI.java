@@ -1,5 +1,8 @@
 package net.winroad.wrdoclet.data;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class OpenAPI {
 	/*
 	 * the description for this API
@@ -8,7 +11,8 @@ public class OpenAPI {
 	private RequestMapping requestMapping;
 	private ModificationHistory modificationHistory;
 	private APIParameter outParameter;
-	private APIParameter inParameter;
+	private List<APIParameter> inParameters = new LinkedList<APIParameter>();
+	
 	/*
 	 * Possible return code list.
 	 */
@@ -19,9 +23,16 @@ public class OpenAPI {
 	 * version specified, returns true.
 	 */
 	public boolean isModifiedOnVersion(String version) {
-		return this.modificationHistory.isModifiedOnVersion(version)
-				|| this.outParameter.isModifiedOnVersion(version)
-				|| this.inParameter.isModifiedOnVersion(version);
+		if( this.modificationHistory.isModifiedOnVersion(version)
+				|| this.outParameter.isModifiedOnVersion(version) ) {
+			return true;
+		}
+		for(APIParameter inParameter : inParameters) {
+			if(inParameter.isModifiedOnVersion(version)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public ModificationHistory getModificationHistory() {
@@ -40,12 +51,16 @@ public class OpenAPI {
 		this.outParameter = outParameter;
 	}
 
-	public APIParameter getInParameter() {
-		return inParameter;
+	public List<APIParameter> getInParameters() {
+		return inParameters;
 	}
 
-	public void setInParameter(APIParameter inParameter) {
-		this.inParameter = inParameter;
+	public boolean addInParameter(APIParameter inParameter) {
+		return this.inParameters.add(inParameter);
+	}
+
+	public boolean addInParameters(List<APIParameter> inParameters) {
+		return this.inParameters.addAll(inParameters);
 	}
 
 	public RequestMapping getRequestMapping() {

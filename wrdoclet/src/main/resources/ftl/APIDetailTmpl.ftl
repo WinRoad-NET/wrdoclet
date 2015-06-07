@@ -29,10 +29,8 @@
     <h3>
       请求
     </h3>
-    <#if openAPI.inParameter?? >
-      <#if openAPI.inParameter.fields?? >
-        <@paramTableMacro param=openAPI.inParameter isRequest=true />
-      </#if>
+    <#if openAPI.inParameters?? >
+        <@reqParamTableMacro params=openAPI.inParameters />
     </#if>
 
     <h3>
@@ -49,7 +47,5 @@
           ${openAPI.outParameter.description}
         </div>
       </#if>
-      <#if openAPI.outParameter.fields?? >
-        <@paramTableMacro param=openAPI.outParameter isRequest=false />
-      </#if>
+        <@resParamTableMacro param=openAPI.outParameter />
     </#if>
