@@ -29,7 +29,7 @@
     <h3>
       请求
     </h3>
-    <#if openAPI.inParameters?? >
+    <#if openAPI.inParameters?? && (openAPI.inParameters?size != 0)>
         <@reqParamTableMacro params=openAPI.inParameters />
     </#if>
 

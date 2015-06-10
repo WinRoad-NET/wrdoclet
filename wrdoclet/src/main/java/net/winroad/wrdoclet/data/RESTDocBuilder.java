@@ -139,9 +139,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	@Override
 	protected List<APIParameter> getInputParams(MethodDoc method) {
 		List<APIParameter> paramList = new LinkedList<APIParameter>();
-		APIParameter apiParameter = null;
 		Parameter reqBody = this.findRequestBody(method.parameters());
 		if (reqBody != null) {
+			APIParameter apiParameter = null;
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
 			apiParameter.setType(reqBody.type().qualifiedTypeName());
@@ -156,8 +156,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					ParameterType.Request));
 			apiParameter
 					.setHistory(this.getModificationHistory(reqBody.type()));
+			paramList.add(apiParameter);
 		}
-		paramList.add(apiParameter);
 		return paramList;
 	}
 
