@@ -124,7 +124,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		if (this.isAnnotatedResponseBody(method)) {
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(method.returnType().qualifiedTypeName());
+			apiParameter.setType(this.getTypeName(method.returnType()));
 			for (Tag tag : method.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
@@ -144,7 +144,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			APIParameter apiParameter = null;
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(reqBody.type().qualifiedTypeName());
+			apiParameter.setType(this.getTypeName(reqBody.type()));
 			apiParameter.setName(reqBody.name());
 			for (Tag tag : method.tags("param")) {
 				if (reqBody.name().equals(((ParamTag) tag).parameterName())) {

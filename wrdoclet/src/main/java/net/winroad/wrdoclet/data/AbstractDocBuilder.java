@@ -6,13 +6,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
 import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
+import net.winroad.wrdoclet.utils.Logger;
+import net.winroad.wrdoclet.utils.LoggerFactory;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
@@ -25,12 +27,15 @@ import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.util.Util;
 
 public abstract class AbstractDocBuilder {
+	protected Logger logger;
+
 	protected WRDoc wrDoc;
 
 	protected Map<String, Set<MethodDoc>> taggedOpenAPIMethods = new HashMap<String, Set<MethodDoc>>();
 
 	public AbstractDocBuilder(WRDoc wrDoc) {
 		this.wrDoc = wrDoc;
+		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
 
 	public WRDoc getWrDoc() {
@@ -215,17 +220,58 @@ public abstract class AbstractDocBuilder {
 		return WRReturnCodeTaglet.concat(tags);
 	}
 
+	protected boolean isInStopClasses(ClassDoc classDoc) {
+		//TODO: add it into configuration.
+		String property = "java.lang.String, java.lang.Object, java.util.Map.Entry, java.lang.Enum";
+		if(property != null) {
+			String[] stopClasses = property.split(",");
+			for(String stopClass : stopClasses) {
+				if(stopClass.trim().equalsIgnoreCase(classDoc
+					.qualifiedTypeName())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	protected List<APIParameter> getFields(Type type, ParameterType paramType) {
+		List<APIParameter> result = new LinkedList<APIParameter>();
+		if (!type.isPrimitive()) {
+			ParameterizedType pt = type.asParameterizedType();
+			if (pt != null && pt.typeArguments().length > 0) {
+				for (Type arg : pt.typeArguments()) {
+					APIParameter tmp = new APIParameter();
+					tmp.setName(arg.simpleTypeName());
+					tmp.setType(this.getTypeName(arg));
+					tmp.setDescription("");
+					tmp.setParentTypeArgument(true);
+					tmp.setFields(this.getFields(arg, paramType));
+					result.add(tmp);
+				}
+			}
+						
+			ClassDoc classDoc = this.wrDoc.getConfiguration().root
+					.classNamed(type.qualifiedTypeName());
+			if (classDoc != null) {
+				result.addAll(this.getFields(classDoc, paramType));
+			}
+		}
+		return result;
+	}
+
 	protected List<APIParameter> getFields(ClassDoc classDoc,
 			ParameterType paramType) {
-		List<APIParameter> result = null;
+		List<APIParameter> result = new LinkedList<APIParameter>();
+
 		ClassDoc superClassDoc = classDoc.superclass();
-		if (superClassDoc != null
-				&& !"java.lang.Object"
-						.equals(superClassDoc.qualifiedTypeName())
-				&& !"java.lang.Enum".equals(superClassDoc.qualifiedTypeName())) {
-			result = this.getFields(superClassDoc, paramType);
-		} else {
-			result = new LinkedList<APIParameter>();
+		if (superClassDoc != null && !this.isInStopClasses(superClassDoc)) {
+			result.addAll(this.getFields(superClassDoc, paramType));
+		} 
+		
+		if (this.isInStopClasses(classDoc)) {
+			return result;
 		}
 
 		FieldDoc[] fieldDocs = classDoc.fields();
@@ -233,7 +279,8 @@ public abstract class AbstractDocBuilder {
 			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
 				APIParameter param = new APIParameter();
 				param.setName(fieldDoc.name());
-				this.processType(paramType, param, fieldDoc.type());
+				param.setType(this.getTypeName(fieldDoc.type()));
+				param.setFields(this.getFields(fieldDoc.type(), paramType));
 				param.setDescription(fieldDoc.commentText());
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(fieldDoc.tags())));
@@ -258,7 +305,8 @@ public abstract class AbstractDocBuilder {
 				} else {
 					typeToProcess = methodDoc.returnType();
 				}
-				processType(paramType, param, typeToProcess);
+				param.setType(this.getTypeName(typeToProcess));
+				param.setFields(this.getFields(typeToProcess, paramType));
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(methodDoc.tags())));
 				param.setDescription(methodDoc.commentText());
@@ -270,38 +318,22 @@ public abstract class AbstractDocBuilder {
 		return result;
 	}
 
-	protected void processType(ParameterType paramType, APIParameter param,
-			Type typeToProcess) {
-		if (!typeToProcess.isPrimitive()
-				&& !"java.lang.String".equalsIgnoreCase(typeToProcess
-						.qualifiedTypeName())) {
-			ParameterizedType pt = typeToProcess.asParameterizedType();
-			if (pt != null && pt.typeArguments().length > 0) {
-				StringBuilder strBuilder = new StringBuilder();
-				strBuilder.append(typeToProcess.qualifiedTypeName());
-				strBuilder.append("<");
-				for (Type arg : pt.typeArguments()) {
-					strBuilder.append(arg.simpleTypeName());
-					strBuilder.append(",");
-					APIParameter tmp = new APIParameter();
-					tmp.setName(arg.simpleTypeName());
-					tmp.setType(arg.qualifiedTypeName());
-					tmp.setDescription("");
-					tmp.setParentTypeArgument(true);
-					tmp.setFields(this.getFields(arg, paramType));
-					param.appendField(tmp);
-				}
-				int len = strBuilder.length();
-				// trim the last ","
-				strBuilder.deleteCharAt(len - 1);
-				strBuilder.append(">");
-				param.setType(strBuilder.toString());
-			} else {
-				param.setType(typeToProcess.qualifiedTypeName());
-				param.setFields(this.getFields(typeToProcess, paramType));
+	protected String getTypeName(Type typeToProcess) {
+		// special type to process e.g. java.util.Map.Entry<Address,Person>
+		ParameterizedType pt = typeToProcess.asParameterizedType();
+		if (pt != null && pt.typeArguments().length > 0) {
+			StringBuilder strBuilder = new StringBuilder();
+			strBuilder.append(typeToProcess.qualifiedTypeName());
+			strBuilder.append("<");
+			for (Type arg : pt.typeArguments()) {
+				strBuilder.append(this.getTypeName(arg));
+				strBuilder.append(",");
 			}
-		} else {
-			param.setType(typeToProcess.qualifiedTypeName());
+			int len = strBuilder.length();
+			// trim the last ","
+			strBuilder.deleteCharAt(len - 1);
+			strBuilder.append(">");
+			return strBuilder.toString();
 		}
 
 		// handle enum to output enum values into doc
@@ -321,9 +353,11 @@ public abstract class AbstractDocBuilder {
 				// trim the last ","
 				strBuilder.deleteCharAt(len - 1);
 				strBuilder.append("]");
-				param.setType(strBuilder.toString());
+				return strBuilder.toString();
 			}
 		}
+
+		return typeToProcess.qualifiedTypeName();
 	}
 
 	/*
@@ -375,15 +409,6 @@ public abstract class AbstractDocBuilder {
 			return true;
 		}
 		return false;
-	}
-
-	protected List<APIParameter> getFields(Type type, ParameterType paramType) {
-		ClassDoc classDoc = this.wrDoc.getConfiguration().root.classNamed(type
-				.qualifiedTypeName());
-		if (classDoc != null) {
-			return this.getFields(classDoc, paramType);
-		}
-		return null;
 	}
 
 	/*

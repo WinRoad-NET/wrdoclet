@@ -31,6 +31,21 @@ public class ClassController extends BaseController {
 		return clazz;
 	}
 
+	// 添加课程列表
+	// @wr.tag Clazz
+	// @author Adams
+	// @version 0.0.1
+	// @wr.memo init create
+	// @author Bob
+	// @version 0.0.2
+	// @wr.memo fix bug
+	@RequestMapping(value = "/class/addlist", method = RequestMethod.POST)
+	public @ResponseBody
+	boolean addClassList(@RequestBody List<Clazz> clazz, HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) {
+		return true;
+	}
+
 	/**
 	 * 删除课程 
 	 * @wr.tag Class 

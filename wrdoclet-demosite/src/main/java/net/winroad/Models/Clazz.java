@@ -42,5 +42,5 @@ public class Clazz {
 
 	private String name;
 	private List<Student> students;
-	public Map.Entry<Address, Person> properties;
+	public Map.Entry<Address, List<Person>> properties;
 }

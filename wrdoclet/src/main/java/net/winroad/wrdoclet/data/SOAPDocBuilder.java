@@ -61,7 +61,7 @@ public class SOAPDocBuilder extends AbstractDocBuilder {
 			 * }
 			 */
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(method.returnType().qualifiedTypeName());
+			apiParameter.setType(this.getTypeName(method.returnType()));
 			for (Tag tag : method.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
@@ -97,7 +97,7 @@ public class SOAPDocBuilder extends AbstractDocBuilder {
 				if (p.getName() == null) {
 					p.setName("arg" + i);
 				}
-				p.setType(methodParameters[i].type().qualifiedTypeName());
+				p.setType(this.getTypeName(methodParameters[i].type()));
 				// TODO:
 				p.setDescription("");
 				p.setFields(this.getFields(methodParameters[i].type(),

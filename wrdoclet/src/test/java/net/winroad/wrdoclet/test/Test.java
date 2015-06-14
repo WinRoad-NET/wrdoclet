@@ -30,6 +30,7 @@ public class Test {
 				"-sourcepath",
 				"D:/Git/wrdoclet/wrdoclet-demoservice/src/main/java",
 				//"D:/Git/wrdoclet/wrdoclet-demosite/src/main/java",
+				"net.winroad.Controller",
 				"net.winroad.Service",
 				"net.winroad.Models",
 				"org.springframework.web.bind.annotation",

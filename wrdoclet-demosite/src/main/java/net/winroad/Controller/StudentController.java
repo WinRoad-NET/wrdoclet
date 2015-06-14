@@ -1,5 +1,6 @@
 package net.winroad.Controller;
 
+import net.winroad.Models.Gender;
 import net.winroad.Models.Student;
 
 import org.springframework.stereotype.Controller;
@@ -46,4 +47,10 @@ public class StudentController {
 		return student;
 	}
 
+	@RequestMapping(value = "/getgender/{name}", method = RequestMethod.GET)
+	public @ResponseBody
+	Gender getStudentGender(@PathVariable("name") String username) {
+		return Gender.MALE;
+	}
+	
 }
