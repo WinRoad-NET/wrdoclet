@@ -13,6 +13,7 @@ import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
 import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
+import net.winroad.wrdoclet.utils.ApplicationContextConfig;
 import net.winroad.wrdoclet.utils.Logger;
 import net.winroad.wrdoclet.utils.LoggerFactory;
 
@@ -221,8 +222,7 @@ public abstract class AbstractDocBuilder {
 	}
 
 	protected boolean isInStopClasses(ClassDoc classDoc) {
-		//TODO: add it into configuration.
-		String property = "java.lang.String, java.lang.Object, java.util.Map.Entry, java.lang.Enum";
+		String property = ApplicationContextConfig.getStopClasses();
 		if(property != null) {
 			String[] stopClasses = property.split(",");
 			for(String stopClass : stopClasses) {
