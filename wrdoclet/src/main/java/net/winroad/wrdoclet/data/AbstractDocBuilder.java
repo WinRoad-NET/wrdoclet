@@ -223,16 +223,28 @@ public abstract class AbstractDocBuilder {
 
 	protected boolean isInStopClasses(ClassDoc classDoc) {
 		String property = ApplicationContextConfig.getStopClasses();
-		if(property != null) {
+		if (property != null) {
 			String[] stopClasses = property.split(",");
-			for(String stopClass : stopClasses) {
-				if(stopClass.trim().equalsIgnoreCase(classDoc
-					.qualifiedTypeName())) {
-					return true;
+			String[] cdParts = classDoc.qualifiedTypeName().split("\\.");
+			for (String stopClass : stopClasses) {
+				String[] scParts = stopClass.trim().split("\\.");
+				if(scParts.length <= cdParts.length) {
+					boolean hasDiffPart = false;
+					for (int i = 0; i < scParts.length; i++) {
+						if (scParts[i].equals("*")) {
+							return true;
+						} else if(!scParts[i].equalsIgnoreCase(cdParts[i])) {
+							hasDiffPart = true;
+							break;
+						}
+					}
+					if(scParts.length == cdParts.length && !hasDiffPart) {
+						return true;
+					}
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -251,7 +263,7 @@ public abstract class AbstractDocBuilder {
 					result.add(tmp);
 				}
 			}
-						
+
 			ClassDoc classDoc = this.wrDoc.getConfiguration().root
 					.classNamed(type.qualifiedTypeName());
 			if (classDoc != null) {
@@ -268,8 +280,8 @@ public abstract class AbstractDocBuilder {
 		ClassDoc superClassDoc = classDoc.superclass();
 		if (superClassDoc != null && !this.isInStopClasses(superClassDoc)) {
 			result.addAll(this.getFields(superClassDoc, paramType));
-		} 
-		
+		}
+
 		if (this.isInStopClasses(classDoc)) {
 			return result;
 		}
@@ -375,7 +387,8 @@ public abstract class AbstractDocBuilder {
 						.text())) {
 					return ParameterOccurs.DEPENDS;
 				} else {
-					// TODO: WARNING in this case
+					this.logger.warn("Unexpected WROccursTaglet: "
+							+ tags[i].text());
 				}
 			}
 		}

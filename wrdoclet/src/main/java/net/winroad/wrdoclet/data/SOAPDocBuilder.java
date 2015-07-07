@@ -9,6 +9,7 @@ import java.util.Set;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 import com.sun.javadoc.AnnotationDesc;
+import com.sun.javadoc.AnnotationDesc.ElementValuePair;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
@@ -53,13 +54,21 @@ public class SOAPDocBuilder extends AbstractDocBuilder {
 		APIParameter apiParameter = null;
 		if (method.returnType() != null) {
 			apiParameter = new APIParameter();
-			// TODO: how to represent @WebResult?
-			/*
-			 * AnnotationDesc[] annotations = method.annotations(); for (int i =
-			 * 0; i < annotations.length; i++) { if
-			 * (annotations[i].annotationType().name().equals("WebResult")) { }
-			 * }
-			 */
+			AnnotationDesc[] annotations = method.annotations();
+			boolean isResNameCustomized = false;
+			for (int i = 0; i < annotations.length; i++) {
+				if (annotations[i].annotationType().name().equals("WebResult")) {
+					for(ElementValuePair p : annotations[i].elementValues()) {
+						if(p.element().name().equals("name")) {
+							apiParameter.setName(p.value().value().toString());
+							isResNameCustomized = true;
+						}
+					}
+				}
+			}
+			if(!isResNameCustomized) {
+				apiParameter.setName("return");
+			}
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
 			apiParameter.setType(this.getTypeName(method.returnType()));
 			for (Tag tag : method.tags("return")) {
