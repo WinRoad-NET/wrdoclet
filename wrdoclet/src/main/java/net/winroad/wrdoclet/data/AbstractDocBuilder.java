@@ -21,6 +21,7 @@ import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.ParameterizedType;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.Type;
@@ -135,6 +136,16 @@ public abstract class AbstractDocBuilder {
 
 	protected abstract List<APIParameter> getInputParams(MethodDoc methodDoc);
 
+	protected String getParamComment(MethodDoc method, String paramName) {
+		ParamTag[] paramTags = method.paramTags();
+		for(ParamTag paramTag : paramTags) {
+			if(paramTag.parameterName().equals(paramName)) {
+				return paramTag.parameterComment();
+			}
+		}
+		return null;
+	}
+	
 	protected boolean isClassDocAnnotatedWith(ClassDoc classDoc,
 			String annotation) {
 		AnnotationDesc[] annotations = classDoc.annotations();

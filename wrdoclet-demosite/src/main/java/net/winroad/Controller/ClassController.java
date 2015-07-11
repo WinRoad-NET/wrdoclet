@@ -74,6 +74,7 @@ public class ClassController extends BaseController {
 	 * @version 0.0.2 
 	 * @wr.memo fix bug
 	 * @wr.returnCode 400 404 503
+	 * @return the class list.
 	 */
 	@RequestMapping(value = "/class/list", method = RequestMethod.GET)
 	public @ResponseBody

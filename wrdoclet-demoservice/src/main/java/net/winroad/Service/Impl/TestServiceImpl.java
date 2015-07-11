@@ -10,6 +10,7 @@ import net.winroad.Service.TestService;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlElement;
 
 @WebService
 public class TestServiceImpl implements TestService {
@@ -25,6 +26,14 @@ public class TestServiceImpl implements TestService {
 		return list;
 	}
 
+	public boolean findUser(@XmlElement(required=false) User user) {
+		return false;
+	}
+	
+	public boolean updateUser(@XmlElement(required=true) User user) {
+		return true;
+	}
+	
 	@WebResult(name = "addResult")
 	public int addUser(String name, String pwd) {
 		return 110;

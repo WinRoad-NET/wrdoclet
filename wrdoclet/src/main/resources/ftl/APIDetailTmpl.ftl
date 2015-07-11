@@ -42,10 +42,5 @@
       </span>
     </#if>
     <#if openAPI.outParameter?? >
-      <#if openAPI.outParameter.description?? >
-        <div>
-          ${openAPI.outParameter.description}
-        </div>
-      </#if>
         <@resParamTableMacro param=openAPI.outParameter />
     </#if>

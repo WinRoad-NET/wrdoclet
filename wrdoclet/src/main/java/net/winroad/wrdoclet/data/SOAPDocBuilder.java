@@ -45,7 +45,21 @@ public class SOAPDocBuilder extends AbstractDocBuilder {
 	@Override
 	protected RequestMapping parseRequestMapping(MethodDoc method) {
 		RequestMapping mapping = new RequestMapping();
-		mapping.setUrl(method.name());
+		AnnotationDesc[] annotations = method.annotations();
+		boolean isOprNameCustomized = false;
+		for (int i = 0; i < annotations.length; i++) {
+			if (annotations[i].annotationType().name().equals("WebMethod")) {
+				for(ElementValuePair p : annotations[i].elementValues()) {
+					if(p.element().name().equals("operationName")) {
+						isOprNameCustomized = true;
+						mapping.setUrl(p.value().value().toString().replace("\"", ""));	
+					}
+				}
+			}
+		}
+		if(!isOprNameCustomized) {
+			mapping.setUrl(method.name());			
+		}
 		return mapping;
 	}
 
@@ -102,13 +116,28 @@ public class SOAPDocBuilder extends AbstractDocBuilder {
 							}
 						}
 					}
+					if (annotations[j].annotationType().name()
+							.equals("XmlElement")) {
+						for (int k = 0; k < annotations[j].elementValues().length; k++) {
+							if ("required".equals(annotations[j].elementValues()[k]
+									.element().name())) {
+								if(annotations[j].elementValues()[k]
+										.value().toString().equals("true")) {
+									p.setParameterOccurs(ParameterOccurs.REQUIRED);
+								} else if(annotations[j].elementValues()[k]
+										.value().toString().equals("false")) {
+									p.setParameterOccurs(ParameterOccurs.OPTIONAL);
+								}
+							}
+						}
+					}
 				}
 				if (p.getName() == null) {
 					p.setName("arg" + i);
 				}
 				p.setType(this.getTypeName(methodParameters[i].type()));
-				// TODO:
 				p.setDescription("");
+				//p.setDescription(this.getParamComment(method, p.getName()));
 				p.setFields(this.getFields(methodParameters[i].type(),
 						ParameterType.Request));
 				paramList.add(p);
