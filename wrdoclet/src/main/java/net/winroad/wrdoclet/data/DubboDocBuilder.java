@@ -59,24 +59,29 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 		return null;
 	}
 
-	protected List<String> getDubboInterfaces(){
+	protected List<String> getDubboInterfaces() {
 		List<String> result = new LinkedList<String>();
 		try {
-		Document dubboConfig = readDubboConfig(((ConfigurationImpl) this.wrDoc
-				.getConfiguration()).dubboconfigpath);
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		xPath.setNamespaceContext(new UniversalNamespaceCache(dubboConfig,
-				false));
-		NodeList serviceNodes = (NodeList) xPath.evaluate(
-				"//:beans/dubbo:service", dubboConfig, XPathConstants.NODESET);
-		for (int i = 0; i < serviceNodes.getLength(); i++) {
-			Node node = serviceNodes.item(i);
-			String ifc = getAttributeValue(node, "interface");
-			if (ifc != null)
-				result.add(ifc);
-		}
-		} catch(Exception e) {
+			Document dubboConfig = readDubboConfig(((ConfigurationImpl) this.wrDoc
+					.getConfiguration()).dubboconfigpath);
+			XPath xPath = XPathFactory.newInstance().newXPath();
+			xPath.setNamespaceContext(new UniversalNamespaceCache(dubboConfig,
+					false));
+			NodeList serviceNodes = (NodeList) xPath.evaluate(
+					"//:beans/dubbo:service", dubboConfig,
+					XPathConstants.NODESET);
+			for (int i = 0; i < serviceNodes.getLength(); i++) {
+				Node node = serviceNodes.item(i);
+				String ifc = getAttributeValue(node, "interface");
+				if (ifc != null)
+					result.add(ifc);
+			}
+		} catch (Exception e) {
 			this.logger.error(e);
+		}
+		this.logger.debug("dubbo interface list:");
+		for (String s : result) {
+			this.logger.debug("interface: " + s);
 		}
 		return result;
 	}

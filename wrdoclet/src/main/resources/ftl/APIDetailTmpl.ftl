@@ -36,7 +36,7 @@
     <h3>
       响应
     </h3>
-    <#if openAPI.returnCode?? >
+    <#if openAPI.returnCode?? && openAPI.returnCode != "">
       <span class='returnCode'>
       <b>响应码：</b>${openAPI.returnCode}
       </span>
