@@ -55,7 +55,7 @@
 							<!-- For the project-reports page -->
 							<name>API doc</name>
 							<description>demo site api documentation.</description>
-							<destDir>../../apidocs</destDir>
+							<destDir>../../../../wrdoclet-gh-pages/apidocs-demosite</destDir>
 						</configuration>
 						<reports>
 							<report>javadoc</report>

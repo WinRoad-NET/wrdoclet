@@ -177,10 +177,11 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {
-		return (url + '[' + methodType + ']').replace('/', '.')
-				.replace('\\', '-').replace(':', '-').replace('*', '-')
-				.replace('?', '-').replace('"', '-').replace('<', '-')
-				.replace('>', '-').replace('|', '-')
+		return StringUtils.strip((url + '-' + methodType + '-')
+				.replace('/', '-').replace('\\', '-').replace(':', '-')
+				.replace('*', '-').replace('?', '-').replace('"', '-')
+				.replace('<', '-').replace('>', '-').replace('|', '-')
+				.replace('{', '-').replace('}', '-'), "-")
 				+ ".html";
 	}
 
