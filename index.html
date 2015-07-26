@@ -37,7 +37,7 @@
 <a href="http://winroad-net.github.io/wrdoclet/apidocs-demoservice/index.html">demo SOAP service API DOC</a><br/>
 <a href="http://winroad-net.github.io/wrdoclet/apidocs-demodubbo/index.html">demo dubbo service API DOC</a><br/>
 
-<p>supported example:</p>
+<p>supported Spring MVC service example:</p>
 
 <pre><code>@RequestMapping(value = "/add", method = RequestMethod.POST)
 public @ResponseBody
@@ -46,7 +46,24 @@ Student addStudent(@RequestBody Student student) {
 }   
 </code></pre>
 
-<p>unsupported example:</p>
+
+<p>supported SOAP service example:</p>
+
+<pre><code>@WebResult(name = "getUserResult")
+public List<User> getUserList(@XmlElement(required=false) @WebParam(name = "name") String name);   
+</code></pre>
+
+<p>supported dubbo service example:</p>
+
+<pre><code>public interface DemoService {
+	String sayHello(String name);
+}
+</code></pre>
+<pre><code>
+<dubbo:service interface="net.winroad.dubbo.DemoService" ref="demoService" /> 
+</code></pre>
+
+<p>unsupported Spring MVC service example:</p>
 
 <pre><code>@RequestMapping("/index/{username}")
 public String index(@PathVariable("username") String username) {
