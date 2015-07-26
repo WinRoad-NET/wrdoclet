@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>wrdoclet by WinRoad-NET</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>wrdoclet</h1>
+        <h2></h2>
+
+        <section id="downloads">
+          <a href="https://github.com/WinRoad-NET/wrdoclet/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/WinRoad-NET/wrdoclet/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/WinRoad-NET/wrdoclet" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="wrdoclet" class="anchor" href="#wrdoclet" aria-hidden="true"><span class="octicon octicon-link"></span></a>wrdoclet</h1>
+
+<p>This doclet tries to generate API doc for Spring MVC service, SOAP service, dubbo service.</p>
+
+<p>supported example:</p>
+
+<pre><code>@RequestMapping(value = "/add", method = RequestMethod.POST)
+public @ResponseBody
+Student addStudent(@RequestBody Student student) {
+    return student;
+}   
+</code></pre>
+
+<p>unsupported example:</p>
+
+<pre><code>@RequestMapping("/index/{username}")
+public String index(@PathVariable("username") String username) {
+    System.out.print(username);
+    return "index";
+}
+
+@RequestMapping(value = "/delete/{name}", method = RequestMethod.POST)
+public @ResponseBody
+String delStudent(@RequestBody Student student,
+        @PathVariable("name") String username) {
+    return "delete name:" + username + "/" + student.getName();
+}
+
+@RequestMapping(value = "/login", method = RequestMethod.POST)
+public String login2(HttpServletRequest request) {
+        String username = request.getParameter("username").trim();
+    return "login2";
+}
+
+@RequestMapping(value = "login", method = RequestMethod.POST)
+public String testParam(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    String username = request.getParameter("username");
+    return null;
+}
+
+@RequestMapping(value = "login", method = RequestMethod.POST)
+public String testParam(PrintWriter out, @RequestParam("username") String username) {
+    out.println(username);
+    return null;
+}
+
+@RequestMapping(value = "login", method = RequestMethod.POST)
+public String testParam(PrintWriter out, User user) {
+    out.println(user.getUsername());
+    return null;
+}
+
+@RequestMapping(value = "login", method = RequestMethod.POST)
+public String testParam(User user, Map model) {
+    model.put("user",user);
+    return "view";
+}
+
+...
+...
+</code></pre>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
