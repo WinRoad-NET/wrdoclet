@@ -157,6 +157,11 @@ public class ConfigurationImpl extends Configuration {
     public boolean noframe = false;
     
     /**
+     * Argument for command line option "-dubboconfigpath".
+     */
+    public String dubboconfigpath = "";
+    
+    /**
      * Unique Resource Handler for this package.
      */
     public final MessageRetriever standardmessage;
@@ -258,7 +263,9 @@ public class ConfigurationImpl extends Configuration {
                 overview = true;
             } else if (opt.equals("-noframe")) {
                 noframe = true;
-            }
+            }else if (opt.equals("-dubboconfigpath")) {
+                dubboconfigpath = os[1];
+            } 
         }
         if (root.specifiedClasses().length > 0) {
             Map<String,PackageDoc> map = new HashMap<String,PackageDoc>();
@@ -323,7 +330,8 @@ public class ConfigurationImpl extends Configuration {
                    option.equals("-stylesheetfile") ||
                    option.equals("-charset") ||
                    option.equals("-overview") ||
-                   option.equals("-xdocrootparent")) {
+                   option.equals("-xdocrootparent") ||
+                   option.equals("-dubboconfigpath")) {
             return 2;
         } else {
             return 0;
@@ -373,6 +381,12 @@ public class ConfigurationImpl extends Configuration {
                     return false;
                 }
                 nohelp = true;
+            } else  if (opt.equals("-dubboconfigpath")) {
+                File dubboConfig = new File(os[1]);
+                if (!dubboConfig.exists()) {
+                    reporter.printError(getText("doclet.File_not_found", os[1]));
+                    return false;
+                }
             } else if (opt.equals("-xdocrootparent")) {
                 try {
                     new URL(os[1]);

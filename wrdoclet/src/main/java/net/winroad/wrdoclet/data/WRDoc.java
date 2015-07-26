@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.winroad.wrdoclet.ConfigurationImpl;
+
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 
 public class WRDoc {
@@ -35,6 +37,10 @@ public class WRDoc {
 		this.configuration = configuration;
 		this.builders.add(new RESTDocBuilder(this));
 		this.builders.add(new SOAPDocBuilder(this));
+		String dubboConfigPath = ((ConfigurationImpl) this.configuration).dubboconfigpath;
+		if (dubboConfigPath != null && !dubboConfigPath.isEmpty()) {
+			this.builders.add(new DubboDocBuilder(this));
+		}
 		this.build();
 	}
 
