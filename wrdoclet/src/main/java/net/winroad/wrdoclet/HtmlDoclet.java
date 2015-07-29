@@ -98,7 +98,7 @@ public class HtmlDoclet extends AbstractDoclet {
 		this.generateWRTagIndexFile(root, wrDoc);
 		this.generateWRURLIndexFiles(root, wrDoc);
 		this.generateWRAPIDetailFiles(root, wrDoc);
-		this.generateFrameIndexFile(root);
+		this.generateFrameIndexFile(root, wrDoc);
 		this.generateCommonFiles(root);
 	}
 
@@ -163,10 +163,16 @@ public class HtmlDoclet extends AbstractDoclet {
 		}
 	}
 
-	protected void generateFrameIndexFile(RootDoc root) throws Exception {
+	protected void generateFrameIndexFile(RootDoc root, WRDoc wrDoc) throws Exception {
 		// generate index.html
+		String framesetFilePath = null;
+		if(wrDoc.getWRTags().size() > 1) {
+			framesetFilePath = "/html/tripleFramesetIndex.html";
+		} else {
+			framesetFilePath = "/html/doubleFramesetIndex.html";
+		}
 		InputStream inputStream = HtmlDoclet.class
-				.getResourceAsStream("/html/framesetIndex.html");
+				.getResourceAsStream(framesetFilePath);
 		Util.outputFile(inputStream, Util.combineFilePath(
 				this.configuration.destDirName, "index.html"));
 	}
