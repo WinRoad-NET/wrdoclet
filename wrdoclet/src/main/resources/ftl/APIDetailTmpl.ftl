@@ -1,7 +1,7 @@
 <#include "modifyHisTmpl.ftl">
 <#include "paramTableTmpl.ftl">
   <p class="qualifiedName">
-    ${openAPI.qualifiedName}
+    ☞&nbsp;${openAPI.qualifiedName}
   </p>
     <#if openAPI.description??>
 	    <h3>
@@ -12,10 +12,9 @@
 	    </p>
     </#if>
     <h3>
-      地址
+      访问路径
     </h3>
     <p>
-      URL:
       <#if openAPI.requestMapping.methodType??>
         <span class="lable label-method-type">
           ${openAPI.requestMapping.methodType}

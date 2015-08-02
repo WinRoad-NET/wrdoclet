@@ -17,7 +17,12 @@
 <#list wrTags as wrTag>
 <ul>
 <li>
-<a href="./tags/${wrTag}.html" target="URL_INDEX_FRAME">${wrTag}</a>
+<a href="./tags/${wrTag}.html" target="URL_INDEX_FRAME">
+${wrTag}
+</a>
+<#if taggedOpenAPIs??>
+  (${taggedOpenAPIs[wrTag]?size})
+</#if>
 </li>
 </ul>
 </#list>

@@ -114,9 +114,9 @@ public class HtmlDoclet extends AbstractDoclet {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		Collator cmp = Collator.getInstance(java.util.Locale.CHINA);
 		Collections.sort(tagList, cmp);
-		Map<String, List<String>> tagMap = new HashMap<String, List<String>>();
+		Map<String, Object> tagMap = new HashMap<String, Object>();
 		tagMap.put("wrTags", tagList);
-
+		tagMap.put("taggedOpenAPIs", wrDoc.getTaggedOpenAPIs());
 		this.configuration
 				.getWriterFactory()
 				.getFreemarkerWriter()
