@@ -12,7 +12,7 @@ public class OpenAPI {
 	private ModificationHistory modificationHistory;
 	private APIParameter outParameter;
 	private List<APIParameter> inParameters = new LinkedList<APIParameter>();
-	
+	private String qualifiedName;
 	/*
 	 * Possible return code list.
 	 */
@@ -85,5 +85,13 @@ public class OpenAPI {
 
 	public void setReturnCode(String returnCode) {
 		this.returnCode = returnCode;
+	}
+
+	public String getQualifiedName() {
+		return qualifiedName;
+	}
+
+	public void setQualifiedName(String qualifiedName) {
+		this.qualifiedName = qualifiedName;
 	}
 }

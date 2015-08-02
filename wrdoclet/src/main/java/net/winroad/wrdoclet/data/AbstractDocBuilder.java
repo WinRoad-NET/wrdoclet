@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
 import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
@@ -116,7 +118,10 @@ public abstract class AbstractDocBuilder {
 					.hasNext();) {
 				MethodDoc methodDoc = mthIter.next();
 				OpenAPI openAPI = new OpenAPI();
-				openAPI.setDescription(methodDoc.commentText());
+				openAPI.setQualifiedName(methodDoc.qualifiedName());
+				if(StringUtils.isNotBlank( methodDoc.commentText())) {
+					openAPI.setDescription(methodDoc.commentText());
+				}
 				openAPI.setModificationHistory(this
 						.getModificationHistory(methodDoc));
 				openAPI.setRequestMapping(this.parseRequestMapping(methodDoc));

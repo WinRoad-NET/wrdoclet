@@ -17,13 +17,19 @@
       <#list modificationRecordList as record>
         <tr>
           <td>
-            ${record.modifier}
+            <#if record.modifier??>
+              ${record.modifier}
+            </#if>
           </td>
           <td>
-            ${record.memo}
+            <#if record.memo??>
+              ${record.memo}
+            </#if>  
           </td>
           <td>
-            ${record.version}
+            <#if record.version??>
+              ${record.version}
+            </#if>
           </td>
         </tr>
       </#list>

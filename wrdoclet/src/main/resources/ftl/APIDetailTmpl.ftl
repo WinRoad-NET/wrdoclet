@@ -1,11 +1,16 @@
 <#include "modifyHisTmpl.ftl">
 <#include "paramTableTmpl.ftl">
-    <h3>
-      描述
-    </h3>
-    <p>
-      ${openAPI.description}
-    </p>
+  <p class="qualifiedName">
+    ${openAPI.qualifiedName}
+  </p>
+    <#if openAPI.description??>
+	    <h3>
+	      描述
+	    </h3>
+	    <p>
+        ${openAPI.description}
+	    </p>
+    </#if>
     <h3>
       地址
     </h3>
@@ -16,7 +21,9 @@
           ${openAPI.requestMapping.methodType}
         </span>
       </#if>
-      ${openAPI.requestMapping.url}
+      <#if openAPI.requestMapping.url??>
+        ${openAPI.requestMapping.url}
+      </#if>
     </p>
     <#if openAPI.modificationHistory?? && (openAPI.modificationHistory.modificationRecordList?size != 0)>
       <table class="modifyHistoryTable">
