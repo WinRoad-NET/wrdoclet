@@ -1,0 +1,195 @@
+@CHARSET "UTF-8";
+
+body {
+	font-size: 12px;
+	font-family: Arial;
+}
+
+h1 {
+	margin-top: 15px;
+	width: 300px;
+	margin-bottom: 8px;
+	font-size: 20px;
+	font-weight: bolder;
+}
+
+h2 {
+	padding-left: 20px;
+	margin-top: 15px;
+	width: 300px;
+	margin-bottom: 8px;
+	font-size: 18px;
+	font-family: "黑体"
+}
+
+h3 {
+	padding-left: 20px;
+	margin-top: 8px;
+	margin-bottom: 5px;
+	font-size: 14px;
+	font-weight: bolder;
+}
+
+h4 {
+	padding-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-size: 12px;
+	font-weight: bolder;
+}
+
+p {
+	padding-left: 20px;
+}
+
+table {
+	border: 1;
+	cellpadding: 3;
+	cellspacing: 1;
+	table-layout: fixed;
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 96%;
+	margin-left: 20px;
+	margin-bottom: 20px;
+	border: 1px solid #666;
+	border-collapse: collapse;
+	border-spacing: 0;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	max-width:1600px;	
+}
+
+table thead tr th {
+	font-size: 12px;
+	font-weight: bolder;
+	background-color: #ef7722;
+	color: #ffffff;
+	border-bottom: 1px solid darkgray;
+	border-left: 1px solid darkgray;
+	border-right: 1px solid darkgray;
+	border-top: 1px solid darkgray;
+}
+
+table tbody tr td {
+	font-size: 12px;
+	height: 20px;
+	border: 1px solid #ccc;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+
+.grip{
+	width:20px;
+	height:20px;
+	margin-top:-3px;
+	background-image:url('../img/grip.png');
+	margin-left:15px;
+	position:relative;
+	z-index:88;
+	cursor:e-resize;
+}
+
+.grip:hover{
+	background-position-x:-20px;
+}
+
+.dragging .grip{
+	background-position-x:-40px;
+}
+
+.dotted{
+	background-image:url('../img/dotted.png');
+	background-repeat:repeat-y;
+}
+
+.resizeDivClass {
+	text-align: right;
+	width: 3px;
+	margin: 0px 0 0px 0;
+	background: #fff;
+	border: 0px;
+	float: right;
+	cursor: e-resize;
+}
+
+li {
+	list-style: none;
+}
+
+ul {
+	-webkit-padding-start: 10px;
+}
+
+a:link {
+	text-decoration: none
+}
+
+a:hover {
+	text-decoration: underline
+}
+
+.label {
+	display: inline-block;
+	padding: 2px 4px;
+	margin-right: 10px;
+	font-size: 10.998px;
+	font-weight: bold;
+	line-height: 14px;
+	color: #ffffff;
+	vertical-align: baseline;
+	white-space: nowrap;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #999999;
+}
+
+.label-method-type {
+	background-color: #55aa55;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+.api-paragraph {
+	border-top: 2px solid red;
+	width: 100%;
+}
+
+.tag-paragraph {
+	margin-bottom: 25px;
+}
+
+.modifyHistoryTable thead tr th {
+	background-color: #f8c05a;
+}
+
+.resParamTable thead tr th {
+	background-color: #a86557;
+}
+
+.innerTable {
+	border: 0;
+	margin-left: 2px;
+	margin-bottom: 2px;
+	width: 98%;
+}
+
+.innerTable thead tr th {
+	border: 0;
+	color: #000000;
+	font-weight: normal;
+	background-color: #ffffff
+}
+
+.innerTable tbody tr td {
+	border: 0;
+}
+
+.returnCode {
+	padding-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.qualifiedName {
+	float: right;
+}

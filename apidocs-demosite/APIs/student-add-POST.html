@@ -1,24 +1,36 @@
-<!DOCTYPE 
-    html
-    PUBLIC
-    "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../stylesheet.css" title="Style" />
-  </head>
-  <body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" title="Style" />
+    </head>
+  <script  src="../js/jquery.js"></script>
+  <script  src="../js/colResizable-1.5.min.js"></script>
+  <script type="text/javascript">
+	$(function(){
+		$("#reqTable").colResizable({
+			liveDrag:true, 
+			gripInnerHtml:"<div class='grip'></div>", 
+			draggingClass:"dragging"});
+			
+		$("#resTable").colResizable({
+			liveDrag:true, 
+			gripInnerHtml:"<div class='grip'></div>", 
+			draggingClass:"dragging"});
+	});	
+  </script>
+
+
+    <body>
   <p class="qualifiedName">
-    net.winroad.Controller.StudentController.addStudent
+    ☞&nbsp;net.winroad.Controller.StudentController.addStudent
   </p>
     <h3>
-      地址
+      访问路径
     </h3>
     <p>
-      URL:
         <span class="lable label-method-type">
           POST
         </span>
@@ -27,22 +39,22 @@
     <h3>
       请求
     </h3>
-    <table class="reqParamTable">
+    <table id="reqTable" class="reqParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th>
+          <th style="width: 20%;"></span>
             参数名
           </th>
-          <th>
+          <th style="width: 22%;"></span>
             参数类型
           </th>
-          <th>
+          <th style="width: 20%;"></span>
             描述
           </th>
-          <th>
+          <th style="width: 8%;"></span>
             是否必须
           </th>
-          <th>
+          <th style="width: 30%;">
             修订记录
           </th>
         </tr>
@@ -313,22 +325,22 @@
     <h3>
       响应
     </h3>
-    <table class="resParamTable">
+    <table id="resTable" class="resParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th>
+          <th style="width: 20%;"></span>
             参数名
           </th>
-          <th>
+          <th style="width: 22%;"></span>
             参数类型
           </th>
-          <th>
+          <th style="width: 20%;"></span>
             描述
           </th>
-          <th>
+          <th style="width: 8%;"></span>
             是否必须
           </th>
-          <th>
+          <th style="width: 30%;">
             修订记录
           </th>
         </tr>
@@ -350,5 +362,6 @@
     </tr>
       </tbody>
     </table>
-  </body>
+    </body>
+
 </html>
