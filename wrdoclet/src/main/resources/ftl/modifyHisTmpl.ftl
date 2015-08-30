@@ -2,13 +2,13 @@
 <#macro modifyHistoryMacro modificationRecordList>
     <thead>
       <tr>
-        <th>
+        <th style="width: 20%;">
           修改人
         </th>
-        <th>
+        <th style="width: 60%;">
           备注
         </th>
-        <th>
+        <th style="width: 20%;">
           版本
         </th>
       </tr>

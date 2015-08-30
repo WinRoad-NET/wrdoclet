@@ -50,22 +50,22 @@
 
 
   <#macro reqParamTableMacro params>
-    <table class="reqParamTable">
+    <table id="reqTable" class="reqParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th>
+          <th style="width: 20%;"></span>
             参数名
           </th>
-          <th>
+          <th style="width: 22%;"></span>
             参数类型
           </th>
-          <th>
+          <th style="width: 20%;"></span>
             描述
           </th>
-          <th>
+          <th style="width: 8%;"></span>
             是否必须
           </th>
-          <th>
+          <th style="width: 30%;">
             修订记录
           </th>
         </tr>
@@ -79,22 +79,22 @@
   </#macro>
 
   <#macro resParamTableMacro param>
-    <table class="resParamTable">
+    <table id="resTable" class="resParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th>
+          <th style="width: 20%;"></span>
             参数名
           </th>
-          <th>
+          <th style="width: 22%;"></span>
             参数类型
           </th>
-          <th>
+          <th style="width: 20%;"></span>
             描述
           </th>
-          <th>
+          <th style="width: 8%;"></span>
             是否必须
           </th>
-          <th>
+          <th style="width: 30%;">
             修订记录
           </th>
         </tr>

@@ -179,7 +179,12 @@ public class HtmlDoclet extends AbstractDoclet {
 
 	protected void generateCommonFiles(RootDoc root) throws Exception {
 		// copy folders
-		Util.copyResourceFolder("/css/", this.configuration.destDirName);
+		Util.copyResourceFolder("/css/",
+				Util.combineFilePath(this.configuration.destDirName, "css"));
+		Util.copyResourceFolder("/js/",
+				Util.combineFilePath(this.configuration.destDirName, "js"));
+		Util.copyResourceFolder("/img/",
+				Util.combineFilePath(this.configuration.destDirName, "img"));
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {
