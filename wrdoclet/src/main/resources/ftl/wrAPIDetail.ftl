@@ -27,6 +27,14 @@
 
     <body>
         <#include "APIDetailTmpl.ftl">
+		<div class="foot">
+			<ul>
+				<li>
+					<#if generatedTime??>
+						Generated on <strong>${generatedTime}</strong> |
+					</#if></li>
+				<li> Powered by <strong>winroad</strong></li>
+			</ul>
+		</div>
     </body>
-
 </html>

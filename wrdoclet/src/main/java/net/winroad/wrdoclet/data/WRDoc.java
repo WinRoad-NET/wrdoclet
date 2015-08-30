@@ -1,5 +1,8 @@
 package net.winroad.wrdoclet.data;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,6 +24,8 @@ public class WRDoc {
 
 	private Configuration configuration;
 
+	private String docGeneratedDate;
+	
 	public Configuration getConfiguration() {
 		return configuration;
 	}
@@ -32,9 +37,16 @@ public class WRDoc {
 	public Map<String, List<OpenAPI>> getTaggedOpenAPIs() {
 		return taggedOpenAPIs;
 	}
+	
+	public String getDocGeneratedTime() {
+		return this.docGeneratedDate;
+	}
 
 	public WRDoc(Configuration configuration) {
 		this.configuration = configuration;
+		Calendar c = Calendar.getInstance();
+		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"); 
+		this.docGeneratedDate = df.format(c.getTime());
 		this.builders.add(new RESTDocBuilder(this));
 		this.builders.add(new SOAPDocBuilder(this));
 		String dubboConfigPath = ((ConfigurationImpl) this.configuration).dubboconfigpath;

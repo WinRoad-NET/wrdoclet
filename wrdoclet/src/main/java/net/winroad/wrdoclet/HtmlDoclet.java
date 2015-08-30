@@ -210,8 +210,9 @@ public class HtmlDoclet extends AbstractDoclet {
 			List<OpenAPI> openAPIList = wrDoc.getTaggedOpenAPIs().get(tag);
 			Set<String> filesGenerated = new HashSet<String>();
 			for (OpenAPI openAPI : openAPIList) {
-				Map<String, OpenAPI> tagMap = new HashMap<String, OpenAPI>();
+				Map<String, Object> tagMap = new HashMap<String, Object>();
 				tagMap.put("openAPI", openAPI);
+				tagMap.put("generatedTime", wrDoc.getDocGeneratedTime());
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
