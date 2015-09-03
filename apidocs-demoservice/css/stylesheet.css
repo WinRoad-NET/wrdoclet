@@ -135,7 +135,7 @@ a:hover {
 
 .label {
 	display: inline-block;
-	padding: 2px 4px;
+	padding: 2px 2px;
 	margin-right: 10px;
 	font-size: 10.998px;
 	font-weight: bold;
@@ -151,6 +151,22 @@ a:hover {
 	background-color: #55aa55;
 	color: #ffffff;
 	font-weight: bold;
+	padding: 4px;
+}
+
+.authIcon {
+	padding-left: 10px;
+	vertical-align: middle;
+}
+
+.accessPath {
+	padding-left: 20px;
+}
+
+.openAPIUrl {
+	display: inline;
+	vertical-align: middle;
+	padding-left: 5px;
 }
 
 .api-paragraph {
