@@ -126,5 +126,8 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 				&& this.isClassDocAnnotatedWith(classDoc, "WebService");
 	}
 
-
+	@Override
+	protected Boolean isAPIAuthNeeded(String url) {
+		return null;
+	}
 }

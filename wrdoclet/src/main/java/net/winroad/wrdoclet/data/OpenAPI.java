@@ -13,6 +13,8 @@ public class OpenAPI {
 	private APIParameter outParameter;
 	private List<APIParameter> inParameters = new LinkedList<APIParameter>();
 	private String qualifiedName;
+	private Boolean authNeeded;
+	
 	/*
 	 * Possible return code list.
 	 */
@@ -93,5 +95,13 @@ public class OpenAPI {
 
 	public void setQualifiedName(String qualifiedName) {
 		this.qualifiedName = qualifiedName;
+	}
+
+	public Boolean getAuthNeeded() {
+		return authNeeded;
+	}
+
+	public void setAuthNeeded(Boolean authNeeded) {
+		this.authNeeded = authNeeded;
 	}
 }

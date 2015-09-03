@@ -29,10 +29,19 @@
         <#include "APIDetailTmpl.ftl">
 		<div class="foot">
 			<ul>
+				<#if systemName?? && systemName != "">
 				<li>
-					<#if generatedTime??>
-						Generated on <strong>${generatedTime}</strong> |
-					</#if></li>
+					© <strong>${systemName}</strong> |
+				</li>
+				</#if>
+				<#if generatedTime??>
+				<li>
+					Generated on <strong>${generatedTime}</strong> |
+				</li>
+				</#if>
+				<#if branchName?? && branchName != "">
+				<li> Branch : <strong>${branchName}</strong> | </li>
+				</#if>
 				<li> Powered by <strong>winroad</strong></li>
 			</ul>
 		</div>

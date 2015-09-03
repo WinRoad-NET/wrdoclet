@@ -1,12 +1,22 @@
 package net.winroad.wrdoclet;
 
-import com.sun.tools.doclets.internal.toolkit.*;
-import com.sun.tools.doclets.internal.toolkit.util.*;
-import com.sun.javadoc.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.PackageDoc;
+import com.sun.javadoc.ProgramElementDoc;
+import com.sun.javadoc.RootDoc;
+import com.sun.tools.doclets.internal.toolkit.Configuration;
+import com.sun.tools.doclets.internal.toolkit.util.DirectoryManager;
+import com.sun.tools.doclets.internal.toolkit.util.MessageRetriever;
 
 /**
  * Configure the output based on the command line options.
@@ -162,6 +172,26 @@ public class ConfigurationImpl extends Configuration {
     public String dubboconfigpath = "";
     
     /**
+     * Argument for command line option "-springcontextconfigpath".
+     */
+    public String springcontextconfigpath = "";
+    
+    /**
+     * Argument for command line option "-excludedurlsxpath".
+     */
+    public String excludedurlsxpath = "";
+    
+    /**
+     * Argument for command line option "-branchname".
+     */
+    public String branchname = "";
+    
+    /**
+     * Argument for command line option "-systemname".
+     */
+    public String systemname = "";
+    
+    /**
      * Unique Resource Handler for this package.
      */
     public final MessageRetriever standardmessage;
@@ -263,8 +293,16 @@ public class ConfigurationImpl extends Configuration {
                 overview = true;
             } else if (opt.equals("-noframe")) {
                 noframe = true;
-            }else if (opt.equals("-dubboconfigpath")) {
+            } else if (opt.equals("-dubboconfigpath")) {
                 dubboconfigpath = os[1];
+            } else if (opt.equals("-springcontextconfigpath")) {
+            	springcontextconfigpath = os[1];
+            } else if (opt.equals("-excludedurlsxpath")) {
+            	excludedurlsxpath = os[1];
+            } else if (opt.equals("-systemname")) {
+            	systemname = os[1];
+            } else if (opt.equals("-branchname")) {
+                branchname = os[1];
             } 
         }
         if (root.specifiedClasses().length > 0) {
@@ -331,7 +369,11 @@ public class ConfigurationImpl extends Configuration {
                    option.equals("-charset") ||
                    option.equals("-overview") ||
                    option.equals("-xdocrootparent") ||
-                   option.equals("-dubboconfigpath")) {
+                   option.equals("-dubboconfigpath") ||
+                   option.equals("-springcontextconfigpath") ||
+                   option.equals("-excludedurlsxpath") ||
+                   option.equals("-systemname") ||
+                   option.equals("-branchname")) {
             return 2;
         } else {
             return 0;
@@ -381,9 +423,15 @@ public class ConfigurationImpl extends Configuration {
                     return false;
                 }
                 nohelp = true;
-            } else  if (opt.equals("-dubboconfigpath")) {
+            } else if (opt.equals("-dubboconfigpath")) {
                 File dubboConfig = new File(os[1]);
                 if (!dubboConfig.exists()) {
+                    reporter.printError(getText("doclet.File_not_found", os[1]));
+                    return false;
+                }
+            } else if (opt.equals("-springcontextconfigpath")) {
+                File springContextConfigPath = new File(os[1]);
+                if (!springContextConfigPath.exists()) {
                     reporter.printError(getText("doclet.File_not_found", os[1]));
                     return false;
                 }

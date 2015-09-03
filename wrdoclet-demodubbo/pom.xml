@@ -7,6 +7,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<wrdoclet.systemname>dubbo服务</wrdoclet.systemname>
+		<wrdoclet.branchname>master</wrdoclet.branchname>
 	</properties>
 	<build>
 		<plugins>
@@ -57,7 +59,7 @@
 								<version>0.0.1-SNAPSHOT</version>
 							</docletArtifact>
 							<additionalparam>
-								-encoding utf-8 -charset utf-8 -dubboconfigpath D://Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml
+								-systemname ${wrdoclet.systemname} -branchname ${wrdoclet.branchname} -encoding utf-8 -charset utf-8 -dubboconfigpath D://Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml
 							</additionalparam>
 							<!-- For the project-reports page -->
 							<name>API doc</name>

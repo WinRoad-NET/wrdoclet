@@ -1,5 +1,7 @@
 package net.winroad.wrdoclet.data;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,7 +11,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
@@ -119,12 +129,16 @@ public abstract class AbstractDocBuilder {
 				MethodDoc methodDoc = mthIter.next();
 				OpenAPI openAPI = new OpenAPI();
 				openAPI.setQualifiedName(methodDoc.qualifiedName());
-				if(StringUtils.isNotBlank( methodDoc.commentText())) {
+				if (StringUtils.isNotBlank(methodDoc.commentText())) {
 					openAPI.setDescription(methodDoc.commentText());
 				}
 				openAPI.setModificationHistory(this
 						.getModificationHistory(methodDoc));
 				openAPI.setRequestMapping(this.parseRequestMapping(methodDoc));
+				if (openAPI.getRequestMapping() != null) {
+					openAPI.setAuthNeeded(this.isAPIAuthNeeded(openAPI
+							.getRequestMapping().getUrl()));
+				}
 				openAPI.addInParameters(this.getInputParams(methodDoc));
 				openAPI.setOutParameter(this.getOutputParam(methodDoc));
 				openAPI.setReturnCode(this.getReturnCode(methodDoc));
@@ -132,6 +146,8 @@ public abstract class AbstractDocBuilder {
 			}
 		}
 	}
+
+	protected abstract Boolean isAPIAuthNeeded(String url);
 
 	protected abstract boolean isOpenAPIMethod(MethodDoc methodDoc);
 
@@ -143,14 +159,14 @@ public abstract class AbstractDocBuilder {
 
 	protected String getParamComment(MethodDoc method, String paramName) {
 		ParamTag[] paramTags = method.paramTags();
-		for(ParamTag paramTag : paramTags) {
-			if(paramTag.parameterName().equals(paramName)) {
+		for (ParamTag paramTag : paramTags) {
+			if (paramTag.parameterName().equals(paramName)) {
 				return paramTag.parameterComment();
 			}
 		}
 		return null;
 	}
-	
+
 	protected boolean isClassDocAnnotatedWith(ClassDoc classDoc,
 			String annotation) {
 		AnnotationDesc[] annotations = classDoc.annotations();
@@ -244,17 +260,17 @@ public abstract class AbstractDocBuilder {
 			String[] cdParts = classDoc.qualifiedTypeName().split("\\.");
 			for (String stopClass : stopClasses) {
 				String[] scParts = stopClass.trim().split("\\.");
-				if(scParts.length <= cdParts.length) {
+				if (scParts.length <= cdParts.length) {
 					boolean hasDiffPart = false;
 					for (int i = 0; i < scParts.length; i++) {
 						if (scParts[i].equals("*")) {
 							return true;
-						} else if(!scParts[i].equalsIgnoreCase(cdParts[i])) {
+						} else if (!scParts[i].equalsIgnoreCase(cdParts[i])) {
 							hasDiffPart = true;
 							break;
 						}
 					}
-					if(scParts.length == cdParts.length && !hasDiffPart) {
+					if (scParts.length == cdParts.length && !hasDiffPart) {
 						return true;
 					}
 				}
@@ -457,4 +473,24 @@ public abstract class AbstractDocBuilder {
 		}
 	}
 
+	public static Document readXMLConfig(String filePath)
+			throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory
+				.newInstance();
+		builderFactory.setNamespaceAware(true);
+		DocumentBuilder builder = builderFactory.newDocumentBuilder();
+		File dubboConfig = new File(filePath);
+		return builder.parse(dubboConfig);
+	}
+
+	public static String getAttributeValue(Node node, String attributeName) {
+		NamedNodeMap attributes = node.getAttributes();
+		if (attributes != null) {
+			Node attribute = attributes.getNamedItem(attributeName);
+			if (attribute != null) {
+				return attribute.getNodeValue();
+			}
+		}
+		return null;
+	}
 }

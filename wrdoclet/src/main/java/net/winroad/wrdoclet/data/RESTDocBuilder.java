@@ -6,7 +6,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
+import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import net.winroad.wrdoclet.ConfigurationImpl;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
+import net.winroad.wrdoclet.utils.UniversalNamespaceCache;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
@@ -16,6 +27,9 @@ import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.util.Util;
+
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 
 /**
  * @author AdamsLee NOTE: WRDoc cannot cover API which returning objects whose
@@ -30,9 +44,55 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		super(wrDoc);
 	}
 
+	private PathMatcher matcher = new AntPathMatcher();
+	private List<String> excludedUrls;
+
+	protected List<String> getExcludedUrls(Configuration configuration) {
+		List<String> excludedUrls = new LinkedList<String>();
+		String contextConfigPath = ((ConfigurationImpl) configuration).springcontextconfigpath;
+		if (!StringUtils.isBlank(contextConfigPath)) {
+			String excludedUrlsXpath = ((ConfigurationImpl) configuration).excludedurlsxpath;
+			try {
+				Document contextConfig = readXMLConfig(contextConfigPath);
+				XPath xPath = XPathFactory.newInstance().newXPath();
+				xPath.setNamespaceContext(new UniversalNamespaceCache(
+						contextConfig, false));
+				if (StringUtils.isBlank(excludedUrlsXpath)) {
+					NodeList serviceNodes = (NodeList) xPath
+							.evaluate(
+									"//:beans/mvc:interceptors/mvc:interceptor/mvc:exclude-mapping",
+									contextConfig, XPathConstants.NODESET);
+					for (int i = 0; i < serviceNodes.getLength(); i++) {
+						Node node = serviceNodes.item(i);
+						String path = getAttributeValue(node, "path");
+						if (path != null) {
+							excludedUrls.add(path);
+						}
+					}
+				} else {
+					NodeList serviceNodes = (NodeList) xPath.evaluate(
+							excludedUrlsXpath, contextConfig,
+							XPathConstants.NODESET);
+					for (int i = 0; i < serviceNodes.getLength(); i++) {
+						Node node = serviceNodes.item(i);
+						excludedUrls.add(node.getTextContent());
+					}
+				}
+			} catch (Exception e) {
+				this.logger.error(e);
+			}
+		}
+		this.logger.debug("excludedUrls: ");
+		for (String s : excludedUrls) {
+			this.logger.debug(s);
+		}
+		return excludedUrls;
+	}
+
 	@Override
 	public void processOpenAPIClasses(ClassDoc[] classDocs,
 			Configuration configuration) {
+		this.excludedUrls = this.getExcludedUrls(configuration);
 		for (int i = 0; i < classDocs.length; i++) {
 			if (configuration.nodeprecated
 					&& (Util.isDeprecated(classDocs[i]) || Util
@@ -90,8 +150,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				for (int j = 0; j < annotations[i].elementValues().length; j++) {
 					if ("value".equals(annotations[i].elementValues()[j]
 							.element().name())) {
-						requestMapping.setUrl(annotations[i].elementValues()[j]
-								.value().toString().replace("\"", ""));
+						String url = annotations[i].elementValues()[j].value()
+								.toString().replace("\"", "");
+						requestMapping.setUrl(url);
 					} else if ("method"
 							.equals(annotations[i].elementValues()[j].element()
 									.name())) {
@@ -242,6 +303,20 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	protected Boolean isAPIAuthNeeded(String url) {
+		if (url != null && this.excludedUrls != null
+				&& this.excludedUrls.size() != 0) {
+			for (String excludedUrl : this.excludedUrls) {
+				if (matcher.match(excludedUrl, url)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return null;
 	}
 
 }

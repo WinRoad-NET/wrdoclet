@@ -163,10 +163,11 @@ public class HtmlDoclet extends AbstractDoclet {
 		}
 	}
 
-	protected void generateFrameIndexFile(RootDoc root, WRDoc wrDoc) throws Exception {
+	protected void generateFrameIndexFile(RootDoc root, WRDoc wrDoc)
+			throws Exception {
 		// generate index.html
 		String framesetFilePath = null;
-		if(wrDoc.getWRTags().size() > 1) {
+		if (wrDoc.getWRTags().size() > 1) {
 			framesetFilePath = "/html/tripleFramesetIndex.html";
 		} else {
 			framesetFilePath = "/html/doubleFramesetIndex.html";
@@ -188,11 +189,12 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {
-		return StringUtils.strip((url + '-' + methodType + '-')
-				.replace('/', '-').replace('\\', '-').replace(':', '-')
-				.replace('*', '-').replace('?', '-').replace('"', '-')
-				.replace('<', '-').replace('>', '-').replace('|', '-')
-				.replace('{', '-').replace('}', '-'), "-")
+		return StringUtils.strip(
+				(url + '-' + methodType + '-').replace('/', '-')
+						.replace('\\', '-').replace(':', '-').replace('*', '-')
+						.replace('?', '-').replace('"', '-').replace('<', '-')
+						.replace('>', '-').replace('|', '-').replace('{', '-')
+						.replace('}', '-'), "-")
 				+ ".html";
 	}
 
@@ -213,6 +215,12 @@ public class HtmlDoclet extends AbstractDoclet {
 				Map<String, Object> tagMap = new HashMap<String, Object>();
 				tagMap.put("openAPI", openAPI);
 				tagMap.put("generatedTime", wrDoc.getDocGeneratedTime());
+				tagMap.put(
+						"branchName",
+						((ConfigurationImpl) wrDoc.getConfiguration()).branchname);
+				tagMap.put(
+						"systemName",
+						((ConfigurationImpl) wrDoc.getConfiguration()).systemname);
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
