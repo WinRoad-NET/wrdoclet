@@ -40,6 +40,36 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- Ignore/Execute plugin execution -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- copy-dependency plugin -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<reporting>
 		<plugins>
@@ -59,7 +89,10 @@
 								<version>0.0.1-SNAPSHOT</version>
 							</docletArtifact>
 							<additionalparam>
-								-systemname ${wrdoclet.systemname} -branchname ${wrdoclet.branchname} -encoding utf-8 -charset utf-8 -dubboconfigpath D://Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml
+								-systemname ${wrdoclet.systemname} -branchname
+								${wrdoclet.branchname} -encoding utf-8 -charset utf-8
+								-dubboconfigpath
+								D://Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml
 							</additionalparam>
 							<!-- For the project-reports page -->
 							<name>API doc</name>

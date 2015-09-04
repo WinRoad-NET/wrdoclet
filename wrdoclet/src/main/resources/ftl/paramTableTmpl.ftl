@@ -28,9 +28,13 @@
           ${field.description}
         </#if>
       </td>
-      <td>
+      <td style="text-align: center;">
         <#if field.parameterOccurs??>
-          ${field.parameterOccurs}
+          <#if field.parameterOccurs == "REQUIRED">
+          	是
+          <#elseif field.parameterOccurs == "OPTIONAL">
+          	否
+          </#if>
         </#if>
       </td>
       <td>

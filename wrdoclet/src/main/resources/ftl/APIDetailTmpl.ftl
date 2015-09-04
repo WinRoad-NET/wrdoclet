@@ -1,7 +1,7 @@
 <#include "modifyHisTmpl.ftl">
 <#include "paramTableTmpl.ftl">
   <p class="qualifiedName">
-    ☞&nbsp;${openAPI.qualifiedName}
+    	<font size='5'>☞</font>&nbsp;${openAPI.qualifiedName}
   </p>
     <#if openAPI.description??>
 	    <h3>
@@ -46,6 +46,8 @@
     </h3>
     <#if openAPI.inParameters?? && (openAPI.inParameters?size != 0)>
         <@reqParamTableMacro params=openAPI.inParameters />
+    <#else>
+        <p>N/A</p>
     </#if>
 
     <h3>
@@ -58,4 +60,6 @@
     </#if>
     <#if openAPI.outParameter?? >
         <@resParamTableMacro param=openAPI.outParameter />
+    <#elseif openAPI.returnCode?? && openAPI.returnCode != "">
+    	<p>N/A</p>
     </#if>

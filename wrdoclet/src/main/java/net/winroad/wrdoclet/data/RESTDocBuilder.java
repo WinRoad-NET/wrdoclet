@@ -20,6 +20,7 @@ import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.UniversalNamespaceCache;
 
 import com.sun.javadoc.AnnotationDesc;
+import com.sun.javadoc.AnnotationDesc.ElementValuePair;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.ParamTag;
@@ -197,28 +198,64 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		return apiParameter;
 	}
 
+	//TODO: handle the @RequestHeader、@CookieValue, @RequestParam, @SessionAttributes, @ModelAttribute
 	@Override
 	protected List<APIParameter> getInputParams(MethodDoc method) {
 		List<APIParameter> paramList = new LinkedList<APIParameter>();
-		Parameter reqBody = this.findRequestBody(method.parameters());
-		if (reqBody != null) {
-			APIParameter apiParameter = null;
-			apiParameter = new APIParameter();
-			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(this.getTypeName(reqBody.type()));
-			apiParameter.setName(reqBody.name());
-			for (Tag tag : method.tags("param")) {
-				if (reqBody.name().equals(((ParamTag) tag).parameterName())) {
-					apiParameter.setDescription(((ParamTag) tag)
-							.parameterComment());
+		Parameter[] parameters = method.parameters();
+		for (int i = 0; i < parameters.length; i++) {
+			AnnotationDesc[] annotations = parameters[i].annotations();
+			for (int j = 0; j < annotations.length; j++) {
+				APIParameter apiParameter = null;
+				apiParameter = new APIParameter();
+				apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+				if ("org.springframework.web.bind.annotation.RequestBody"
+						.equals(annotations[j].annotationType().qualifiedName())
+						&& annotations[j].elementValues() != null
+						&& annotations[j].elementValues().length != 0) {
+					for (ElementValuePair pair : annotations[j].elementValues()) {
+						if (pair.element().name().equals("required")) {
+							if (annotations[j].elementValues()[0].value()
+									.equals(true)) {
+								apiParameter
+										.setParameterOccurs(ParameterOccurs.REQUIRED);
+							} else {
+								apiParameter
+										.setParameterOccurs(ParameterOccurs.OPTIONAL);
+							}
+						}
+					}
 				}
+				apiParameter.setType(this.getTypeName(parameters[i].type()));
+				apiParameter.setName(parameters[i].name());
+				if ("org.springframework.web.bind.annotation.PathVariable"
+						.equals(annotations[j].annotationType().qualifiedName())) {
+					for (ElementValuePair pair : annotations[j].elementValues()) {
+						if (pair.element().name().equals("value")) {
+							if (annotations[j].elementValues()[0].value() != null) {
+								apiParameter.setName(annotations[j]
+										.elementValues()[0].value().toString()
+										.replace("\"", ""));
+							}
+						}
+					}
+				}
+				String desc = "@" + annotations[j].annotationType().name();
+				for (Tag tag : method.tags("param")) {
+					if (parameters[i].name().equals(
+							((ParamTag) tag).parameterName())) {
+						desc += "\n" + ((ParamTag) tag).parameterComment();
+					}
+				}
+				apiParameter.setDescription(desc);
+				apiParameter.setFields(this.getFields(parameters[i].type(),
+						ParameterType.Request));
+				apiParameter.setHistory(this
+						.getModificationHistory(parameters[i].type()));
+				paramList.add(apiParameter);
 			}
-			apiParameter.setFields(this.getFields(reqBody.type(),
-					ParameterType.Request));
-			apiParameter
-					.setHistory(this.getModificationHistory(reqBody.type()));
-			paramList.add(apiParameter);
 		}
+
 		return paramList;
 	}
 
@@ -273,23 +310,6 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			}
 		}
 		return isActionMethod;
-	}
-
-	/*
-	 * Find the Parameter which is annotated with @RequestBody.
-	 */
-	private Parameter findRequestBody(Parameter[] parameters) {
-		// TODO: ONLY ONE PARAM WITHOUT @RequestBody
-		for (int i = 0; i < parameters.length; i++) {
-			AnnotationDesc[] annotations = parameters[i].annotations();
-			for (int j = 0; j < annotations.length; j++) {
-				if (annotations[j].annotationType().name()
-						.equals("RequestBody")) {
-					return parameters[i];
-				}
-			}
-		}
-		return null;
 	}
 
 	/*

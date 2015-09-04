@@ -70,5 +70,16 @@ unsupported Spring MVC service example:
 		return "view";
 	}
 	
+	@Controller
+	public class HelloWorldController {
+    @ModelAttribute
+    public void populateModel(@RequestParam String abc, Model model) {
+       model.addAttribute("attributeName", abc);
+    }
+    @RequestMapping(value = "/helloWorld")
+    public String helloWorld() {
+       return "helloWorld";
+    }
+}	
 	...
 	...
