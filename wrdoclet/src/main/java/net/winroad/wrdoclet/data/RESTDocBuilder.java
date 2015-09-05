@@ -10,14 +10,16 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.lang.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import net.winroad.wrdoclet.ConfigurationImpl;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.UniversalNamespaceCache;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationDesc.ElementValuePair;
@@ -28,9 +30,6 @@ import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.util.Util;
-
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.PathMatcher;
 
 /**
  * @author AdamsLee NOTE: WRDoc cannot cover API which returning objects whose
@@ -194,6 +193,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					ParameterType.Response));
 			apiParameter.setHistory(this.getModificationHistory(method
 					.returnType()));
+		} else {
+			apiParameter = this.parseCustomizedReturn(method);
 		}
 		return apiParameter;
 	}
@@ -202,12 +203,12 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	@Override
 	protected List<APIParameter> getInputParams(MethodDoc method) {
 		List<APIParameter> paramList = new LinkedList<APIParameter>();
+		paramList.addAll(parseCustomizedParameters(method));
 		Parameter[] parameters = method.parameters();
 		for (int i = 0; i < parameters.length; i++) {
 			AnnotationDesc[] annotations = parameters[i].annotations();
 			for (int j = 0; j < annotations.length; j++) {
-				APIParameter apiParameter = null;
-				apiParameter = new APIParameter();
+				APIParameter apiParameter = new APIParameter();
 				apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
 				if ("org.springframework.web.bind.annotation.RequestBody"
 						.equals(annotations[j].annotationType().qualifiedName())

@@ -1,5 +1,7 @@
 package net.winroad.Controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.winroad.Models.Gender;
 import net.winroad.Models.Student;
 
@@ -54,6 +56,18 @@ public class StudentController {
 	public @ResponseBody
 	Gender getStudentGender(@PathVariable("name") String username) {
 		return Gender.MALE;
+	}
+	
+	/**
+	 * @wr.param username || String || user's name to login || Y || adams | init add | 0.1 | bob | update | 0.2
+	 * @wr.param password || String || user's password to login 
+	 * @wr.param isAdmin || boolean || login as admin || N || adams | init add | 0.1 
+	 * @wr.return login cookie || http cookie
+	 */
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String login(HttpServletRequest request) {
+		String username = request.getParameter("username").trim();
+		return username;
 	}
 	
 }

@@ -15,19 +15,21 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.winroad.wrdoclet.taglets.WRMemoTaglet;
+import net.winroad.wrdoclet.taglets.WROccursTaglet;
+import net.winroad.wrdoclet.taglets.WRParamTaglet;
+import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
+import net.winroad.wrdoclet.taglets.WRReturnTaglet;
+import net.winroad.wrdoclet.taglets.WRTagTaglet;
+import net.winroad.wrdoclet.utils.ApplicationContextConfig;
+import net.winroad.wrdoclet.utils.Logger;
+import net.winroad.wrdoclet.utils.LoggerFactory;
+
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import net.winroad.wrdoclet.taglets.WRMemoTaglet;
-import net.winroad.wrdoclet.taglets.WROccursTaglet;
-import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
-import net.winroad.wrdoclet.taglets.WRTagTaglet;
-import net.winroad.wrdoclet.utils.ApplicationContextConfig;
-import net.winroad.wrdoclet.utils.Logger;
-import net.winroad.wrdoclet.utils.LoggerFactory;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
@@ -218,6 +220,30 @@ public abstract class AbstractDocBuilder {
 		return result;
 	}
 
+	/*
+	 * Parse tags to get customized parameters.
+	 */
+	protected LinkedList<APIParameter> parseCustomizedParameters(MethodDoc methodDoc) {
+		Tag[] tags = methodDoc.tags(WRParamTaglet.NAME);
+		LinkedList<APIParameter> result = new LinkedList<APIParameter>();
+		for (int i = 0; i < tags.length; i++) {
+			result.add(WRParamTaglet.parse(tags[i].text()));
+		}
+		return result;
+	}
+
+	/*
+	 * Parse tags to get customized return.
+	 */
+	protected APIParameter parseCustomizedReturn(MethodDoc methodDoc) {
+		Tag[] tags = methodDoc.tags(WRReturnTaglet.NAME);
+		APIParameter result = null;
+		if(tags.length > 0) {
+			result = WRReturnTaglet.parse(tags[0].text());
+		}
+		return result;
+	}
+	
 	/*
 	 * Parse tags to get modification records.
 	 */
