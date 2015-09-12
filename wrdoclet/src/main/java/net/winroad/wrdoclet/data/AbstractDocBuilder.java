@@ -130,6 +130,11 @@ public abstract class AbstractDocBuilder {
 					.hasNext();) {
 				MethodDoc methodDoc = mthIter.next();
 				OpenAPI openAPI = new OpenAPI();
+				if(methodDoc.tags(WRTagTaglet.NAME).length == 0) {
+					openAPI.addTag(WRTagTaglet.DEFAULT_TAG_NAME);
+				} else {
+					openAPI.addTags(methodDoc.tags(WRTagTaglet.NAME));					
+				}
 				openAPI.setQualifiedName(methodDoc.qualifiedName());
 				if (StringUtils.isNotBlank(methodDoc.commentText())) {
 					openAPI.setDescription(methodDoc.commentText());

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ClassController extends BaseController {
 	// 添加课程
-	// @wr.tag Clazz
+	// @wr.tag Clazz, School, OPS
 	// @author Adams
 	// @version 0.0.1
 	// @wr.memo init create
@@ -32,7 +32,7 @@ public class ClassController extends BaseController {
 	}
 
 	// 添加课程列表
-	// @wr.tag Clazz
+	// @wr.tag Clazz, School, OPS
 	// @author Adams
 	// @version 0.0.1
 	// @wr.memo init create
@@ -48,7 +48,7 @@ public class ClassController extends BaseController {
 
 	/**
 	 * 删除课程 
-	 * @wr.tag Class 
+	 * @wr.tag Class, School
 	 * @author Adams 
 	 * @version 0.0.1 
 	 * @wr.memo init add api 

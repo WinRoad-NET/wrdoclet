@@ -1,7 +1,11 @@
 package net.winroad.wrdoclet.data;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
+import com.sun.javadoc.Tag;
 
 public class OpenAPI {
 	/*
@@ -14,6 +18,7 @@ public class OpenAPI {
 	private List<APIParameter> inParameters = new LinkedList<APIParameter>();
 	private String qualifiedName;
 	private Boolean authNeeded;
+	private Set<String> tags = new HashSet<String>();
 	
 	/*
 	 * Possible return code list.
@@ -103,5 +108,23 @@ public class OpenAPI {
 
 	public void setAuthNeeded(Boolean authNeeded) {
 		this.authNeeded = authNeeded;
+	}
+
+	public Set<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<String> tags) {
+		this.tags = tags;
+	}
+	
+	public void addTags(Tag[] tags) {
+		for(Tag t : tags) {
+			this.tags.add(t.text());
+		}
+	}
+	
+	public void addTag(String tag) {
+		this.tags.add(tag);
 	}
 }

@@ -212,18 +212,22 @@ public class HtmlDoclet extends AbstractDoclet {
 			List<OpenAPI> openAPIList = wrDoc.getTaggedOpenAPIs().get(tag);
 			Set<String> filesGenerated = new HashSet<String>();
 			for (OpenAPI openAPI : openAPIList) {
-				Map<String, Object> tagMap = new HashMap<String, Object>();
-				tagMap.put("openAPI", openAPI);
-				tagMap.put("generatedTime", wrDoc.getDocGeneratedTime());
-				tagMap.put(
+				Map<String, Object> hashMap = new HashMap<String, Object>();
+				hashMap.put("openAPI", openAPI);
+				String tagsStr = openAPI.getTags().toString();
+				// trim '[' and ']'
+				hashMap.put("tags", tagsStr.substring(1, tagsStr.length() - 1));
+				hashMap.put("generatedTime", wrDoc.getDocGeneratedTime());
+				hashMap.put(
 						"branchName",
 						((ConfigurationImpl) wrDoc.getConfiguration()).branchname);
-				tagMap.put(
+				hashMap.put(
 						"systemName",
 						((ConfigurationImpl) wrDoc.getConfiguration()).systemname);
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
+				hashMap.put("filePath", Util.urlConcat("APIs", filename));
 				if (!filesGenerated.contains(filename)) {
 					this.configuration
 							.getWriterFactory()
@@ -232,7 +236,7 @@ public class HtmlDoclet extends AbstractDoclet {
 									this.configuration
 											.getFreemarkerTemplateFilePath(),
 									"wrAPIDetail.ftl",
-									tagMap,
+									hashMap,
 									Util.combineFilePath(
 											this.configuration.destDirName,
 											"APIs"), filename);
