@@ -1,27 +1,32 @@
 package net.winroad.wrdoclet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.winroad.wrdoclet.data.OpenAPI;
-import net.winroad.wrdoclet.data.URLIndex;
 import net.winroad.wrdoclet.data.WRDoc;
+import net.winroad.wrdoclet.doc.API;
+import net.winroad.wrdoclet.doc.Doc;
+import net.winroad.wrdoclet.doc.DocData;
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.Util;
+
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonEncoding;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
@@ -41,6 +46,8 @@ public class HtmlDoclet extends AbstractDoclet {
 	public HtmlDoclet() {
 		configuration = (ConfigurationImpl) configuration();
 	}
+
+	public static final String API_DOC_FOLDER = "APIs";
 
 	/**
 	 * The global configuration information for this run.
@@ -69,6 +76,36 @@ public class HtmlDoclet extends AbstractDoclet {
 		return ConfigurationImpl.getInstance();
 	}
 
+	protected DocData generateDocData(WRDoc wrDoc) {
+		DocData result = new DocData();
+		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
+		Collator cmp = Collator.getInstance(java.util.Locale.CHINA);
+		Collections.sort(tagList, cmp);
+		for(String tag : tagList) {
+			result.getFacet_counts().getFacet_fields().addTagField(tag,  wrDoc.getTaggedOpenAPIs().get(tag).size());
+			Doc doc = new Doc();
+			doc.setTag(tag);
+			for (OpenAPI openAPI : wrDoc.getTaggedOpenAPIs().get(tag)) {
+				API api = new API();
+				String url = openAPI.getRequestMapping().getUrl();
+				if (!StringUtils.isEmpty(openAPI.getRequestMapping()
+						.getMethodType())) {
+					url += "["
+							+ openAPI.getRequestMapping().getMethodType()
+							+ "]";
+				}
+				api.setUrl(url);
+				String filename = generateWRAPIFileName(openAPI
+						.getRequestMapping().getUrl(), openAPI
+						.getRequestMapping().getMethodType());
+				api.setFilepath(Util.urlConcat(API_DOC_FOLDER, filename));
+				doc.getAPIs().add(api);
+			}
+			result.addDoc(doc);
+		}
+		return result;
+	}
+
 	@Override
 	protected void generateWRDocFiles(RootDoc root, WRDoc wrDoc)
 			throws Exception {
@@ -95,87 +132,32 @@ public class HtmlDoclet extends AbstractDoclet {
 
 	protected void generateWRFrameFiles(RootDoc root, WRDoc wrDoc)
 			throws Exception {
-		this.generateWRTagIndexFile(root, wrDoc);
-		this.generateWRURLIndexFiles(root, wrDoc);
+		this.generateIndexFile(root, wrDoc);
 		this.generateWRAPIDetailFiles(root, wrDoc);
-		this.generateFrameIndexFile(root, wrDoc);
 		this.generateCommonFiles(root);
 	}
 
-	/**
-	 * Generate the wr.tag index documentation.
-	 * 
-	 * @param root
-	 *            the RootDoc of source to document.
-	 * @param wrDoc
-	 *            the data structure representing the doc to generate.
-	 */
-	protected void generateWRTagIndexFile(RootDoc root, WRDoc wrDoc) {
+	protected void generateIndexFile(RootDoc root, WRDoc wrDoc)
+			throws Exception {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		Collator cmp = Collator.getInstance(java.util.Locale.CHINA);
 		Collections.sort(tagList, cmp);
 		Map<String, Object> tagMap = new HashMap<String, Object>();
-		tagMap.put("wrTags", tagList);
-		tagMap.put("taggedOpenAPIs", wrDoc.getTaggedOpenAPIs());
+		DocData bean = this.generateDocData(wrDoc);
+		OutputStream os = new ByteArrayOutputStream();
+		JsonGenerator generator = new ObjectMapper().getJsonFactory()
+				.createJsonGenerator(os, JsonEncoding.UTF8);
+		generator.writeObject(bean);
+		tagMap.put("response", os.toString());
+		//tagMap.put("wrTags", tagList);
+		//tagMap.put("taggedOpenAPIs", wrDoc.getTaggedOpenAPIs());
 		this.configuration
 				.getWriterFactory()
 				.getFreemarkerWriter()
 				.generateHtmlFile(
 						this.configuration.getFreemarkerTemplateFilePath(),
-						"wrTagIndex.ftl", tagMap,
-						this.configuration.destDirName, null);
-	}
-
-	protected void generateWRURLIndexFiles(RootDoc root, WRDoc wrDoc) {
-		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
-		for (String tag : tagList) {
-			List<URLIndex> urlIndexList = new LinkedList<URLIndex>();
-			List<OpenAPI> openAPIList = wrDoc.getTaggedOpenAPIs().get(tag);
-			if (openAPIList != null) {
-				for (OpenAPI openAPI : openAPIList) {
-					String index = openAPI.getRequestMapping().getUrl();
-					if (!StringUtils.isEmpty(openAPI.getRequestMapping()
-							.getMethodType())) {
-						index += "["
-								+ openAPI.getRequestMapping().getMethodType()
-								+ "]";
-					}
-					String filename = generateWRAPIFileName(openAPI
-							.getRequestMapping().getUrl(), openAPI
-							.getRequestMapping().getMethodType());
-					URLIndex urlIndex = new URLIndex(index, filename);
-					urlIndexList.add(urlIndex);
-				}
-			}
-			Collections.sort(urlIndexList);
-			Map<String, List<URLIndex>> tagMap = new HashMap<String, List<URLIndex>>();
-			tagMap.put("urls", urlIndexList);
-			this.configuration
-					.getWriterFactory()
-					.getFreemarkerWriter()
-					.generateHtmlFile(
-							this.configuration.getFreemarkerTemplateFilePath(),
-							"wrURLIndex.ftl",
-							tagMap,
-							Util.combineFilePath(
-									this.configuration.destDirName, "tags"),
-							tag + ".html");
-		}
-	}
-
-	protected void generateFrameIndexFile(RootDoc root, WRDoc wrDoc)
-			throws Exception {
-		// generate index.html
-		String framesetFilePath = null;
-		if (wrDoc.getWRTags().size() > 1) {
-			framesetFilePath = "/html/tripleFramesetIndex.html";
-		} else {
-			framesetFilePath = "/html/doubleFramesetIndex.html";
-		}
-		InputStream inputStream = HtmlDoclet.class
-				.getResourceAsStream(framesetFilePath);
-		Util.outputFile(inputStream, Util.combineFilePath(
-				this.configuration.destDirName, "index.html"));
+						"index.ftl", tagMap, this.configuration.destDirName,
+						null);
 	}
 
 	protected void generateCommonFiles(RootDoc root) throws Exception {
@@ -186,6 +168,8 @@ public class HtmlDoclet extends AbstractDoclet {
 				Util.combineFilePath(this.configuration.destDirName, "js"));
 		Util.copyResourceFolder("/img/",
 				Util.combineFilePath(this.configuration.destDirName, "img"));
+		Util.copyResourceFolder("/html/",
+				Util.combineFilePath(this.configuration.destDirName, "html"));
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {
@@ -227,7 +211,8 @@ public class HtmlDoclet extends AbstractDoclet {
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
-				hashMap.put("filePath", Util.urlConcat("APIs", filename));
+				hashMap.put("filePath",
+						Util.urlConcat(API_DOC_FOLDER, filename));
 				if (!filesGenerated.contains(filename)) {
 					this.configuration
 							.getWriterFactory()
@@ -239,7 +224,7 @@ public class HtmlDoclet extends AbstractDoclet {
 									hashMap,
 									Util.combineFilePath(
 											this.configuration.destDirName,
-											"APIs"), filename);
+											API_DOC_FOLDER), filename);
 					filesGenerated.add(filename);
 				}
 			}

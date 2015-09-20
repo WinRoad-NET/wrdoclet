@@ -9,6 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.2.2.RELEASE</spring.version>
+		<jackson.mapper.version>1.9.13</jackson.mapper.version>
 	</properties>
 
 	<dependencies>
@@ -75,5 +76,17 @@
 			<artifactId>xmlworker</artifactId>
 			<version>5.5.5</version>
 		</dependency>
+		<!-- Jackson JSON Mapper -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson.mapper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>${jackson.mapper.version}</version>
+		</dependency>
+		<!-- Jackson JSON Mapper end -->		
 	</dependencies>
 </project>

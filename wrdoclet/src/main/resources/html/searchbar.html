@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="../css/stylesheet.css" title="Style" />
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-1.11.4.min.js"></script>
+<script type="text/javascript">
+	window.onload=function(){
+	};
+	$(function() {
+		var availableTags = [
+		  "ActionScript",
+		  "AppleScript",
+		  "Asp",
+		  "BASIC",
+		  "C",
+		  "C++",
+		  "Clojure",
+		  "COBOL",
+		  "ColdFusion",
+		  "Erlang",
+		  "Fortran",
+		  "Groovy",
+		  "Haskell",
+		  "Java",
+		  "JavaScript",
+		  "Lisp",
+		  "Perl",
+		  "PHP",
+		  "Python",
+		  "Ruby",
+		  "Scala",
+		  "Scheme"
+		];
+		$( "#searchbox" ).autocomplete({
+		  source: availableTags
+		});
+	});
+</script>
+
+<input id="searchbox" type="text"/>
+
+<label for="system">系统:</label>
+<select name="system" id="system">
+</select>
+
+<label for="system">代码分支:</label>
+<select name="branch" id="branch">
+</select>
+
+<input id="searchbtn" value="搜索" type="submit"/>
+</body>
+</html>

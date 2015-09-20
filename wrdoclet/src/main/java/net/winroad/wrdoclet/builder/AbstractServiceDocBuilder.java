@@ -1,9 +1,10 @@
-package net.winroad.wrdoclet.data;
+package net.winroad.wrdoclet.builder;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import net.winroad.wrdoclet.data.WRDoc;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 import com.sun.javadoc.ClassDoc;

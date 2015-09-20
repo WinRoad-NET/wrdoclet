@@ -1,4 +1,4 @@
-package net.winroad.wrdoclet.data;
+package net.winroad.wrdoclet.builder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +8,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import net.winroad.wrdoclet.ConfigurationImpl;
+import net.winroad.wrdoclet.data.APIParameter;
+import net.winroad.wrdoclet.data.ParameterOccurs;
+import net.winroad.wrdoclet.data.ParameterType;
+import net.winroad.wrdoclet.data.RequestMapping;
+import net.winroad.wrdoclet.data.WRDoc;
 import net.winroad.wrdoclet.utils.Logger;
 import net.winroad.wrdoclet.utils.LoggerFactory;
 import net.winroad.wrdoclet.utils.UniversalNamespaceCache;

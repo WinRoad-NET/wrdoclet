@@ -1,4 +1,4 @@
-package net.winroad.wrdoclet.data;
+package net.winroad.wrdoclet.builder;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.winroad.wrdoclet.data.APIParameter;
+import net.winroad.wrdoclet.data.ModificationHistory;
+import net.winroad.wrdoclet.data.ModificationRecord;
+import net.winroad.wrdoclet.data.OpenAPI;
+import net.winroad.wrdoclet.data.ParameterOccurs;
+import net.winroad.wrdoclet.data.ParameterType;
+import net.winroad.wrdoclet.data.RequestMapping;
+import net.winroad.wrdoclet.data.WRDoc;
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
 import net.winroad.wrdoclet.taglets.WRParamTaglet;

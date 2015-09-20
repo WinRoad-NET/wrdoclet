@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 import net.winroad.wrdoclet.ConfigurationImpl;
+import net.winroad.wrdoclet.builder.AbstractDocBuilder;
+import net.winroad.wrdoclet.builder.DubboDocBuilder;
+import net.winroad.wrdoclet.builder.RESTDocBuilder;
+import net.winroad.wrdoclet.builder.SOAPDocBuilder;
 
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 

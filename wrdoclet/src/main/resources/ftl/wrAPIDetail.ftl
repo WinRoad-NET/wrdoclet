@@ -14,7 +14,7 @@
     	<meta name="branchName" content="${branchName}" />
         <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" title="Style" />
     </head>
-  <script  src="../js/jquery.js"></script>
+  <script  src="../js/jquery-1.11.3.min.js"></script>
   <script  src="../js/colResizable-1.5.min.js"></script>
   <script type="text/javascript">
 	$(function(){
