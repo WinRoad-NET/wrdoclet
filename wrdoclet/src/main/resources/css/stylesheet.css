@@ -220,14 +220,26 @@ a:hover {
 	float: right;
 }
 
+.tagListHeader {
+	font-weight: bold;
+	text-align: center;
+	background: lightgray;
+}
+
 #searchbox {
 	width: 300px;
 }
 
 #system {
-	width:100px;
+	width: 100px;
 }
 
 #branch {
-	width:100px;
+	width: 100px;
+}
+
+#searchBar {
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -10,9 +10,9 @@
 <script type="text/javascript" src="js/template.min.js"></script>
 <script type="text/javascript">
 	// the API tag and link data
-	var data = ${response};
+	var localData = ${response};
 	// map key: tag, value: APIs
-	var map = {};
+	var tag2APIsmap = {};
 
 	Request = {
 		QueryString : function(item){
@@ -20,18 +20,99 @@
 			return svalue ? decodeURIComponent( svalue[1] ) : svalue;
 		}
 	}	
-		
-	function loadAPIList(data) {
-		var html = template('APIURLListTmpl', data);
+
+	function search() {
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags';
+		if(!!document.getElementById("searchbox").value) {
+			url = url + '&q=' + document.getElementById("searchbox").value;
+		} else {
+			url = url + '&q=*:*';
+		}
+		$.ajax({
+				type:'get',
+				dataType: "jsonp",
+ 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+				url: encodeURI(url),
+				success: function(data){
+					window.parent.loadTagList(data);
+				},
+				error: function(e){
+					var str = '出错啦！';
+					for(var p in e) {
+						str += p + "=" + e[p] + ";";
+					}
+					alert(str);
+				}
+			});
+	};
+
+	function loadSearchBarOptions(){
+		//todo: make solr server address configurable
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=systemName&facet.field=branchName';
+		$.ajax({
+				type:'get',
+				dataType: "jsonp",
+ 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+				url: encodeURI(url),
+				success: function(data){
+					var systemSelect = document.getElementById("system");
+					systemSelect.options.length = 0;  
+					for(var i=0; !!data && !!data.facet_counts && i<data.facet_counts.facet_fields.systemName.length; i+=2){
+						if(!!data.facet_counts.facet_fields.systemName[i]) {
+							var option = document.createElement("option");
+							option.text = data.facet_counts.facet_fields.systemName[i];
+							option.value = data.facet_counts.facet_fields.systemName[i];
+							systemSelect.appendChild(option);
+						}
+					}
+
+					var branchSelect = document.getElementById("branch");
+					branchSelect.options.length = 0;  
+					for(var i=0; !!data && !!data.facet_counts && i<data.facet_counts.facet_fields.branchName.length; i+=2){
+						if(!!data.facet_counts.facet_fields.branchName[i]) {
+							var option = document.createElement("option");
+							option.text = data.facet_counts.facet_fields.branchName[i];
+							option.value = data.facet_counts.facet_fields.branchName[i];
+							branchSelect.appendChild(option);
+						}
+					}
+				},
+				error: function(e){
+					var str = '出错啦！';
+					for(var p in e) {
+						str += p + "=" + e[p] + ";";
+					}
+					alert(str);
+				}
+			});
+	};
+
+	function loadTagList(data) {
+		var html = template('tagListTmpl', data);
+		document.getElementById('tagList').innerHTML = html;
+	}
+
+	function convertData(data) {
+		// map key: tag, value: APIs
+		var tag2APIsmap = {};
+		for(var i in data.docs) {
+			tag2APIsmap[data.docs[i].tag] = data.docs[i];
+		}
+		return tag2APIsmap;
+	}
+
+	function loadAPIList(APIs) {
+		var html = template('APIURLListTmpl', APIs);
 		document.getElementById('APIURLList').innerHTML = html;
 		$("#mainFrame").attr("src",$("#APIDetailLink")[0].href).trigger("beforeload");
 	};
 	
 	window.onload=function(){
-		if(map[Request.QueryString("tag")]) {
-			loadAPIList(map[Request.QueryString("tag")]);
+		loadSearchBarOptions();
+		if(tag2APIsmap[Request.QueryString("tag")]) {
+			loadAPIList(tag2APIsmap[Request.QueryString("tag")]);
 		} else {
-			loadAPIList(map[Object.keys(map)[0]]);
+			loadAPIList(tag2APIsmap[Object.keys(tag2APIsmap)[0]]);
 		}
 	};
 
@@ -54,7 +135,7 @@
 
 		});
 
-		if(data.facet_counts.facet_fields.tags.length == 2 && data.facet_counts.facet_fields.tags[0] == "default") {
+		if(localData.facet_counts.facet_fields.tags.length == 2 && localData.facet_counts.facet_fields.tags[0] == "default") {
 			pagelayout.west.children.layout1.hide('north');
 		}
 
@@ -64,10 +145,19 @@
 
 <body>
 
-<iframe id="searchBarFrame" name="searchBarFrame" class="ui-layout-north"
-	width="100%" frameborder="0" scrolling="auto"
-	src="html/searchbar.html">
-</iframe>
+<div id="searchBar" class="ui-layout-north">
+	<input id="searchbox" type="text"/>
+
+	<label for="system">系统:</label>
+	<select name="system" id="system">
+	</select>
+
+	<label for="system">代码分支:</label>
+	<select name="branch" id="branch">
+	</select>
+
+	<input id="searchbtn" value="搜索" onclick='search()' type="submit"/>	
+</div>
 
 <iframe id="mainFrame" name="mainFrame" class="ui-layout-center"
 	width="100%" height="600" frameborder="0" scrolling="auto"
@@ -76,16 +166,14 @@
 
 <div class="ui-layout-west">
 	<div class="ui-layout-north">
-		<h3>
-		分类
-		</h3>
+		<div class="tagListHeader">标签</div>
 		<div id="tagList"></div>
 		<script id="tagListTmpl" type="text/html">
 		{{each facet_counts.facet_fields.tags as value i}}
 			{{if i%2==0 }}
 			<ul>
 				<li>
-					<a onclick="loadAPIList(map['{{value}}'])">
+					<a onclick="loadAPIList(tag2APIsmap['{{value}}'])">
 						{{value}}
 					</a>
 			{{else}}
@@ -96,28 +184,28 @@
 		{{/each}}
 		</script>
 		<script>
-		var html = template('tagListTmpl', data);
-		document.getElementById('tagList').innerHTML = html;
-		
-		for(var i in data.docs) {
-			map[data.docs[i].tag] = data.docs[i];
-		}
+			loadTagList(localData);
+			tag2APIsmap = convertData(localData);
 		</script>
-		</div>	
-		<div id="APIURLList" class="ui-layout-center"></div>
-		<script id="APIURLListTmpl" type="text/html">
+	</div>	
+	<div id="APIURLList" class="ui-layout-center"></div>
+	<script id="APIURLListTmpl" type="text/html">
 		{{each apis as value}}
 			<ul>
 				<li>
-					<a id="APIDetailLink" href="{{value.filepath}}" target="mainFrame">
-						{{value.url}}
-					</a>
+					{{if value.pageContent}}
+						<a id="APIDetailLink" onclick="javascript:$('#mainFrame').contents().find('html').html({{value.pageContent}});" target="mainFrame">
+							{{value.url}}
+						</a>
+					{{else}}
+						<a id="APIDetailLink" href="{{value.filepath}}" target="mainFrame">
+							{{value.url}}
+						</a>
+					{{/if}}
 				</li>
 			</ul>
 		{{/each}}
-		</script>
-	</div>
-
+	</script>
 </div>
 </body>
 </html>

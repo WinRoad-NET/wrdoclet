@@ -168,8 +168,6 @@ public class HtmlDoclet extends AbstractDoclet {
 				Util.combineFilePath(this.configuration.destDirName, "js"));
 		Util.copyResourceFolder("/img/",
 				Util.combineFilePath(this.configuration.destDirName, "img"));
-		Util.copyResourceFolder("/html/",
-				Util.combineFilePath(this.configuration.destDirName, "html"));
 	}
 
 	protected String generateWRAPIFileName(String url, String methodType) {
