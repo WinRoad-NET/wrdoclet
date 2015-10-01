@@ -22,7 +22,7 @@
 	}	
 
 	function search() {
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags';
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1';
 		if(!!document.getElementById("searchbox").value) {
 			url = url + '&q=' + document.getElementById("searchbox").value;
 		} else {
@@ -34,7 +34,12 @@
  				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 				url: encodeURI(url),
 				success: function(data){
-					window.parent.loadTagList(data);
+					if(data.response.numFound == 0) {
+						alert("没有找到任何记录。可以调整搜索的参数再试试看。")
+					} else {
+						window.parent.loadTagList(data);
+						tag2APIsmap = convertSearchResult(data);
+					}
 				},
 				error: function(e){
 					var str = '出错啦！';
@@ -92,11 +97,29 @@
 		document.getElementById('tagList').innerHTML = html;
 	}
 
-	function convertData(data) {
+	function convertLocalData(localData) {
 		// map key: tag, value: APIs
 		var tag2APIsmap = {};
-		for(var i in data.docs) {
-			tag2APIsmap[data.docs[i].tag] = data.docs[i];
+		for(var i in localData.docs) {
+			tag2APIsmap[localData.docs[i].tag] = localData.docs[i];
+		}
+		return tag2APIsmap;
+	}
+
+	function convertSearchResult(searchResult) {
+		var tag2APIsmap = {};
+		for(var i in searchResult.response.docs) {
+			for(var j in searchResult.response.docs[i].tags) {
+				var api = {};
+				api.url = searchResult.response.docs[i].APIUrl;
+				api.methodType = searchResult.response.docs[i].methodType;
+				api.pageContent = searchResult.response.docs[i].pageContent;
+				api.brief = searchResult.response.docs[i].brief;
+				if(!tag2APIsmap[searchResult.response.docs[i].tags[j]]) {
+					tag2APIsmap[searchResult.response.docs[i].tags[j]] = { tag: searchResult.response.docs[i].tags[j], apis: [] };
+				}
+				tag2APIsmap[searchResult.response.docs[i].tags[j]].apis.push(api);
+			}
 		}
 		return tag2APIsmap;
 	}
@@ -106,13 +129,22 @@
 		document.getElementById('APIURLList').innerHTML = html;
 		$("#mainFrame").attr("src",$("#APIDetailLink")[0].href).trigger("beforeload");
 	};
+
+	function loadMainFrame(tag, index) {
+		//$('#mainFrame').contents().find('html').html(tag2APIsmap[tag].apis[index].pageContent);
+		document.getElementById("mainFrame").contentWindow.document.open();
+		document.getElementById("mainFrame").contentWindow.document.write(tag2APIsmap[tag].apis[index].pageContent);
+		document.getElementById("mainFrame").contentWindow.document.close();
+	}
 	
 	window.onload=function(){
 		loadSearchBarOptions();
 		if(tag2APIsmap[Request.QueryString("tag")]) {
-			loadAPIList(tag2APIsmap[Request.QueryString("tag")]);
+			//render the tag specified in the request
+			loadAPIList( tag2APIsmap[Request.QueryString("tag")] );
 		} else {
-			loadAPIList(tag2APIsmap[Object.keys(tag2APIsmap)[0]]);
+			//render the first tag
+			loadAPIList( tag2APIsmap[Object.keys(tag2APIsmap)[0]] );
 		}
 	};
 
@@ -173,7 +205,7 @@
 			{{if i%2==0 }}
 			<ul>
 				<li>
-					<a onclick="loadAPIList(tag2APIsmap['{{value}}'])">
+					<a onclick="loadAPIList( tag2APIsmap['{{value}}'] )">
 						{{value}}
 					</a>
 			{{else}}
@@ -185,21 +217,27 @@
 		</script>
 		<script>
 			loadTagList(localData);
-			tag2APIsmap = convertData(localData);
+			tag2APIsmap = convertLocalData(localData);
 		</script>
 	</div>	
 	<div id="APIURLList" class="ui-layout-center"></div>
 	<script id="APIURLListTmpl" type="text/html">
-		{{each apis as value}}
+		{{each apis as value i}}
 			<ul>
 				<li>
 					{{if value.pageContent}}
-						<a id="APIDetailLink" onclick="javascript:$('#mainFrame').contents().find('html').html({{value.pageContent}});" target="mainFrame">
-							{{value.url}}
+						<a id="APIDetailLink" onclick="loadMainFrame('{{tag}}', {{i}});" target="mainFrame">
+							{{if value.brief}}
+								{{value.brief}} →
+							{{/if}}
+							{{value.url}}[{{value.methodType}}]
 						</a>
 					{{else}}
 						<a id="APIDetailLink" href="{{value.filepath}}" target="mainFrame">
-							{{value.url}}
+							{{if value.brief}}
+								{{value.brief}} → 
+							{{/if}}
+							{{value.url}}[{{value.methodType}}]
 						</a>
 					{{/if}}
 				</li>

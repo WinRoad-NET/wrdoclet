@@ -125,8 +125,9 @@
    <field name="ns" type="string" indexed="true" stored="true"/>
    
    <field name="tags" type="string" indexed="true" stored="true" multiValued="true"/>
-   <field name="filePath" type="string" indexed="false" stored="true"/>
+   <field name="brief" type="string" indexed="false" stored="true" multiValued="false"/>
    <field name="APIUrl" type="string" indexed="true" stored="true" multiValued="false"/>
+   <field name="methodType" type="string" indexed="false" stored="true" multiValued="false"/>
    <field name="pageContent" type="text_general" indexed="false" stored="true" multiValued="false"/>
    <field name="systemName" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="branchName" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -230,7 +231,7 @@
         or to add multiple fields to the same field for easier/faster searching.  -->
 
    <copyField source="tags" dest="text"/>
-   <copyField source="filePath" dest="text"/>
+   <copyField source="brief" dest="text"/>
    <copyField source="APIUrl" dest="text"/>
    <copyField source="pageContent" dest="text"/>
    <copyField source="systemName" dest="text"/>

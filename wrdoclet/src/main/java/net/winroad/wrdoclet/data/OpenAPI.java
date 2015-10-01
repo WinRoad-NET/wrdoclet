@@ -12,6 +12,10 @@ public class OpenAPI {
 	 * the description for this API
 	 */
 	private String description;
+	/*
+	 * the brief description for this API
+	 */
+	private String brief;
 	private RequestMapping requestMapping;
 	private ModificationHistory modificationHistory;
 	private APIParameter outParameter;
@@ -126,5 +130,13 @@ public class OpenAPI {
 	
 	public void addTag(String tag) {
 		this.tags.add(tag);
+	}
+
+	public String getBrief() {
+		return brief;
+	}
+
+	public void setBrief(String brief) {
+		this.brief = brief;
 	}
 }

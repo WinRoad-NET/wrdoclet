@@ -23,6 +23,7 @@ import net.winroad.wrdoclet.data.ParameterOccurs;
 import net.winroad.wrdoclet.data.ParameterType;
 import net.winroad.wrdoclet.data.RequestMapping;
 import net.winroad.wrdoclet.data.WRDoc;
+import net.winroad.wrdoclet.taglets.WRBriefTaglet;
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WROccursTaglet;
 import net.winroad.wrdoclet.taglets.WRParamTaglet;
@@ -122,6 +123,21 @@ public abstract class AbstractDocBuilder {
 		}
 	}
 
+	protected String getBriefFromCommentText(String commentText) {
+		int index = StringUtils.indexOf(commentText, '\n');
+		if (index != -1) {
+			commentText = StringUtils.substring(commentText, 0, index);
+		}
+		index = StringUtils.indexOfAny(commentText,  ".!?。！？…");
+		if(index > 0) {
+			commentText = StringUtils.substring(commentText, 0, index);
+		}
+		if (StringUtils.length(commentText) > 8) {
+			commentText = StringUtils.substring(commentText, 0, 8) + "…";
+		}
+		return commentText;
+	}
+
 	protected void buildOpenAPIs(Configuration configuration) {
 		Set<Entry<String, Set<MethodDoc>>> methods = this.taggedOpenAPIMethods
 				.entrySet();
@@ -138,14 +154,19 @@ public abstract class AbstractDocBuilder {
 					.hasNext();) {
 				MethodDoc methodDoc = mthIter.next();
 				OpenAPI openAPI = new OpenAPI();
-				if(methodDoc.tags(WRTagTaglet.NAME).length == 0) {
+				if (methodDoc.tags(WRTagTaglet.NAME).length == 0) {
 					openAPI.addTag(WRTagTaglet.DEFAULT_TAG_NAME);
 				} else {
-					openAPI.addTags(methodDoc.tags(WRTagTaglet.NAME));					
+					openAPI.addTags(methodDoc.tags(WRTagTaglet.NAME));
 				}
 				openAPI.setQualifiedName(methodDoc.qualifiedName());
 				if (StringUtils.isNotBlank(methodDoc.commentText())) {
 					openAPI.setDescription(methodDoc.commentText());
+				}
+				if (methodDoc.tags(WRBriefTaglet.NAME).length == 0) {
+					openAPI.setBrief(getBriefFromCommentText(methodDoc.commentText()));
+				} else {
+					openAPI.setBrief(methodDoc.tags(WRBriefTaglet.NAME)[0].text());
 				}
 				openAPI.setModificationHistory(this
 						.getModificationHistory(methodDoc));
@@ -236,7 +257,8 @@ public abstract class AbstractDocBuilder {
 	/*
 	 * Parse tags to get customized parameters.
 	 */
-	protected LinkedList<APIParameter> parseCustomizedParameters(MethodDoc methodDoc) {
+	protected LinkedList<APIParameter> parseCustomizedParameters(
+			MethodDoc methodDoc) {
 		Tag[] tags = methodDoc.tags(WRParamTaglet.NAME);
 		LinkedList<APIParameter> result = new LinkedList<APIParameter>();
 		for (int i = 0; i < tags.length; i++) {
@@ -251,12 +273,12 @@ public abstract class AbstractDocBuilder {
 	protected APIParameter parseCustomizedReturn(MethodDoc methodDoc) {
 		Tag[] tags = methodDoc.tags(WRReturnTaglet.NAME);
 		APIParameter result = null;
-		if(tags.length > 0) {
+		if (tags.length > 0) {
 			result = WRReturnTaglet.parse(tags[0].text());
 		}
 		return result;
 	}
-	
+
 	/*
 	 * Parse tags to get modification records.
 	 */

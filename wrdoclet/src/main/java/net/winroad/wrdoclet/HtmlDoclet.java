@@ -47,8 +47,6 @@ public class HtmlDoclet extends AbstractDoclet {
 		configuration = (ConfigurationImpl) configuration();
 	}
 
-	public static final String API_DOC_FOLDER = "APIs";
-
 	/**
 	 * The global configuration information for this run.
 	 */
@@ -81,24 +79,21 @@ public class HtmlDoclet extends AbstractDoclet {
 		List<String> tagList = new ArrayList<String>(wrDoc.getWRTags());
 		Collator cmp = Collator.getInstance(java.util.Locale.CHINA);
 		Collections.sort(tagList, cmp);
-		for(String tag : tagList) {
-			result.getFacet_counts().getFacet_fields().addTagField(tag,  wrDoc.getTaggedOpenAPIs().get(tag).size());
+		for (String tag : tagList) {
+			result.getFacet_counts()
+					.getFacet_fields()
+					.addTagField(tag, wrDoc.getTaggedOpenAPIs().get(tag).size());
 			Doc doc = new Doc();
 			doc.setTag(tag);
 			for (OpenAPI openAPI : wrDoc.getTaggedOpenAPIs().get(tag)) {
 				API api = new API();
-				String url = openAPI.getRequestMapping().getUrl();
-				if (!StringUtils.isEmpty(openAPI.getRequestMapping()
-						.getMethodType())) {
-					url += "["
-							+ openAPI.getRequestMapping().getMethodType()
-							+ "]";
-				}
-				api.setUrl(url);
+				api.setUrl(openAPI.getRequestMapping().getUrl());
+				api.setMethodType(openAPI.getRequestMapping().getMethodType());
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
-				api.setFilepath(Util.urlConcat(API_DOC_FOLDER, filename));
+				api.setFilepath(filename);
+				api.setBrief(openAPI.getBrief());
 				doc.getAPIs().add(api);
 			}
 			result.addDoc(doc);
@@ -149,8 +144,6 @@ public class HtmlDoclet extends AbstractDoclet {
 				.createJsonGenerator(os, JsonEncoding.UTF8);
 		generator.writeObject(bean);
 		tagMap.put("response", os.toString());
-		//tagMap.put("wrTags", tagList);
-		//tagMap.put("taggedOpenAPIs", wrDoc.getTaggedOpenAPIs());
 		this.configuration
 				.getWriterFactory()
 				.getFreemarkerWriter()
@@ -209,8 +202,7 @@ public class HtmlDoclet extends AbstractDoclet {
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
-				hashMap.put("filePath",
-						Util.urlConcat(API_DOC_FOLDER, filename));
+				hashMap.put("filePath", filename);
 				if (!filesGenerated.contains(filename)) {
 					this.configuration
 							.getWriterFactory()
@@ -218,11 +210,8 @@ public class HtmlDoclet extends AbstractDoclet {
 							.generateHtmlFile(
 									this.configuration
 											.getFreemarkerTemplateFilePath(),
-									"wrAPIDetail.ftl",
-									hashMap,
-									Util.combineFilePath(
-											this.configuration.destDirName,
-											API_DOC_FOLDER), filename);
+									"wrAPIDetail.ftl", hashMap,
+									this.configuration.destDirName, filename);
 					filesGenerated.add(filename);
 				}
 			}

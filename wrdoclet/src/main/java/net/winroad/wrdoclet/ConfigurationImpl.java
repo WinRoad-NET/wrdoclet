@@ -391,6 +391,8 @@ public class ConfigurationImpl extends Configuration {
         boolean nooverview = false;
         boolean splitindex = false;
         boolean noindex = false;
+        boolean hasSystemName = false;
+        boolean hasBranchName = false;
         // check shared options
         if (!generalValidOptions(options, reporter)) {
             return false;
@@ -475,7 +477,19 @@ public class ConfigurationImpl extends Configuration {
                     return false;
                 }
                 noindex = true;
+            } else if (opt.equals("-systemname")) {
+            	hasSystemName = true;
+            } else if (opt.equals("-branchname")) {
+            	hasBranchName = true;
             }
+        }
+        if(!hasBranchName) {
+        	reporter.printError("No branchName specified!");
+        	return false;
+        }
+        if(!hasSystemName) {
+        	reporter.printError("No systemName specified!");
+        	return false;
         }
         return true;
     }
