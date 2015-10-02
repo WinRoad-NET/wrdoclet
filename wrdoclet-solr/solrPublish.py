@@ -26,9 +26,6 @@ for file in filelist:
 		tags = None
 		if soup.html.head.find("meta", {"name":"tags"}) != None:
 			tags = str(soup.html.head.find("meta", {"name":"tags"})['content']).decode("utf-8").split(", ")
-		filePath = None
-		if soup.html.head.find("meta", {"name":"filePath"}) != None:
-			filePath = str(soup.html.head.find("meta", {"name":"filePath"})['content']).decode("utf-8")
 		brief = None
 		if soup.html.head.find("meta", {"name":"brief"}) != None:
 			brief = str(soup.html.head.find("meta", {"name":"brief"})['content']).decode("utf-8")
@@ -46,7 +43,7 @@ for file in filelist:
 			branchName = str(soup.html.head.find("meta", {"name":"branchName"})['content']).decode("utf-8")
 		with open(file, "r") as fl:
 			doc = { # just for print
-				"id":str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(filePath).decode("utf-8"),
+				"id":str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"),
 				"tags":tags, 
 				"brief":brief, 			
 				"APIUrl":APIUrl, 
@@ -55,7 +52,7 @@ for file in filelist:
 				"branchName":branchName
 				}
 			print doc
-			solrInstance.add(_id=str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(filePath).decode("utf-8"), 
+			solrInstance.add(_id=str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"), 
 				tags=tags,
 				brief=brief, 			
 				APIUrl=APIUrl, 

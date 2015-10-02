@@ -31,14 +31,18 @@ public class ClassController extends BaseController {
 		return clazz;
 	}
 
-	// 添加课程列表
-	// @wr.tag Clazz, School, OPS
-	// @author Adams
-	// @version 0.0.1
-	// @wr.memo init create
-	// @author Bob
-	// @version 0.0.2
-	// @wr.memo fix bug
+	/**
+	 * 
+	 添加课程列表. 添加
+	 完后返回添加结果。
+	 @wr.tag Clazz, School, OPS
+	 @author Adams
+	 @version 0.0.1
+	 @wr.memo init create
+	 @author Bob
+	 @version 0.0.2
+	 @wr.memo fix bug
+	 */
 	@RequestMapping(value = "/class/addlist", method = RequestMethod.POST)
 	public @ResponseBody
 	boolean addClassList(@RequestBody List<Clazz> clazz, HttpServletRequest httpRequest,
@@ -65,7 +69,7 @@ public class ClassController extends BaseController {
 	}
 	
 	/**
-	 * list课程 
+	 * @wr.brief list课程 
 	 * @wr.tag Class 
 	 * @author Adams 
 	 * @version 0.0.1 

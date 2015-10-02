@@ -8,10 +8,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="generator" content="wrdoclet" />
         <meta name="tags" content="${tags}" />
-        <meta name="filePath" content="${filePath}" />
         <meta name="brief" content="${openAPI.brief}" />
     	<meta name="APIUrl" content="${openAPI.requestMapping.url}" />
-    	<meta name="methodType" content="${openAPI.requestMapping.methodType}" />
+    	<#if openAPI.requestMapping.methodType??>
+    		<meta name="methodType" content="${openAPI.requestMapping.methodType}" />
+    	<#else>
+    		<meta name="methodType" content="" />
+    	</#if>
     	<meta name="systemName" content="${systemName}" />
     	<meta name="branchName" content="${branchName}" />
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />

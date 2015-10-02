@@ -13,15 +13,16 @@
 	var localData = ${response};
 	// map key: tag, value: APIs
 	var tag2APIsmap = {};
+	var pagelayout;
 
 	Request = {
 		QueryString : function(item){
 			var svalue = location.search.match(new RegExp("[\?\&]" + item + "=([^\&]+)","i"));
 			return svalue ? decodeURIComponent( svalue[1] ) : svalue;
 		}
-	}	
+	};
 
-	function search() {
+	function searchCloud() {
 		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1';
 		if(!!document.getElementById("searchbox").value) {
 			url = url + '&q=' + document.getElementById("searchbox").value;
@@ -37,8 +38,13 @@
 					if(data.response.numFound == 0) {
 						alert("没有找到任何记录。可以调整搜索的参数再试试看。")
 					} else {
+						handleTagListDisplay(data, pagelayout);
 						window.parent.loadTagList(data);
 						tag2APIsmap = convertSearchResult(data);
+						if(data.facet_counts.facet_fields.tags[0]) {
+							//render the first tag
+							loadAPIList( tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
+						}
 					}
 				},
 				error: function(e){
@@ -95,7 +101,7 @@
 	function loadTagList(data) {
 		var html = template('tagListTmpl', data);
 		document.getElementById('tagList').innerHTML = html;
-	}
+	};
 
 	function convertLocalData(localData) {
 		// map key: tag, value: APIs
@@ -104,7 +110,7 @@
 			tag2APIsmap[localData.docs[i].tag] = localData.docs[i];
 		}
 		return tag2APIsmap;
-	}
+	};
 
 	function convertSearchResult(searchResult) {
 		var tag2APIsmap = {};
@@ -122,12 +128,18 @@
 			}
 		}
 		return tag2APIsmap;
-	}
+	};
 
 	function loadAPIList(APIs) {
 		var html = template('APIURLListTmpl', APIs);
 		document.getElementById('APIURLList').innerHTML = html;
-		$("#mainFrame").attr("src",$("#APIDetailLink")[0].href).trigger("beforeload");
+		$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
+		/* TODO:
+		Loading page locally, chrome raises ' Uncaught SecurityError: Blocked a frame with origin "null" from accessing a frame with origin "null". ' when clicking search button.
+		*/
+		if($("#APIDetailLink").length && !$("#APIDetailLink")[0].href) {
+			$("#APIDetailLink")[0].click();
+		}
 	};
 
 	function loadMainFrame(tag, index) {
@@ -135,22 +147,42 @@
 		document.getElementById("mainFrame").contentWindow.document.open();
 		document.getElementById("mainFrame").contentWindow.document.write(tag2APIsmap[tag].apis[index].pageContent);
 		document.getElementById("mainFrame").contentWindow.document.close();
-	}
+	};
+
+	function returnLocal() {
+		handleTagListDisplay(localData, pagelayout);
+		loadTagList(localData);
+		tag2APIsmap = convertLocalData(localData);
+		if(Object.keys(tag2APIsmap)[0]) {
+			//render the first tag
+			loadAPIList( tag2APIsmap[Object.keys(tag2APIsmap)[0]] );				
+		}
+	};
 	
+	function handleTagListDisplay(data, pagelayout) {
+		if(data.facet_counts.facet_fields.tags.length == 2 && data.facet_counts.facet_fields.tags[0] == "default") {
+			pagelayout.west.children.layout1.hide('north');
+		} else {
+			pagelayout.west.children.layout1.show('north');
+		}
+	}
+
 	window.onload=function(){
 		loadSearchBarOptions();
 		if(tag2APIsmap[Request.QueryString("tag")]) {
 			//render the tag specified in the request
 			loadAPIList( tag2APIsmap[Request.QueryString("tag")] );
 		} else {
-			//render the first tag
-			loadAPIList( tag2APIsmap[Object.keys(tag2APIsmap)[0]] );
+			if(Object.keys(tag2APIsmap)[0]) {
+				//render the first tag
+				loadAPIList( tag2APIsmap[Object.keys(tag2APIsmap)[0]] );				
+			}
 		}
 	};
 
 	$(document).ready(function() {
 
-		var pagelayout = $('body').layout({
+		pagelayout = $('body').layout({
 			minSize:					50	// ALL panes
 		,	west__size:					200
 		,	east__size:					200
@@ -167,10 +199,7 @@
 
 		});
 
-		if(localData.facet_counts.facet_fields.tags.length == 2 && localData.facet_counts.facet_fields.tags[0] == "default") {
-			pagelayout.west.children.layout1.hide('north');
-		}
-
+		handleTagListDisplay(localData, pagelayout);
 	});
 </script>
 </head>
@@ -188,7 +217,8 @@
 	<select name="branch" id="branch">
 	</select>
 
-	<input id="searchbtn" value="搜索" onclick='search()' type="submit"/>	
+	<input id="searchbtn" value="搜索云端" onclick='searchCloud()' type="submit"/>	
+	<input id="returnbtn" value="回到本地" onclick='returnLocal()' type="submit"/>	
 </div>
 
 <iframe id="mainFrame" name="mainFrame" class="ui-layout-center"
@@ -198,7 +228,7 @@
 
 <div class="ui-layout-west">
 	<div class="ui-layout-north">
-		<div class="tagListHeader">标签</div>
+		<div class="listHeader">标签</div>
 		<div id="tagList"></div>
 		<script id="tagListTmpl" type="text/html">
 		{{each facet_counts.facet_fields.tags as value i}}
@@ -220,30 +250,39 @@
 			tag2APIsmap = convertLocalData(localData);
 		</script>
 	</div>	
-	<div id="APIURLList" class="ui-layout-center"></div>
-	<script id="APIURLListTmpl" type="text/html">
-		{{each apis as value i}}
-			<ul>
-				<li>
-					{{if value.pageContent}}
-						<a id="APIDetailLink" onclick="loadMainFrame('{{tag}}', {{i}});" target="mainFrame">
-							{{if value.brief}}
-								{{value.brief}} →
-							{{/if}}
-							{{value.url}}[{{value.methodType}}]
-						</a>
-					{{else}}
-						<a id="APIDetailLink" href="{{value.filepath}}" target="mainFrame">
-							{{if value.brief}}
-								{{value.brief}} → 
-							{{/if}}
-							{{value.url}}[{{value.methodType}}]
-						</a>
-					{{/if}}
-				</li>
-			</ul>
-		{{/each}}
-	</script>
+	<div class="ui-layout-center">
+		<div class="listHeader">接口</div>
+		<div id="APIURLList"></div>
+		<script id="APIURLListTmpl" type="text/html">
+			{{each apis as value i}}
+				<ul>
+					<li>
+						{{if value.pageContent}}
+							<a id="APIDetailLink" onclick="loadMainFrame('{{tag}}', {{i}});" target="mainFrame">
+								{{if value.brief}}
+									{{value.brief}} →
+								{{/if}}
+								{{value.url}}
+								{{if value.methodType}}
+									[{{value.methodType}}]
+								{{/if}}
+							</a>
+						{{else}}
+							<a id="APIDetailLink" href="{{value.filepath}}" target="mainFrame">
+								{{if value.brief}}
+									{{value.brief}} → 
+								{{/if}}
+								{{value.url}}
+								{{if value.methodType}}
+									[{{value.methodType}}]
+								{{/if}}
+							</a>
+						{{/if}}
+					</li>
+				</ul>
+			{{/each}}
+		</script>
+	</div>
 </div>
 </body>
 </html>

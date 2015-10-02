@@ -8,6 +8,8 @@
 	<properties>
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<cxf.version>2.6.13</cxf.version>
+		<wrdoclet.systemname>SOAP服务</wrdoclet.systemname>
+		<wrdoclet.branchname>master</wrdoclet.branchname>
 	</properties>
 	<build>
 		<finalName>wrdoclet-demoservice</finalName>
@@ -50,7 +52,8 @@
 								<version>0.0.1-SNAPSHOT</version>
 							</docletArtifact>
 							<additionalparam>
-								-encoding utf-8 -charset utf-8
+								-systemname ${wrdoclet.systemname} -branchname
+								${wrdoclet.branchname} -encoding utf-8 -charset utf-8
 							</additionalparam>
 							<!-- For the project-reports page -->
 							<name>API doc</name>
