@@ -9,11 +9,15 @@
 <script type="text/javascript" src="js/jquery.layout-1.4.0.js"></script>
 <script type="text/javascript" src="js/template.min.js"></script>
 <script type="text/javascript">
-	// the API tag and link data
-	var localData = ${response};
-	// map key: tag, value: APIs
-	var tag2APIsmap = {};
-	var pagelayout;
+	Global = {
+		// the API tag and link data
+		localData : ${response},
+		// map key: tag, value: APIs
+		tag2APIsmap : {},
+		pagelayout : {},
+		searchContent : '',
+		searchRows : 10 
+	};
 
 	Request = {
 		QueryString : function(item){
@@ -23,9 +27,48 @@
 	};
 
 	function searchCloud() {
+		// todo: configurable solr server address
 		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1';
+		Global.searchStart = 0;
 		if(!!document.getElementById("searchbox").value) {
-			url = url + '&q=' + document.getElementById("searchbox").value;
+			Global.searchContent = document.getElementById("searchbox").value;
+			url = url + '&q=' + Global.searchContent;
+		} else {
+			Global.searchContent = '';
+			url = url + '&q=*:*';
+		}
+		$.ajax({
+				type:'get',
+				dataType: "jsonp",
+ 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+				url: encodeURI(url),
+				success: function(data){
+					if(data.response.numFound == 0) {
+						alert("没有找到任何记录。可以调整搜索的参数再试试看。");
+					} else {
+						handleTagListDisplay(data, Global.pagelayout);
+						window.parent.loadTagList(data);
+						Global.tag2APIsmap = convertSearchResult(data);
+						if(data.facet_counts.facet_fields.tags[0]) {
+							//render the first tag
+							loadAPIList( Global.tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
+						}
+					}
+				},
+				error: function(e){
+					var str = '出错啦！';
+					for(var p in e) {
+						str += p + "=" + e[p] + ";";
+					}
+					alert(str);
+				}
+			});
+	};
+
+	function searchMore(tagName, searchStart) {
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&fq=tags=' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
+		if(!!Global.searchContent) {
+			url = url + '&q=' + Global.searchContent;
 		} else {
 			url = url + '&q=*:*';
 		}
@@ -36,15 +79,12 @@
 				url: encodeURI(url),
 				success: function(data){
 					if(data.response.numFound == 0) {
-						alert("没有找到任何记录。可以调整搜索的参数再试试看。")
+						alert("就这么多，没有更多记录了。");
 					} else {
-						handleTagListDisplay(data, pagelayout);
-						window.parent.loadTagList(data);
-						tag2APIsmap = convertSearchResult(data);
-						if(data.facet_counts.facet_fields.tags[0]) {
-							//render the first tag
-							loadAPIList( tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
-						}
+						var convertedResult = convertSearchResult(data);
+						Global.tag2APIsmap[tagName].apis = Global.tag2APIsmap[tagName].apis.concat( convertedResult[tagName].apis );
+						var html = template('APIURLListTmpl', Global.tag2APIsmap[tagName]);
+						document.getElementById('APIURLList').innerHTML = html;
 					}
 				},
 				error: function(e){
@@ -109,6 +149,9 @@
 		for(var i in localData.docs) {
 			tag2APIsmap[localData.docs[i].tag] = localData.docs[i];
 		}
+		for (var i = 0; i < localData.facet_counts.facet_fields.tags.length; i += 2) {
+			tag2APIsmap[ localData.facet_counts.facet_fields.tags[i] ].totalCount = localData.facet_counts.facet_fields.tags[i+1];
+		};
 		return tag2APIsmap;
 	};
 
@@ -127,6 +170,11 @@
 				tag2APIsmap[searchResult.response.docs[i].tags[j]].apis.push(api);
 			}
 		}
+		if(searchResult.facet_counts) {
+			for (var i = 0; i < searchResult.facet_counts.facet_fields.tags.length; i += 2) {
+				tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ].totalCount = searchResult.facet_counts.facet_fields.tags[i+1];
+			};
+		}
 		return tag2APIsmap;
 	};
 
@@ -143,19 +191,18 @@
 	};
 
 	function loadMainFrame(tag, index) {
-		//$('#mainFrame').contents().find('html').html(tag2APIsmap[tag].apis[index].pageContent);
 		document.getElementById("mainFrame").contentWindow.document.open();
-		document.getElementById("mainFrame").contentWindow.document.write(tag2APIsmap[tag].apis[index].pageContent);
+		document.getElementById("mainFrame").contentWindow.document.write(Global.tag2APIsmap[tag].apis[index].pageContent);
 		document.getElementById("mainFrame").contentWindow.document.close();
 	};
 
 	function returnLocal() {
-		handleTagListDisplay(localData, pagelayout);
-		loadTagList(localData);
-		tag2APIsmap = convertLocalData(localData);
-		if(Object.keys(tag2APIsmap)[0]) {
+		handleTagListDisplay(Global.localData, Global.pagelayout);
+		loadTagList(Global.localData);
+		Global.tag2APIsmap = convertLocalData(Global.localData);
+		if(Object.keys(Global.tag2APIsmap)[0]) {
 			//render the first tag
-			loadAPIList( tag2APIsmap[Object.keys(tag2APIsmap)[0]] );				
+			loadAPIList( Global.tag2APIsmap[Object.keys(Global.tag2APIsmap)[0]] );
 		}
 	};
 	
@@ -169,20 +216,20 @@
 
 	window.onload=function(){
 		loadSearchBarOptions();
-		if(tag2APIsmap[Request.QueryString("tag")]) {
+		if(Global.tag2APIsmap[Request.QueryString("tag")]) {
 			//render the tag specified in the request
-			loadAPIList( tag2APIsmap[Request.QueryString("tag")] );
+			loadAPIList( Global.tag2APIsmap[Request.QueryString("tag")] );
 		} else {
-			if(Object.keys(tag2APIsmap)[0]) {
+			if(Object.keys(Global.tag2APIsmap)[0]) {
 				//render the first tag
-				loadAPIList( tag2APIsmap[Object.keys(tag2APIsmap)[0]] );				
+				loadAPIList( Global.tag2APIsmap[Object.keys(Global.tag2APIsmap)[0]] );
 			}
 		}
 	};
 
 	$(document).ready(function() {
 
-		pagelayout = $('body').layout({
+		Global.pagelayout = $('body').layout({
 			minSize:					50	// ALL panes
 		,	west__size:					200
 		,	east__size:					200
@@ -199,7 +246,7 @@
 
 		});
 
-		handleTagListDisplay(localData, pagelayout);
+		handleTagListDisplay(Global.localData, Global.pagelayout);
 	});
 </script>
 </head>
@@ -235,7 +282,7 @@
 			{{if i%2==0 }}
 			<ul>
 				<li>
-					<a onclick="loadAPIList( tag2APIsmap['{{value}}'] )">
+					<a onclick="loadAPIList( Global.tag2APIsmap['{{value}}'] )">
 						{{value}}
 					</a>
 			{{else}}
@@ -246,8 +293,8 @@
 		{{/each}}
 		</script>
 		<script>
-			loadTagList(localData);
-			tag2APIsmap = convertLocalData(localData);
+			loadTagList(Global.localData);
+			Global.tag2APIsmap = convertLocalData(Global.localData);
 		</script>
 	</div>	
 	<div class="ui-layout-center">
@@ -281,6 +328,9 @@
 					</li>
 				</ul>
 			{{/each}}
+			{{if apis.length < totalCount }}
+				<input value="加载更多" onclick="searchMore('{{tag}}', {{apis.length}})" type="submit" />
+			{{/if}}
 		</script>
 	</div>
 </div>
