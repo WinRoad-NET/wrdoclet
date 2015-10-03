@@ -88,6 +88,7 @@ public class HtmlDoclet extends AbstractDoclet {
 			for (OpenAPI openAPI : wrDoc.getTaggedOpenAPIs().get(tag)) {
 				API api = new API();
 				api.setUrl(openAPI.getRequestMapping().getUrl());
+				api.setTooltip(openAPI.getRequestMapping().getTooltip());
 				api.setMethodType(openAPI.getRequestMapping().getMethodType());
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getUrl(), openAPI

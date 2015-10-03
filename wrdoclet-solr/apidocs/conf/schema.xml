@@ -127,6 +127,7 @@
    <field name="tags" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="brief" type="string" indexed="false" stored="true" multiValued="false"/>
    <field name="APIUrl" type="string" indexed="true" stored="true" multiValued="false"/>
+   <field name="tooltip" type="string" indexed="false" stored="true" multiValued="false"/>
    <field name="methodType" type="string" indexed="false" stored="true" multiValued="false"/>
    <field name="pageContent" type="text_general" indexed="false" stored="true" multiValued="false"/>
    <field name="systemName" type="string" indexed="true" stored="true" multiValued="false"/>

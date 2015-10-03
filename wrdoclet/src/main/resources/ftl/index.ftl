@@ -28,15 +28,17 @@
 
 	function searchCloud() {
 		// todo: configurable solr server address
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1';
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=' + Global.searchRows;
 		Global.searchStart = 0;
 		if(!!document.getElementById("searchbox").value) {
 			Global.searchContent = document.getElementById("searchbox").value;
-			url = url + '&q=' + Global.searchContent;
+			url += '&q=' + Global.searchContent;
 		} else {
 			Global.searchContent = '';
-			url = url + '&q=*:*';
+			url += '&q=*:*';
 		}
+		url += '&fq=systemName:' + document.getElementById("system").value;
+		url += '&fq=branchName:' + document.getElementById("branch").value;
 		$.ajax({
 				type:'get',
 				dataType: "jsonp",
@@ -66,12 +68,14 @@
 	};
 
 	function searchMore(tagName, searchStart) {
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&fq=tags=' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
 		if(!!Global.searchContent) {
-			url = url + '&q=' + Global.searchContent;
+			url += '&q=' + Global.searchContent;
 		} else {
-			url = url + '&q=*:*';
+			url += '&q=*:*';
 		}
+		url += '&fq=systemName:' + document.getElementById("system").value;
+		url += '&fq=branchName:' + document.getElementById("branch").value;
 		$.ajax({
 				type:'get',
 				dataType: "jsonp",
@@ -161,6 +165,7 @@
 			for(var j in searchResult.response.docs[i].tags) {
 				var api = {};
 				api.url = searchResult.response.docs[i].APIUrl;
+				api.tooltip = searchResult.response.docs[i].tooltip;
 				api.methodType = searchResult.response.docs[i].methodType;
 				api.pageContent = searchResult.response.docs[i].pageContent;
 				api.brief = searchResult.response.docs[i].brief;
@@ -172,6 +177,9 @@
 		}
 		if(searchResult.facet_counts) {
 			for (var i = 0; i < searchResult.facet_counts.facet_fields.tags.length; i += 2) {
+				if(!tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ]) {
+					tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ] = { tag: searchResult.facet_counts.facet_fields.tags[i], apis: [] };
+				}
 				tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ].totalCount = searchResult.facet_counts.facet_fields.tags[i+1];
 			};
 		}
@@ -207,10 +215,10 @@
 	};
 	
 	function handleTagListDisplay(data, pagelayout) {
-		if(data.facet_counts.facet_fields.tags.length == 2 && data.facet_counts.facet_fields.tags[0] == "default") {
-			pagelayout.west.children.layout1.hide('north');
+		if(data.facet_counts.facet_fields.tags.length == 2) {
+			pagelayout.west.children.layout1.close('north');
 		} else {
-			pagelayout.west.children.layout1.show('north');
+			pagelayout.west.children.layout1.open('north');
 		}
 	}
 
@@ -230,7 +238,8 @@
 	$(document).ready(function() {
 
 		Global.pagelayout = $('body').layout({
-			minSize:					50	// ALL panes
+			center__maskContents:		true	// IMPORTANT - enable iframe masking
+		,	minSize:					50		// ALL panes
 		,	west__size:					200
 		,	east__size:					200
 		,	stateManagement__enabled:	true
@@ -240,7 +249,7 @@
 		    }
 
 		,	west__childOptions:	{
-				minSize:				50	// ALL panes
+				minSize:				50		// ALL panes
 			,	north__size:			300
 			}
 
@@ -305,7 +314,7 @@
 				<ul>
 					<li>
 						{{if value.pageContent}}
-							<a id="APIDetailLink" onclick="loadMainFrame('{{tag}}', {{i}});" target="mainFrame">
+							<a id="APIDetailLink" title="{{value.tooltip}}" onclick="loadMainFrame('{{tag}}', {{i}});" target="mainFrame">
 								{{if value.brief}}
 									{{value.brief}} →
 								{{/if}}
@@ -315,7 +324,7 @@
 								{{/if}}
 							</a>
 						{{else}}
-							<a id="APIDetailLink" href="{{value.filepath}}" target="mainFrame">
+							<a id="APIDetailLink" title="{{value.tooltip}}" href="{{value.filepath}}" target="mainFrame">
 								{{if value.brief}}
 									{{value.brief}} → 
 								{{/if}}

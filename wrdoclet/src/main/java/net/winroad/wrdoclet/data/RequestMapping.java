@@ -3,6 +3,8 @@ package net.winroad.wrdoclet.data;
 public class RequestMapping {
 	private String url;
 	private String methodType;
+	private String tooltip;
+	
 	//TODO: take "consumes"，"produces", "params"，"headers" into consideration.
 	
 	public String getUrl() {
@@ -19,5 +21,13 @@ public class RequestMapping {
 
 	public void setMethodType(String methodType) {
 		this.methodType = methodType;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 }

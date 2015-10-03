@@ -99,7 +99,7 @@ public abstract class AbstractDocBuilder {
 
 		Tag[] methodTagArray = methodDoc.tags(WRTagTaglet.NAME);
 		if (methodTagArray.length == 0) {
-			String tag = WRTagTaglet.DEFAULT_TAG_NAME;
+			String tag = methodDoc.containingClass().simpleTypeName();
 			this.wrDoc.getWRTags().add(tag);
 			if (!this.taggedOpenAPIMethods.containsKey(tag)) {
 				this.taggedOpenAPIMethods.put(tag, new HashSet<MethodDoc>());
@@ -155,7 +155,7 @@ public abstract class AbstractDocBuilder {
 				MethodDoc methodDoc = mthIter.next();
 				OpenAPI openAPI = new OpenAPI();
 				if (methodDoc.tags(WRTagTaglet.NAME).length == 0) {
-					openAPI.addTag(WRTagTaglet.DEFAULT_TAG_NAME);
+					openAPI.addTag(methodDoc.containingClass().simpleTypeName());
 				} else {
 					openAPI.addTags(methodDoc.tags(WRTagTaglet.NAME));
 				}

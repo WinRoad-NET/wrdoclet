@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ClassController extends BaseController {
+	// 悲催，这种注释doclet不认
 	// 添加课程
 	// @wr.tag Clazz, School, OPS
 	// @author Adams

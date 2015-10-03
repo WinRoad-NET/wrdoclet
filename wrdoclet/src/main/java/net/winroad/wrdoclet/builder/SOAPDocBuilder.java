@@ -39,6 +39,7 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 		if(!isOprNameCustomized) {
 			mapping.setUrl(method.name());			
 		}
+		mapping.setTooltip(method.containingClass().simpleTypeName());
 		return mapping;
 	}
 

@@ -14,7 +14,7 @@ import net.winroad.Models.User;
 
 @WebService
 public interface TestService {
-	/*
+	/* 悲催，这种注释doclet不认
 	 * 获取用户列表
 	 * 
 	 * @wr.tag User

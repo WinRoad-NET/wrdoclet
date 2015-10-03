@@ -5,6 +5,7 @@ public class API {
 	private String filepath;
 	private String brief;
 	private String methodType;
+	private String tooltip;
 
 	public String getFilepath() {
 		return filepath;
@@ -36,5 +37,13 @@ public class API {
 
 	public void setMethodType(String methodType) {
 		this.methodType = methodType;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 }

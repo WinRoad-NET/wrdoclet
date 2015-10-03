@@ -9,7 +9,6 @@ import com.sun.tools.doclets.Taglet;
 
 public class WRTagTaglet implements Taglet {
 	public static final String NAME = "wr.tag";
-	public static final String DEFAULT_TAG_NAME = "default";
 	private static final String SPLITTER = ",";
 
 	public String getName() {

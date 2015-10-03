@@ -125,10 +125,11 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		RequestMapping baseMapping = this.parseRequestMapping(baseAnnotations);
 		AnnotationDesc[] annotations = methodDoc.annotations();
 		RequestMapping mapping = this.parseRequestMapping(annotations);
+		RequestMapping result;
 		if (baseMapping == null) {
-			return mapping;
+			result = mapping;
 		} else if (mapping == null) {
-			return baseMapping;
+			result = baseMapping;
 		} else {
 			mapping.setUrl(net.winroad.wrdoclet.utils.Util.urlConcat(
 					baseMapping.getUrl(), mapping.getUrl()));
@@ -140,8 +141,12 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					mapping.setMethodType(baseMapping.getMethodType());
 				}
 			}
-			return mapping;
+			result = mapping;
 		}
+		if(result != null) {
+			result.setTooltip(methodDoc.containingClass().simpleTypeName());
+		}
+		return result;
 	}
 
 	/*

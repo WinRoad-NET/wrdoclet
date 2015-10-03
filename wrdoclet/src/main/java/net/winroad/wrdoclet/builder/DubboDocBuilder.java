@@ -67,6 +67,7 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 	protected RequestMapping parseRequestMapping(MethodDoc methodDoc) {
 		RequestMapping mapping = new RequestMapping();
 		mapping.setUrl(methodDoc.name());
+		mapping.setTooltip(methodDoc.containingClass().simpleTypeName());
 		return mapping;
 	}
 
