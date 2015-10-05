@@ -28,7 +28,7 @@
 
 	function searchCloud() {
 		// todo: configurable solr server address
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=' + Global.searchRows;
+		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=0';
 		Global.searchStart = 0;
 		if(!!document.getElementById("searchbox").value) {
 			Global.searchContent = document.getElementById("searchbox").value;
@@ -53,7 +53,8 @@
 						Global.tag2APIsmap = convertSearchResult(data);
 						if(data.facet_counts.facet_fields.tags[0]) {
 							//render the first tag
-							loadAPIList( Global.tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
+							searchMore(data.facet_counts.facet_fields.tags[0], 0);
+							//loadAPIList( Global.tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
 						}
 					}
 				},
@@ -89,6 +90,12 @@
 						Global.tag2APIsmap[tagName].apis = Global.tag2APIsmap[tagName].apis.concat( convertedResult[tagName].apis );
 						var html = template('APIURLListTmpl', Global.tag2APIsmap[tagName]);
 						document.getElementById('APIURLList').innerHTML = html;
+						if(searchStart == 0) {
+							$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
+							if($("#APIDetailLink").length && !$("#APIDetailLink")[0].href) {
+								$("#APIDetailLink")[0].click();
+							}
+						}
 					}
 				},
 				error: function(e){
@@ -187,14 +194,18 @@
 	};
 
 	function loadAPIList(APIs) {
-		var html = template('APIURLListTmpl', APIs);
-		document.getElementById('APIURLList').innerHTML = html;
-		$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
-		/* TODO:
-		Loading page locally, chrome raises ' Uncaught SecurityError: Blocked a frame with origin "null" from accessing a frame with origin "null". ' when clicking search button.
-		*/
-		if($("#APIDetailLink").length && !$("#APIDetailLink")[0].href) {
-			$("#APIDetailLink")[0].click();
+		if(APIs.apis.length == 0) {
+			searchMore(APIs.tag, 0);
+		} else {
+			var html = template('APIURLListTmpl', APIs);
+			document.getElementById('APIURLList').innerHTML = html;
+			$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
+			/* TODO:
+			Loading page locally, chrome raises ' Uncaught SecurityError: Blocked a frame with origin "null" from accessing a frame with origin "null". ' when clicking search button.
+			*/
+			if($("#APIDetailLink").length && !$("#APIDetailLink")[0].href) {
+				$("#APIDetailLink")[0].click();
+			}
 		}
 	};
 
@@ -338,7 +349,7 @@
 				</ul>
 			{{/each}}
 			{{if apis.length < totalCount }}
-				<input value="加载更多" onclick="searchMore('{{tag}}', {{apis.length}})" type="submit" />
+				<div id="loadMore" onclick="searchMore('{{tag}}', {{apis.length}})">加载更多</div>
 			{{/if}}
 		</script>
 	</div>

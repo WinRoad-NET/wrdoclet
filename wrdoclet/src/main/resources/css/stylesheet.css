@@ -243,3 +243,16 @@ a:hover {
 	margin-right: auto;
 	margin-left: auto;
 }
+
+#loadMore {
+	background-color: #eee;
+	color: #999;
+	font-weight: bold;
+	text-align: center;
+	padding: 1px 0;
+	cursor: pointer;
+}
+
+#loadMore:hover {
+	color: #666;
+}
