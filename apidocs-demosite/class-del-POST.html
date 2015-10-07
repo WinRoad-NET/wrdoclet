@@ -4,10 +4,18 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" title="Style" />
+        <meta name="generator" content="wrdoclet" />
+        <meta name="tags" content="Class, School" />
+        <meta name="brief" content="删除课程" />
+    	<meta name="APIUrl" content="/class/del" />
+    	<meta name="tooltip" content="ClassController" />
+    		<meta name="methodType" content="POST" />
+    	<meta name="systemName" content="demosite" />
+    	<meta name="branchName" content="master" />
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
     </head>
-  <script  src="../js/jquery.js"></script>
-  <script  src="../js/colResizable-1.5.min.js"></script>
+  <script  src="js/jquery-1.11.3.min.js"></script>
+  <script  src="js/colResizable-1.5.min.js"></script>
   <script type="text/javascript">
 	$(function(){
 		$("#reqTable").colResizable({
@@ -25,24 +33,24 @@
 
     <body>
   <p class="qualifiedName">
-    ☞&nbsp;net.winroad.Controller.ClassController.listClass
+    	<font size='5'>☞</font>&nbsp;net.winroad.Controller.ClassController.delClass
   </p>
 	    <h3>
 	      描述
 	    </h3>
 	    <p>
-        list课程
+        删除课程
 	    </p>
     <h3>
       访问路径
     </h3>
     <div class="accessPath">
         <span class="lable label-method-type">
-          GET
+          POST
         </span>
 			<img title="需要认证" class="authIcon" src="data:image/png;base64,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"/>
       	<div class="openAPIUrl">
-        	/class/list
+        	/class/del
         </div>
     </div>
       <table class="modifyHistoryTable">
@@ -90,6 +98,796 @@
     <h3>
       请求
     </h3>
+    <table id="reqTable" class="reqParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th style="width: 20%;"></span>
+            参数名
+          </th>
+          <th style="width: 22%;"></span>
+            参数类型
+          </th>
+          <th style="width: 20%;"></span>
+            描述
+          </th>
+          <th style="width: 8%;"></span>
+            是否必须
+          </th>
+          <th style="width: 30%;">
+            修订记录
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+  <tr>
+    <td>
+            clazz
+      </td>
+      <td>
+          net.winroad.Models.Clazz
+      </td>
+      <td>
+          @RequestBody
+      </td>
+      <td style="text-align: center;">
+          	是
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            properties
+      </td>
+      <td>
+          java.util.Map.Entry&lt;net.winroad.Models.Address,java.util.List&lt;net.winroad.Models.Person&gt;&gt;
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          <b>
+            Address
+          </b>
+      </td>
+      <td>
+          net.winroad.Models.Address
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            city
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            province
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            county
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            addr
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          <b>
+            List
+          </b>
+      </td>
+      <td>
+          java.util.List&lt;net.winroad.Models.Person&gt;
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          <b>
+            Person
+          </b>
+      </td>
+      <td>
+          net.winroad.Models.Person
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            hobby
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            adult
+      </td>
+      <td>
+          boolean
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            test
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            name
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            age
+      </td>
+      <td>
+          int
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            gender
+      </td>
+      <td>
+          Enum[MALE,FEMALE]
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            height
+      </td>
+      <td>
+          double
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            logourl
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            address
+      </td>
+      <td>
+          net.winroad.Models.Address
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            city
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            province
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            county
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            addr
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            name
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          课程名称
+      </td>
+      <td style="text-align: center;">
+          	是
+      </td>
+      <td>
+          <table class="innerTable">
+    <thead>
+      <tr>
+        <th style="width: 20%;">
+          修改人
+        </th>
+        <th style="width: 60%;">
+          备注
+        </th>
+        <th style="width: 20%;">
+          版本
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              Bob zhong
+          </td>
+          <td>
+              fix bug
+          </td>
+          <td>
+              0.0.2
+          </td>
+        </tr>
+    </tbody>
+          </table>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            students
+      </td>
+      <td>
+          java.util.List&lt;net.winroad.Models.Student&gt;
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          <b>
+            Student
+          </b>
+      </td>
+      <td>
+          net.winroad.Models.Student
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            hobby
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            adult
+      </td>
+      <td>
+          boolean
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            test
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            name
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            age
+      </td>
+      <td>
+          int
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            gender
+      </td>
+      <td>
+          Enum[MALE,FEMALE]
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            height
+      </td>
+      <td>
+          double
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            logourl
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            address
+      </td>
+      <td>
+          net.winroad.Models.Address
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            city
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            province
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            county
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            addr
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            schoolName
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            sno
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+      </tbody>
+    </table>
 
     <h3>
       响应
@@ -122,38 +920,18 @@
     <td>
       </td>
       <td>
-          java.util.List&lt;net.winroad.Models.Clazz&gt;
-      </td>
-      <td>
-          the class list.
-      </td>
-      <td>
-          REQUIRED
-      </td>
-      <td>
-      </td>
-    </tr>
-  <tr>
-    <td>
-          &nbsp;&nbsp;
-          <b>
-            Clazz
-          </b>
-      </td>
-      <td>
           net.winroad.Models.Clazz
       </td>
       <td>
-          
       </td>
-      <td>
+      <td style="text-align: center;">
+          	是
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
             properties
       </td>
@@ -163,14 +941,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           <b>
@@ -183,14 +960,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -202,14 +978,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -221,14 +996,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -240,14 +1014,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -259,14 +1032,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           <b>
@@ -279,14 +1051,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -300,14 +1071,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -320,14 +1090,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -340,14 +1109,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -360,14 +1128,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -380,14 +1147,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -400,14 +1166,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -420,14 +1185,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -440,14 +1204,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -460,14 +1223,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -480,14 +1242,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -500,14 +1261,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -521,14 +1281,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -542,14 +1301,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -563,14 +1321,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -584,14 +1341,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
             name
       </td>
@@ -601,8 +1357,8 @@
       <td>
           课程名称
       </td>
-      <td>
-          REQUIRED
+      <td style="text-align: center;">
+          	是
       </td>
       <td>
           <table class="innerTable">
@@ -638,7 +1394,6 @@
   <tr>
     <td>
           &nbsp;&nbsp;
-          &nbsp;&nbsp;
             students
       </td>
       <td>
@@ -647,14 +1402,13 @@
       <td>
           选择该门功课的学生列表。
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           <b>
@@ -667,14 +1421,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -686,14 +1439,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -705,14 +1457,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -724,14 +1475,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -743,14 +1493,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -762,14 +1511,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -781,14 +1529,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -800,14 +1547,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -819,14 +1565,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -838,14 +1583,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -857,14 +1601,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -877,14 +1620,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -897,14 +1639,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -917,14 +1658,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -937,14 +1677,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -956,14 +1695,13 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
     </tr>
   <tr>
     <td>
-          &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
           &nbsp;&nbsp;
@@ -975,7 +1713,7 @@
       <td>
           
       </td>
-      <td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
@@ -985,8 +1723,12 @@
 		<div class="foot">
 			<ul>
 				<li>
-					Generated on <strong>2015.09.03 22:05:18</strong> |
+					© <strong>demosite</strong> |
 				</li>
+				<li>
+					Generated on <strong>2015.10.07 11:12:22</strong> |
+				</li>
+				<li> Branch : <strong>master</strong> | </li>
 				<li> Powered by <strong>winroad</strong></li>
 			</ul>
 		</div>
