@@ -87,7 +87,7 @@
 						alert("就这么多，没有更多记录了。");
 					} else {
 						var convertedResult = convertSearchResult(data);
-						Global.tag2APIsmap[tagName].apis = Global.tag2APIsmap[tagName].apis.concat( convertedResult[tagName].apis );
+						Global.tag2APIsmap[tagName].APIs = Global.tag2APIsmap[tagName].APIs.concat( convertedResult[tagName].APIs );
 						var html = template('APIURLListTmpl', Global.tag2APIsmap[tagName]);
 						document.getElementById('APIURLList').innerHTML = html;
 						if(searchStart == 0) {
@@ -177,15 +177,15 @@
 				api.pageContent = searchResult.response.docs[i].pageContent;
 				api.brief = searchResult.response.docs[i].brief;
 				if(!tag2APIsmap[searchResult.response.docs[i].tags[j]]) {
-					tag2APIsmap[searchResult.response.docs[i].tags[j]] = { tag: searchResult.response.docs[i].tags[j], apis: [] };
+					tag2APIsmap[searchResult.response.docs[i].tags[j]] = { tag: searchResult.response.docs[i].tags[j], APIs: [] };
 				}
-				tag2APIsmap[searchResult.response.docs[i].tags[j]].apis.push(api);
+				tag2APIsmap[searchResult.response.docs[i].tags[j]].APIs.push(api);
 			}
 		}
 		if(searchResult.facet_counts) {
 			for (var i = 0; i < searchResult.facet_counts.facet_fields.tags.length; i += 2) {
 				if(!tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ]) {
-					tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ] = { tag: searchResult.facet_counts.facet_fields.tags[i], apis: [] };
+					tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ] = { tag: searchResult.facet_counts.facet_fields.tags[i], APIs: [] };
 				}
 				tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ].totalCount = searchResult.facet_counts.facet_fields.tags[i+1];
 			};
@@ -193,11 +193,11 @@
 		return tag2APIsmap;
 	};
 
-	function loadAPIList(APIs) {
-		if(APIs.apis.length == 0) {
-			searchMore(APIs.tag, 0);
+	function loadAPIList(tagAPIs) {
+		if(tagAPIs.APIs.length == 0) {
+			searchMore(tagAPIs.tag, 0);
 		} else {
-			var html = template('APIURLListTmpl', APIs);
+			var html = template('APIURLListTmpl', tagAPIs);
 			document.getElementById('APIURLList').innerHTML = html;
 			$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
 			/* TODO:
@@ -211,7 +211,7 @@
 
 	function loadMainFrame(tag, index) {
 		document.getElementById("mainFrame").contentWindow.document.open();
-		document.getElementById("mainFrame").contentWindow.document.write(Global.tag2APIsmap[tag].apis[index].pageContent);
+		document.getElementById("mainFrame").contentWindow.document.write(Global.tag2APIsmap[tag].APIs[index].pageContent);
 		document.getElementById("mainFrame").contentWindow.document.close();
 	};
 
@@ -321,7 +321,7 @@
 		<div class="listHeader">接口</div>
 		<div id="APIURLList"></div>
 		<script id="APIURLListTmpl" type="text/html">
-			{{each apis as value i}}
+			{{each APIs as value i}}
 				<ul>
 					<li>
 						{{if value.pageContent}}
@@ -348,8 +348,8 @@
 					</li>
 				</ul>
 			{{/each}}
-			{{if apis.length < totalCount }}
-				<div id="loadMore" onclick="searchMore('{{tag}}', {{apis.length}})">加载更多</div>
+			{{if APIs.length < totalCount }}
+				<div id="loadMore" onclick="searchMore('{{tag}}', {{APIs.length}})">加载更多</div>
 			{{/if}}
 		</script>
 	</div>

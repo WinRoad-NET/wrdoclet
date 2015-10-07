@@ -8,7 +8,7 @@
 	<properties>
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<cxf.version>2.6.13</cxf.version>
-		<wrdoclet.systemname>SOAP服务</wrdoclet.systemname>
+		<wrdoclet.systemname>demoservice</wrdoclet.systemname>
 		<wrdoclet.branchname>master</wrdoclet.branchname>
 	</properties>
 	<build>

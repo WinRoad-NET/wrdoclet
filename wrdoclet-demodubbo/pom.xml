@@ -7,7 +7,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<wrdoclet.systemname>dubbo服务</wrdoclet.systemname>
+		<wrdoclet.systemname>demodubbo</wrdoclet.systemname>
 		<wrdoclet.branchname>master</wrdoclet.branchname>
 	</properties>
 	<build>
@@ -92,7 +92,7 @@
 								-systemname ${wrdoclet.systemname} -branchname
 								${wrdoclet.branchname} -encoding utf-8 -charset utf-8
 								-dubboconfigpath
-								D://Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml
+								${project.basedir}/src/main/resources/provider.xml
 							</additionalparam>
 							<!-- For the project-reports page -->
 							<name>API doc</name>

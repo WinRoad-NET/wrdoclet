@@ -9,6 +9,8 @@
 	<properties>
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<jackson.version>1.9.10</jackson.version>
+		<wrdoclet.systemname>demosite</wrdoclet.systemname>
+		<wrdoclet.branchname>master</wrdoclet.branchname>
 	</properties>
 	<build>
 		<plugins>
@@ -50,7 +52,8 @@
 								<version>0.0.1-SNAPSHOT</version>
 							</docletArtifact>
 							<additionalparam>
-								-encoding utf-8 -charset utf-8 -springcontextconfigpath D:/Git/wrdoclet/wrdoclet-demosite/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml
+								-systemname ${wrdoclet.systemname} -branchname
+								${wrdoclet.branchname} -encoding utf-8 -charset utf-8 -springcontextconfigpath  ${project.basedir}/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml
 							</additionalparam>
 							<!-- For the project-reports page -->
 							<name>API doc</name>

@@ -1,8 +1,6 @@
 package net.winroad.wrdoclet;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.OutputStream;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,10 +22,8 @@ import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.Util;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.google.gson.Gson;
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
@@ -140,11 +136,8 @@ public class HtmlDoclet extends AbstractDoclet {
 		Collections.sort(tagList, cmp);
 		Map<String, Object> tagMap = new HashMap<String, Object>();
 		DocData bean = this.generateDocData(wrDoc);
-		OutputStream os = new ByteArrayOutputStream();
-		JsonGenerator generator = new ObjectMapper().getJsonFactory()
-				.createJsonGenerator(os, JsonEncoding.UTF8);
-		generator.writeObject(bean);
-		tagMap.put("response", os.toString());
+		Gson gson = new Gson();
+		tagMap.put("response", gson.toJson(bean));
 		this.configuration
 				.getWriterFactory()
 				.getFreemarkerWriter()
