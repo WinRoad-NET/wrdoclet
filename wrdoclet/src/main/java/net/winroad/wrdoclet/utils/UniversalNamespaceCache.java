@@ -45,18 +45,25 @@ public class UniversalNamespaceCache implements NamespaceContext {
 	 *            if true no recursion happens
 	 */
 	private void examineNode(Node node, boolean attributesOnly) {
-		NamedNodeMap attributes = node.getAttributes();
-		for (int i = 0; i < attributes.getLength(); i++) {
-			Node attribute = attributes.item(i);
-			storeAttribute((Attr) attribute);
+		while(node != null && node.getNodeType() == Node.COMMENT_NODE) {
+			node = node.getNextSibling();
 		}
+		if(node != null) {
+			NamedNodeMap attributes = node.getAttributes();
+			if(attributes != null) {
+				for (int i = 0; i < attributes.getLength(); i++) {
+					Node attribute = attributes.item(i);
+					storeAttribute((Attr) attribute);
+				}
+			}
 
-		if (!attributesOnly) {
-			NodeList chields = node.getChildNodes();
-			for (int i = 0; i < chields.getLength(); i++) {
-				Node chield = chields.item(i);
-				if (chield.getNodeType() == Node.ELEMENT_NODE)
-					examineNode(chield, false);
+			if (!attributesOnly) {
+				NodeList chields = node.getChildNodes();
+				for (int i = 0; i < chields.getLength(); i++) {
+					Node chield = chields.item(i);
+					if (chield.getNodeType() == Node.ELEMENT_NODE)
+						examineNode(chield, false);
+				}
 			}
 		}
 	}
