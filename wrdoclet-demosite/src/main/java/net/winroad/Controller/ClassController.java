@@ -81,7 +81,7 @@ public class ClassController extends BaseController {
 	 * @wr.returnCode 400 404 503
 	 * @return the class list.
 	 */
-	@RequestMapping(value = "/class/list", method = RequestMethod.GET)
+	@RequestMapping(value = {"/class/list","/class/listclass"}, method = RequestMethod.GET)
 	public @ResponseBody
 	List<Clazz> listClass(HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {

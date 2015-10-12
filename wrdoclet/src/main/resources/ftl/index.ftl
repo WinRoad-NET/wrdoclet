@@ -28,13 +28,11 @@
 
 	function searchCloud() {
 		// todo: configurable solr server address
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=0';
+		var url = 'http://127.0.0.1:8080/solr/apidocs/search?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=0';
 		Global.searchStart = 0;
 		if(!!document.getElementById("searchbox").value) {
-			Global.searchContent = document.getElementById("searchbox").value;
-			url += '&q=' + Global.searchContent;
+			url += '&q=' + document.getElementById("searchbox").value;
 		} else {
-			Global.searchContent = '';
 			url += '&q=*:*';
 		}
 		url += '&fq=systemName:' + document.getElementById("system").value;
@@ -56,6 +54,11 @@
 							searchMore(data.facet_counts.facet_fields.tags[0], 0);
 							//loadAPIList( Global.tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
 						}
+						if(!!document.getElementById("searchbox").value) {
+							Global.searchContent = document.getElementById("searchbox").value;
+						} else {
+							Global.searchContent = '';
+						}
 					}
 				},
 				error: function(e){
@@ -69,7 +72,7 @@
 	};
 
 	function searchMore(tagName, searchStart) {
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
+		var url = 'http://127.0.0.1:8080/solr/apidocs/search?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
 		if(!!Global.searchContent) {
 			url += '&q=' + Global.searchContent;
 		} else {

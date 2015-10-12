@@ -125,17 +125,17 @@
    <field name="ns" type="string" indexed="true" stored="true"/>
    
    <field name="tags" type="string" indexed="true" stored="true" multiValued="true"/>
-   <field name="brief" type="string" indexed="false" stored="true" multiValued="false"/>
+   <field name="brief" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="APIUrl" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="tooltip" type="string" indexed="false" stored="true" multiValued="false"/>
    <field name="methodType" type="string" indexed="false" stored="true" multiValued="false"/>
-   <field name="pageContent" type="text_general" indexed="false" stored="true" multiValued="false"/>
+   <field name="pageContent" type="text_general" indexed="true" stored="true" multiValued="false"/>
    <field name="systemName" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="branchName" type="string" indexed="true" stored="true" multiValued="false"/>
 
       <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
-   <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="text" type="text_zh" indexed="true" stored="false" multiValued="true"/>
 
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->
@@ -234,9 +234,9 @@
    <copyField source="tags" dest="text"/>
    <copyField source="brief" dest="text"/>
    <copyField source="APIUrl" dest="text"/>
-   <copyField source="pageContent" dest="text"/>
    <copyField source="systemName" dest="text"/>
    <copyField source="branchName" dest="text"/>
+   <copyField source="pageContent" dest="text"/>
 
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
@@ -418,6 +418,11 @@
       </analyzer>
     </fieldType>
 
+    <fieldType name="text_zh" class="solr.TextField">
+		<analyzer type="index" isMaxWordLength="false" class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+		<analyzer type="query" isMaxWordLength="true" class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+    </fieldType>
+	
     <!-- A text field with defaults appropriate for English: it
          tokenizes with StandardTokenizer, removes English stop words
          (lang/stopwords_en.txt), down cases, protects words from protwords.txt, and
