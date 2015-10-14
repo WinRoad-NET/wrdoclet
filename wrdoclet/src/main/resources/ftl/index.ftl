@@ -44,7 +44,7 @@
 				url: encodeURI(url),
 				success: function(data){
 					if(data.response.numFound == 0) {
-						alert("没有找到任何记录。可以调整搜索的参数再试试看。");
+						alert("道可道，非常道。您搜的东西没找到:(");
 					} else {
 						handleTagListDisplay(data, Global.pagelayout);
 						window.parent.loadTagList(data);
@@ -62,7 +62,7 @@
 					}
 				},
 				error: function(e){
-					var str = '出错啦！';
+					var str = '道哥出错啦！';
 					for(var p in e) {
 						str += p + "=" + e[p] + ";";
 					}
@@ -87,7 +87,7 @@
 				url: encodeURI(url),
 				success: function(data){
 					if(data.response.numFound == 0) {
-						alert("就这么多，没有更多记录了。");
+						alert("别再翻了，道哥就这么多了。");
 					} else {
 						var convertedResult = convertSearchResult(data);
 						Global.tag2APIsmap[tagName].APIs = Global.tag2APIsmap[tagName].APIs.concat( convertedResult[tagName].APIs );
@@ -102,7 +102,7 @@
 					}
 				},
 				error: function(e){
-					var str = '出错啦！';
+					var str = '道哥出错啦！';
 					for(var p in e) {
 						str += p + "=" + e[p] + ";";
 					}
@@ -143,7 +143,7 @@
 					}
 				},
 				error: function(e){
-					var str = '出错啦！';
+					var str = '道哥出错啦！';
 					for(var p in e) {
 						str += p + "=" + e[p] + ";";
 					}
@@ -287,8 +287,8 @@
 	<select name="branch" id="branch">
 	</select>
 
-	<input id="searchbtn" value="搜索云端" onclick='searchCloud()' type="submit"/>	
-	<input id="returnbtn" value="回到本地" onclick='returnLocal()' type="submit"/>	
+	<input id="searchbtn" value="云端问道" onclick='searchCloud()' type="submit"/>	
+	<input id="returnbtn" value="本地取经" onclick='returnLocal()' type="submit"/>	
 </div>
 
 <iframe id="mainFrame" name="mainFrame" class="ui-layout-center"

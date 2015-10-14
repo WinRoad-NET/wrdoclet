@@ -251,6 +251,28 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 						}
 					}
 				}
+				if ("org.springframework.web.bind.annotation.RequestParam"
+						.equals(annotations[j].annotationType().qualifiedName())) {
+					for (ElementValuePair pair : annotations[j].elementValues()) {
+						if (pair.element().name().equals("value")) {
+							if (annotations[j].elementValues()[0].value() != null) {
+								apiParameter.setName(annotations[j]
+										.elementValues()[0].value().toString()
+										.replace("\"", ""));
+							}
+						}
+						if (pair.element().name().equals("required")) {
+							if (annotations[j].elementValues()[0].value()
+									.equals(true)) {
+								apiParameter
+										.setParameterOccurs(ParameterOccurs.REQUIRED);
+							} else {
+								apiParameter
+										.setParameterOccurs(ParameterOccurs.OPTIONAL);
+							}
+						}
+					}
+				}
 				String desc = "@" + annotations[j].annotationType().name();
 				for (Tag tag : method.tags("param")) {
 					if (parameters[i].name().equals(
@@ -340,12 +362,18 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	protected Boolean isAPIAuthNeeded(String url) {
 		if (url != null && this.excludedUrls != null
 				&& this.excludedUrls.size() != 0) {
-			for (String excludedUrl : this.excludedUrls) {
-				if (matcher.match(excludedUrl, url)) {
-					return false;
-				}
+			if(url.startsWith("{") && url.endsWith("}")) {
+				url = StringUtils.substring(url, 1, url.length()-1);
 			}
-			return true;
+			String[] urls = url.split(",");
+			for (String u : urls) {
+				for (String excludedUrl : this.excludedUrls) {
+					if (matcher.match(excludedUrl, u)) {
+						return false;
+					}
+				}
+				return true;
+			}
 		}
 		return null;
 	}
