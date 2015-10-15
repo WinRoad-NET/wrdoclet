@@ -143,7 +143,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			}
 			result = mapping;
 		}
-		if(result != null) {
+		if (result != null) {
 			result.setTooltip(methodDoc.containingClass().simpleTypeName());
 		}
 		return result;
@@ -199,8 +199,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			for (Tag tag : method.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
+			HashSet<String> processingClasses = new HashSet<String>();
 			apiParameter.setFields(this.getFields(method.returnType(),
-					ParameterType.Response));
+					ParameterType.Response, processingClasses));
 			apiParameter.setHistory(this.getModificationHistory(method
 					.returnType()));
 		} else {
@@ -209,7 +210,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		return apiParameter;
 	}
 
-	//TODO: handle the @RequestHeader、@CookieValue, @RequestParam, @SessionAttributes, @ModelAttribute
+	// TODO: handle the @RequestHeader、@CookieValue, @RequestParam,
+	// @SessionAttributes, @ModelAttribute
 	@Override
 	protected List<APIParameter> getInputParams(MethodDoc method) {
 		List<APIParameter> paramList = new LinkedList<APIParameter>();
@@ -281,8 +283,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					}
 				}
 				apiParameter.setDescription(desc);
+				HashSet<String> processingClasses = new HashSet<String>();
 				apiParameter.setFields(this.getFields(parameters[i].type(),
-						ParameterType.Request));
+						ParameterType.Request, processingClasses));
 				apiParameter.setHistory(this
 						.getModificationHistory(parameters[i].type()));
 				paramList.add(apiParameter);
@@ -362,8 +365,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	protected Boolean isAPIAuthNeeded(String url) {
 		if (url != null && this.excludedUrls != null
 				&& this.excludedUrls.size() != 0) {
-			if(url.startsWith("{") && url.endsWith("}")) {
-				url = StringUtils.substring(url, 1, url.length()-1);
+			if (url.startsWith("{") && url.endsWith("}")) {
+				url = StringUtils.substring(url, 1, url.length() - 1);
 			}
 			String[] urls = url.split(",");
 			for (String u : urls) {

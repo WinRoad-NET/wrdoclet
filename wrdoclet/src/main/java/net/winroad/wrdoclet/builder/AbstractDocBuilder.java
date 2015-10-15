@@ -128,8 +128,8 @@ public abstract class AbstractDocBuilder {
 		if (index != -1) {
 			commentText = StringUtils.substring(commentText, 0, index);
 		}
-		index = StringUtils.indexOfAny(commentText,  ".!?。！？…");
-		if(index > 0) {
+		index = StringUtils.indexOfAny(commentText, ".!?。！？…");
+		if (index > 0) {
 			commentText = StringUtils.substring(commentText, 0, index);
 		}
 		if (StringUtils.length(commentText) > 8) {
@@ -164,9 +164,11 @@ public abstract class AbstractDocBuilder {
 					openAPI.setDescription(methodDoc.commentText());
 				}
 				if (methodDoc.tags(WRBriefTaglet.NAME).length == 0) {
-					openAPI.setBrief(getBriefFromCommentText(methodDoc.commentText()));
+					openAPI.setBrief(getBriefFromCommentText(methodDoc
+							.commentText()));
 				} else {
-					openAPI.setBrief(methodDoc.tags(WRBriefTaglet.NAME)[0].text());
+					openAPI.setBrief(methodDoc.tags(WRBriefTaglet.NAME)[0]
+							.text());
 				}
 				openAPI.setModificationHistory(this
 						.getModificationHistory(methodDoc));
@@ -341,7 +343,9 @@ public abstract class AbstractDocBuilder {
 		return false;
 	}
 
-	protected List<APIParameter> getFields(Type type, ParameterType paramType) {
+	protected List<APIParameter> getFields(Type type, ParameterType paramType,
+			HashSet<String> processingClasses) {
+		processingClasses.add(type.qualifiedTypeName());
 		List<APIParameter> result = new LinkedList<APIParameter>();
 		if (!type.isPrimitive()) {
 			ParameterizedType pt = type.asParameterizedType();
@@ -352,7 +356,10 @@ public abstract class AbstractDocBuilder {
 					tmp.setType(this.getTypeName(arg));
 					tmp.setDescription("");
 					tmp.setParentTypeArgument(true);
-					tmp.setFields(this.getFields(arg, paramType));
+					if (!processingClasses.contains(arg.qualifiedTypeName())) {
+						tmp.setFields(this.getFields(arg, paramType,
+								processingClasses));
+					}
 					result.add(tmp);
 				}
 			}
@@ -360,19 +367,25 @@ public abstract class AbstractDocBuilder {
 			ClassDoc classDoc = this.wrDoc.getConfiguration().root
 					.classNamed(type.qualifiedTypeName());
 			if (classDoc != null) {
-				result.addAll(this.getFields(classDoc, paramType));
+				result.addAll(this.getFields(classDoc, paramType,
+						processingClasses));
 			}
 		}
 		return result;
 	}
 
 	protected List<APIParameter> getFields(ClassDoc classDoc,
-			ParameterType paramType) {
+			ParameterType paramType, HashSet<String> processingClasses) {
+		processingClasses.add(classDoc.qualifiedTypeName());
 		List<APIParameter> result = new LinkedList<APIParameter>();
 
 		ClassDoc superClassDoc = classDoc.superclass();
-		if (superClassDoc != null && !this.isInStopClasses(superClassDoc)) {
-			result.addAll(this.getFields(superClassDoc, paramType));
+		if (superClassDoc != null
+				&& !this.isInStopClasses(superClassDoc)
+				&& !processingClasses.contains(superClassDoc
+						.qualifiedTypeName())) {
+			result.addAll(this.getFields(superClassDoc, paramType,
+					processingClasses));
 		}
 
 		if (this.isInStopClasses(classDoc)) {
@@ -385,7 +398,11 @@ public abstract class AbstractDocBuilder {
 				APIParameter param = new APIParameter();
 				param.setName(fieldDoc.name());
 				param.setType(this.getTypeName(fieldDoc.type()));
-				param.setFields(this.getFields(fieldDoc.type(), paramType));
+				if (!processingClasses.contains(fieldDoc.type()
+						.qualifiedTypeName())) {
+					param.setFields(this.getFields(fieldDoc.type(), paramType,
+							processingClasses));
+				}
 				param.setDescription(fieldDoc.commentText());
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(fieldDoc.tags())));
@@ -411,7 +428,11 @@ public abstract class AbstractDocBuilder {
 					typeToProcess = methodDoc.returnType();
 				}
 				param.setType(this.getTypeName(typeToProcess));
-				param.setFields(this.getFields(typeToProcess, paramType));
+				if (!processingClasses.contains(typeToProcess
+						.qualifiedTypeName())) {
+					param.setFields(this.getFields(typeToProcess, paramType,
+							processingClasses));
+				}
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(methodDoc.tags())));
 				param.setDescription(methodDoc.commentText());

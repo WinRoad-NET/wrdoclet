@@ -1,5 +1,6 @@
 package net.winroad.wrdoclet.builder;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,8 +82,9 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 			for (Tag tag : methodDoc.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
+			HashSet<String> processingClasses = new HashSet<String>();
 			apiParameter.setFields(this.getFields(methodDoc.returnType(),
-					ParameterType.Response));
+					ParameterType.Response, processingClasses));
 			apiParameter.setHistory(this.getModificationHistory(methodDoc
 					.returnType()));
 		}
@@ -100,8 +102,9 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 				p.setType(this.getTypeName(methodParameters[i].type()));
 				p.setDescription("");
 				// p.setDescription(this.getParamComment(method, p.getName()));
+				HashSet<String> processingClasses = new HashSet<String>();
 				p.setFields(this.getFields(methodParameters[i].type(),
-						ParameterType.Request));
+						ParameterType.Request, processingClasses));
 				paramList.add(p);
 			}
 		}

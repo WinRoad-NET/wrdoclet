@@ -1,5 +1,6 @@
 package net.winroad.wrdoclet.builder;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,16 +29,17 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 		boolean isOprNameCustomized = false;
 		for (int i = 0; i < annotations.length; i++) {
 			if (annotations[i].annotationType().name().equals("WebMethod")) {
-				for(ElementValuePair p : annotations[i].elementValues()) {
-					if(p.element().name().equals("operationName")) {
+				for (ElementValuePair p : annotations[i].elementValues()) {
+					if (p.element().name().equals("operationName")) {
 						isOprNameCustomized = true;
-						mapping.setUrl(p.value().value().toString().replace("\"", ""));	
+						mapping.setUrl(p.value().value().toString()
+								.replace("\"", ""));
 					}
 				}
 			}
 		}
-		if(!isOprNameCustomized) {
-			mapping.setUrl(method.name());			
+		if (!isOprNameCustomized) {
+			mapping.setUrl(method.name());
 		}
 		mapping.setTooltip(method.containingClass().simpleTypeName());
 		return mapping;
@@ -52,15 +54,15 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 			boolean isResNameCustomized = false;
 			for (int i = 0; i < annotations.length; i++) {
 				if (annotations[i].annotationType().name().equals("WebResult")) {
-					for(ElementValuePair p : annotations[i].elementValues()) {
-						if(p.element().name().equals("name")) {
+					for (ElementValuePair p : annotations[i].elementValues()) {
+						if (p.element().name().equals("name")) {
 							apiParameter.setName(p.value().value().toString());
 							isResNameCustomized = true;
 						}
 					}
 				}
 			}
-			if(!isResNameCustomized) {
+			if (!isResNameCustomized) {
 				apiParameter.setName("return");
 			}
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
@@ -68,8 +70,9 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 			for (Tag tag : method.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
+			HashSet<String> processingClasses = new HashSet<String>();
 			apiParameter.setFields(this.getFields(method.returnType(),
-					ParameterType.Response));
+					ParameterType.Response, processingClasses));
 			apiParameter.setHistory(this.getModificationHistory(method
 					.returnType()));
 		}
@@ -99,12 +102,12 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 					if (annotations[j].annotationType().name()
 							.equals("XmlElement")) {
 						for (int k = 0; k < annotations[j].elementValues().length; k++) {
-							if ("required".equals(annotations[j].elementValues()[k]
-									.element().name())) {
-								if(annotations[j].elementValues()[k]
-										.value().toString().equals("true")) {
+							if ("required".equals(annotations[j]
+									.elementValues()[k].element().name())) {
+								if (annotations[j].elementValues()[k].value()
+										.toString().equals("true")) {
 									p.setParameterOccurs(ParameterOccurs.REQUIRED);
-								} else if(annotations[j].elementValues()[k]
+								} else if (annotations[j].elementValues()[k]
 										.value().toString().equals("false")) {
 									p.setParameterOccurs(ParameterOccurs.OPTIONAL);
 								}
@@ -117,10 +120,11 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 				}
 				p.setType(this.getTypeName(methodParameters[i].type()));
 				p.setDescription("");
-				//TODO:
-				//p.setDescription(this.getParamComment(method, p.getName()));
+				// TODO:
+				// p.setDescription(this.getParamComment(method, p.getName()));
+				HashSet<String> processingClasses = new HashSet<String>();
 				p.setFields(this.getFields(methodParameters[i].type(),
-						ParameterType.Request));
+						ParameterType.Request, processingClasses));
 				paramList.add(p);
 			}
 		}
