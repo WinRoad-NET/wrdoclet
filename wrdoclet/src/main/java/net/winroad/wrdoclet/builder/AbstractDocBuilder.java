@@ -345,7 +345,7 @@ public abstract class AbstractDocBuilder {
 
 	protected List<APIParameter> getFields(Type type, ParameterType paramType,
 			HashSet<String> processingClasses) {
-		processingClasses.add(type.qualifiedTypeName());
+		processingClasses.add(type.toString());
 		List<APIParameter> result = new LinkedList<APIParameter>();
 		if (!type.isPrimitive()) {
 			ParameterizedType pt = type.asParameterizedType();
@@ -376,7 +376,7 @@ public abstract class AbstractDocBuilder {
 
 	protected List<APIParameter> getFields(ClassDoc classDoc,
 			ParameterType paramType, HashSet<String> processingClasses) {
-		processingClasses.add(classDoc.qualifiedTypeName());
+		processingClasses.add(classDoc.toString());
 		List<APIParameter> result = new LinkedList<APIParameter>();
 
 		ClassDoc superClassDoc = classDoc.superclass();
