@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -20,10 +21,11 @@ public class StudentController {
 	 * @param name the name of student.
 	 * @return the student object.
 	 */
-	@RequestMapping(value = "{name}", method = RequestMethod.GET)
+	@RequestMapping(value = "name.{json|html}", method = RequestMethod.GET)
 	public @ResponseBody
-	Student getStudentInJSON(@PathVariable("name") String name) {
+	Student getStudentInJSON(@PathVariable("json|html") String name) {
 		Student s = new Student();
+		//s.setSno(sno);
 		s.setName(name);
 		s.setAge(11);
 		return s;
@@ -47,7 +49,8 @@ public class StudentController {
 	// TODO: how to handle Object as response?
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody
-	Object updateStudent(@RequestHeader("Accept-Encoding") Student student) {
+	Object updateStudent(@RequestHeader("Accept-Encoding") Student student, 
+			@RequestParam(value = "action", required = false) String action) {
 		student.setAge(student.getAge() + 100);
 		return student;
 	}

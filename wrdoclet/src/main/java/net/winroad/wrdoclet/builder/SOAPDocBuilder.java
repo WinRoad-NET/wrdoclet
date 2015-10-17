@@ -26,21 +26,19 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 	protected RequestMapping parseRequestMapping(MethodDoc method) {
 		RequestMapping mapping = new RequestMapping();
 		AnnotationDesc[] annotations = method.annotations();
-		boolean isOprNameCustomized = false;
+		String url = method.toString().replaceFirst(
+				method.containingClass().qualifiedName() + ".", "");
 		for (int i = 0; i < annotations.length; i++) {
 			if (annotations[i].annotationType().name().equals("WebMethod")) {
 				for (ElementValuePair p : annotations[i].elementValues()) {
 					if (p.element().name().equals("operationName")) {
-						isOprNameCustomized = true;
-						mapping.setUrl(p.value().value().toString()
-								.replace("\"", ""));
+						url = url.replace(method.name(), p.value().value()
+								.toString().replace("\"", ""));
 					}
 				}
 			}
 		}
-		if (!isOprNameCustomized) {
-			mapping.setUrl(method.name());
-		}
+		mapping.setUrl(url);
 		mapping.setTooltip(method.containingClass().simpleTypeName());
 		return mapping;
 	}

@@ -40,7 +40,16 @@ public class Clazz {
 		this.students = students;
 	}
 
+	public List<Clazz> getRelatedClasses() {
+		return relatedClasses;
+	}
+
+	public void setRelatedClasses(List<Clazz> relatedClasses) {
+		this.relatedClasses = relatedClasses;
+	}
+
 	private String name;
 	private List<Student> students;
+	private List<Clazz> relatedClasses;
 	public Map.Entry<Address, List<Person>> properties;
 }

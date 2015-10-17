@@ -29,7 +29,7 @@
       </#if>
       <#if openAPI.requestMapping.url??>
       	<div class="openAPIUrl">
-        	${openAPI.requestMapping.url}
+        	${openAPI.requestMapping.url?html}
         </div>
       </#if>
     </div>

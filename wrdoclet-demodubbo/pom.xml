@@ -39,6 +39,28 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+				<configuration>
+					<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
+					<docletArtifact>
+						<groupId>net.winroad</groupId>
+						<artifactId>wrdoclet</artifactId>
+						<version>0.0.1-SNAPSHOT</version>
+					</docletArtifact>
+					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
+					<additionalparam>
+						-systemname ${wrdoclet.systemname} 
+						-branchname ${wrdoclet.branchname} 
+						-encoding utf-8 
+						-charset utf-8
+						-dubboconfigpath ${project.basedir}/src/main/resources/provider.xml
+						-d ../../../../../wrdoclet-gh-pages/apidocs-demodubbo
+					</additionalparam>
+				</configuration>
+			</plugin>			
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -71,105 +93,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.1</version>
-				<reportSets>
-					<reportSet>
-						<id>wrdoclet</id>
-						<configuration>
-							<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
-							<docletPath>${project.basedir}/../wrdoclet/target/wrdoclet-0.0.1-SNAPSHOT.jar</docletPath>
-							<docletArtifact>
-								<groupId>net.winroad</groupId>
-								<artifactId>wrdoclet</artifactId>
-								<version>0.0.1-SNAPSHOT</version>
-							</docletArtifact>
-							<additionalparam>
-								-systemname ${wrdoclet.systemname} -branchname ${wrdoclet.branchname} 
-								-encoding utf-8 -charset utf-8
-								-dubboconfigpath ${project.basedir}/src/main/resources/provider.xml
-							</additionalparam>
-							<!-- wrdoclet dependencies -->
-							<docletArtifacts>
-								<docletArtifact>
-									<groupId>org.freemarker</groupId>
-									<artifactId>freemarker</artifactId>
-									<version>2.3.19</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>commons-io</groupId>
-									<artifactId>commons-io</artifactId>
-									<version>2.4</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>commons-lang</groupId>
-									<artifactId>commons-lang</artifactId>
-									<version>2.6</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>org.springframework</groupId>
-									<artifactId>spring-webmvc</artifactId>
-									<version>3.2.2.RELEASE</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>ch.qos.logback</groupId>
-									<artifactId>logback-classic</artifactId>
-									<version>1.0.3</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>org.slf4j</groupId>
-									<artifactId>slf4j-log4j12</artifactId>
-									<version>1.7.5</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>com.google.code.gson</groupId>
-									<artifactId>gson</artifactId>
-									<version>2.3.1</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>com.itextpdf</groupId>
-									<artifactId>itextpdf</artifactId>
-									<version>5.5.5</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>com.itextpdf</groupId>
-									<artifactId>itext-asian</artifactId>
-									<version>5.2.0</version>
-								</docletArtifact>
-								<docletArtifact>
-									<groupId>com.itextpdf.tool</groupId>
-									<artifactId>xmlworker</artifactId>
-									<version>5.5.5</version>
-								</docletArtifact>
-							 </docletArtifacts>
-							 <!-- For the project-reports page -->
-							<name>API doc</name>
-							<description>demo site api documentation.</description>
-							<destDir>../../../../wrdoclet-gh-pages/apidocs-demodubbo</destDir>
-						</configuration>
-						<reports>
-							<report>javadoc</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.7</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>index</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
