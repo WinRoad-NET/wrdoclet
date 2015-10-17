@@ -138,6 +138,7 @@ public class HtmlDoclet extends AbstractDoclet {
 		DocData bean = this.generateDocData(wrDoc);
 		Gson gson = new Gson();
 		tagMap.put("response", gson.toJson(bean));
+		tagMap.put("searchengine", this.configuration.searchengine);
 		this.configuration
 				.getWriterFactory()
 				.getFreemarkerWriter()

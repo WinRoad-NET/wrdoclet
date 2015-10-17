@@ -10,6 +10,7 @@
 <script type="text/javascript" src="js/template.min.js"></script>
 <script type="text/javascript">
 	Global = {
+		searchEngine : '${searchengine}',
 		// the API tag and link data
 		localData : ${response},
 		// map key: tag, value: APIs
@@ -28,7 +29,7 @@
 
 	function searchCloud() {
 		// todo: configurable solr server address
-		var url = 'http://127.0.0.1:8080/solr/apidocs/search?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=0';
+		var url = Global.searchEngine + '/search?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=0';
 		Global.searchStart = 0;
 		if(!!document.getElementById("searchbox").value) {
 			url += '&q=' + document.getElementById("searchbox").value;
@@ -61,18 +62,22 @@
 						}
 					}
 				},
-				error: function(e){
-					var str = '道哥出错啦！';
-					for(var p in e) {
-						str += p + "=" + e[p] + ";";
+				error: function(jqXHR, textStatus, errorThrown){
+					if(textStatus === "timeout") {
+						alert("道哥超时了，让他歇会再试吧。");
+					} else {
+						var str = '道哥出错啦！';
+						for(var p in errorThrown) {
+							str += p + "=" + errorThrown[p] + ";";
+						}
+						alert(str);
 					}
-					alert(str);
 				}
 			});
 	};
 
 	function searchMore(tagName, searchStart) {
-		var url = 'http://127.0.0.1:8080/solr/apidocs/search?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
+		var url = Global.searchEngine + '/search?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
 		if(!!Global.searchContent) {
 			url += '&q=' + Global.searchContent;
 		} else {
@@ -101,24 +106,28 @@
 						}
 					}
 				},
-				error: function(e){
-					var str = '道哥出错啦！';
-					for(var p in e) {
-						str += p + "=" + e[p] + ";";
+				error: function(jqXHR, textStatus, errorThrown){
+					if(textStatus === "timeout") {
+						alert("道哥超时了，让他歇会再试吧。");
+					} else {
+						var str = '道哥出错啦！';
+						for(var p in errorThrown) {
+							str += p + "=" + errorThrown[p] + ";";
+						}
+						alert(str);
 					}
-					alert(str);
 				}
 			});
 	};
 
 	function loadSearchBarOptions(){
-		//todo: make solr server address configurable
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=systemName&facet.field=branchName';
+		var url = Global.searchEngine + '/select?wt=json&json.wrf=?&facet=true&facet.field=systemName&facet.field=branchName';
 		$.ajax({
 				type:'get',
 				dataType: "jsonp",
  				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 				url: encodeURI(url),
+				timeout: 1000,
 				success: function(data){
 					var systemSelect = document.getElementById("system");
 					systemSelect.options.length = 0;  
@@ -142,12 +151,16 @@
 						}
 					}
 				},
-				error: function(e){
-					var str = '道哥出错啦！';
-					for(var p in e) {
-						str += p + "=" + e[p] + ";";
+				error: function(jqXHR, textStatus, errorThrown){
+					if(textStatus === "timeout") {
+						alert("道哥超时了，让他歇会再试吧。");
+					} else {
+						var str = '道哥出错啦！';
+						for(var p in errorThrown) {
+							str += p + "=" + errorThrown[p] + ";";
+						}
+						alert(str);
 					}
-					alert(str);
 				}
 			});
 	};
@@ -253,13 +266,13 @@
 
 		Global.pagelayout = $('body').layout({
 			center__maskContents:		true	// IMPORTANT - enable iframe masking
-		,	minSize:					50		// ALL panes
+		,	minSize:					60		// ALL panes
 		,	west__size:					200
 		,	east__size:					200
 		,	stateManagement__enabled:	true
 		,   north : {
 				initClosed:				true
-			,	size:					60
+			,	size:					82
 		    }
 
 		,	west__childOptions:	{
@@ -277,18 +290,21 @@
 <body>
 
 <div id="searchBar" class="ui-layout-north">
-	<input id="searchbox" type="text"/>
+	<div class="sitename"></div>
+	<div class="searchcomponent">
+		<input id="searchbox" type="text"/>
 
-	<label for="system">系统:</label>
-	<select name="system" id="system">
-	</select>
+		<label for="system">系统:</label>
+		<select name="system" id="system">
+		</select>
 
-	<label for="system">代码分支:</label>
-	<select name="branch" id="branch">
-	</select>
+		<label for="system">代码分支:</label>
+		<select name="branch" id="branch">
+		</select>
 
-	<input id="searchbtn" value="云端问道" onclick='searchCloud()' type="submit"/>	
-	<input id="returnbtn" value="本地取经" onclick='returnLocal()' type="submit"/>	
+		<input id="searchbtn" value="云端问道" onclick='searchCloud()' type="submit"/>	
+		<input id="returnbtn" value="本地取经" onclick='returnLocal()' type="submit"/>
+	</div>
 </div>
 
 <iframe id="mainFrame" name="mainFrame" class="ui-layout-center"

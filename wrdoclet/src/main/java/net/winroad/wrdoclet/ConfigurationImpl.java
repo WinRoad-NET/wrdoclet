@@ -192,6 +192,11 @@ public class ConfigurationImpl extends Configuration {
     public String systemname = "";
     
     /**
+     * Argument for command line option "-searchengine".
+     */
+    public String searchengine = "http://127.0.0.1:8080/solr/apidocs";
+    
+    /**
      * Unique Resource Handler for this package.
      */
     public final MessageRetriever standardmessage;
@@ -303,6 +308,8 @@ public class ConfigurationImpl extends Configuration {
             	systemname = os[1];
             } else if (opt.equals("-branchname")) {
                 branchname = os[1];
+            } else if (opt.equals("-searchengine")) {
+            	searchengine = os[1];
             } 
         }
         if (root.specifiedClasses().length > 0) {
@@ -373,7 +380,8 @@ public class ConfigurationImpl extends Configuration {
                    option.equals("-springcontextconfigpath") ||
                    option.equals("-excludedurlsxpath") ||
                    option.equals("-systemname") ||
-                   option.equals("-branchname")) {
+                   option.equals("-branchname") ||
+                   option.equals("-searchengine")) {
             return 2;
         } else {
             return 0;
