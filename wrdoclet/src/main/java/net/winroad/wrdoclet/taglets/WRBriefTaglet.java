@@ -6,7 +6,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 public class WRBriefTaglet implements Taglet {
-	public static final String NAME = "wr.brief";
+	public static final String NAME = "brief";
 	
 	public String getName() {
 		return NAME;

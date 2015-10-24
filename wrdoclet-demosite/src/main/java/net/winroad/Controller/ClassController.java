@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ClassController extends BaseController {
 	// 悲催，这种注释doclet不认
 	// 添加课程
-	// @wr.tag Clazz, School, OPS
+	// @tag Clazz, School, OPS
 	// @author Adams
 	// @version 0.0.1
-	// @wr.memo init create
+	// @memo init create
 	// @author Bob
 	// @version 0.0.2
-	// @wr.memo fix bug
+	// @memo fix bug
 	@RequestMapping(value = "/class/add", method = RequestMethod.POST)
 	public @ResponseBody
 	Clazz addClass(@RequestBody Clazz clazz, HttpServletRequest httpRequest,
@@ -36,13 +36,13 @@ public class ClassController extends BaseController {
 	 * 
 	 添加课程列表. 添加
 	 完后返回添加结果。
-	 @wr.tag Clazz, School, OPS
+	 @tag Clazz；School，OPS 测试
 	 @author Adams
 	 @version 0.0.1
-	 @wr.memo init create
+	 @memo init create
 	 @author Bob
 	 @version 0.0.2
-	 @wr.memo fix bug
+	 @memo fix bug
 	 */
 	@RequestMapping(value = "/class/addlist", method = RequestMethod.POST)
 	public @ResponseBody
@@ -53,14 +53,14 @@ public class ClassController extends BaseController {
 
 	/**
 	 * 删除课程 
-	 * @wr.tag Class, School
+	 * @tag Class, School
 	 * @author Adams 
 	 * @version 0.0.1 
-	 * @wr.memo init add api 
+	 * @memo init add api 
 	 * @author Bob 
 	 * @version 0.0.2 
-	 * @wr.memo fix bug
-	 * @wr.returnCode 400 404 503
+	 * @memo fix bug
+	 * @returnCode 400 404 503
 	 */
 	@RequestMapping(value = "/class/del", method = RequestMethod.POST)
 	public @ResponseBody
@@ -70,15 +70,15 @@ public class ClassController extends BaseController {
 	}
 	
 	/**
-	 * @wr.brief list课程 
-	 * @wr.tag Class 
+	 * @brief list课程 
+	 * @tag Class 
 	 * @author Adams 
 	 * @version 0.0.1 
-	 * @wr.memo init add api 
+	 * @memo init add api 
 	 * @author Bob 
 	 * @version 0.0.2 
-	 * @wr.memo fix bug
-	 * @wr.returnCode 400 404 503
+	 * @memo fix bug
+	 * @returnCode 400 404 503
 	 * @return the class list.
 	 */
 	@RequestMapping(value = {"/class/list","/class/listclass"}, method = RequestMethod.GET)

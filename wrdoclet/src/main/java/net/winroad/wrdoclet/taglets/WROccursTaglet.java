@@ -6,7 +6,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 public class WROccursTaglet implements Taglet {
-	public static final String NAME = "wr.occurs";
+	public static final String NAME = "occurs";
 	public static final String REQUIRED = "required";
 	public static final String OPTIONAL = "optional";
 	public static final String DEPENDS = "depends";

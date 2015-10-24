@@ -8,7 +8,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 public class WRTagTaglet implements Taglet {
-	public static final String NAME = "wr.tag";
+	public static final String NAME = "tag";
 	private static final String SPLITTER = ",";
 
 	public String getName() {
@@ -67,7 +67,7 @@ public class WRTagTaglet implements Taglet {
 	 * @return set of tags.
 	 */
 	public static Set<String> getTagSet(String tags) {
-		String[] tagArr = tags.split(SPLITTER);
+		String[] tagArr = tags.split("[\\s,，;；]");
 		Set<String> tagSet = new HashSet<String>();
 		for (int i = 0; i < tagArr.length; i++) {
 			String tag = tagArr[i].trim();

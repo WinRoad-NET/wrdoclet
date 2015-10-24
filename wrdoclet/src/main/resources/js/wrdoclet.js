@@ -20,16 +20,16 @@
 					} else {
 						handleTagListDisplay(data, Global.pagelayout);
 						window.parent.loadTagList(data);
+						if(!!document.getElementById("searchbox").value) {
+							Global.searchContent = document.getElementById("searchbox").value;
+						} else {
+							Global.searchContent = '';
+						}
 						Global.tag2APIsmap = convertSearchResult(data);
 						if(data.facet_counts.facet_fields.tags[0]) {
 							//render the first tag
 							searchMore(data.facet_counts.facet_fields.tags[0], 0);
 							//loadAPIList( Global.tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
-						}
-						if(!!document.getElementById("searchbox").value) {
-							Global.searchContent = document.getElementById("searchbox").value;
-						} else {
-							Global.searchContent = '';
 						}
 					}
 				},

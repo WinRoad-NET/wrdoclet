@@ -17,19 +17,19 @@ public interface TestService {
 	/* 悲催，这种注释doclet不认
 	 * 获取用户列表
 	 * 
-	 * @wr.tag User
+	 * @tag User
 	 * 
 	 * @author Adams
 	 * 
 	 * @version 0.0.1
 	 * 
-	 * @wr.memo init create
+	 * @memo init create
 	 * 
 	 * @author Bob
 	 * 
 	 * @version 0.0.2
 	 * 
-	 * @wr.memo fix bug
+	 * @memo fix bug
 	 */
 	@WebResult(name = "getUserResult")
 	public List<User> getUserList(@XmlElement(required=false) @WebParam(name = "name") String name);

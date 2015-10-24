@@ -15,6 +15,8 @@ import net.winroad.wrdoclet.builder.AbstractDocBuilder;
 import net.winroad.wrdoclet.builder.DubboDocBuilder;
 import net.winroad.wrdoclet.builder.RESTDocBuilder;
 import net.winroad.wrdoclet.builder.SOAPDocBuilder;
+import net.winroad.wrdoclet.utils.Logger;
+import net.winroad.wrdoclet.utils.LoggerFactory;
 
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 
@@ -29,6 +31,8 @@ public class WRDoc {
 	private Configuration configuration;
 
 	private String docGeneratedDate;
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public Configuration getConfiguration() {
 		return configuration;
@@ -52,10 +56,13 @@ public class WRDoc {
 		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"); 
 		this.docGeneratedDate = df.format(c.getTime());
 		this.builders.add(new RESTDocBuilder(this));
+		this.logger.debug("RESTDocBuilder loaded.");
 		this.builders.add(new SOAPDocBuilder(this));
+		this.logger.debug("SOAPDocBuilder loaded.");
 		String dubboConfigPath = ((ConfigurationImpl) this.configuration).dubboconfigpath;
 		if (dubboConfigPath != null && !dubboConfigPath.isEmpty()) {
 			this.builders.add(new DubboDocBuilder(this));
+			this.logger.debug("DubboDocBuilder loaded with config path:" + dubboConfigPath);
 		}
 		this.build();
 	}

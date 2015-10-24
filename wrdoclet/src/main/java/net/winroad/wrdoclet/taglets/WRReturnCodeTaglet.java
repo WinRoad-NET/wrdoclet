@@ -6,7 +6,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 public class WRReturnCodeTaglet implements Taglet {
-	public static final String NAME = "wr.returnCode";
+	public static final String NAME = "returnCode";
 	
 	public String getName() {
 		return NAME;

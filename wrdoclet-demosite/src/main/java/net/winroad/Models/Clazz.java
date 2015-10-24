@@ -10,8 +10,8 @@ public class Clazz {
 	 * 
 	 * @author Bob huang
 	 * @version 0.0.2
-	 * @wr.memo fix bla bla bla bla bla bla bla bla bug
-	 * @wr.occurs required
+	 * @memo fix bla bla bla bla bla bla bla bla bug
+	 * @occurs required
 	 */
 	public String getName() {
 		return name;
@@ -22,8 +22,8 @@ public class Clazz {
 	 * 
 	 * @author Bob zhong
 	 * @version 0.0.2
-	 * @wr.memo fix bug
-	 * @wr.occurs required
+	 * @memo fix bug
+	 * @occurs required
 	 */
 	public void setName(String name) {
 		this.name = name;

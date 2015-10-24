@@ -11,7 +11,7 @@ public class ModificationRecord {
 	 */
 	private String version;
 	/*
-	 * Describes the modification. Corresponds to @wr.memo.
+	 * Describes the modification. Corresponds to @memo.
 	 */
 	private String memo;
 

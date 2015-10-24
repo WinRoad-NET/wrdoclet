@@ -14,6 +14,7 @@
 		searchEngine : '${searchengine}',
 		// the API tag and link data
 		localData : ${response},
+		//localData : {"docs":[{}],"facet_counts":{"facet_fields":{"tags":[]}}}
 		// map key: tag, value: APIs
 		tag2APIsmap : {},
 		pagelayout : {},

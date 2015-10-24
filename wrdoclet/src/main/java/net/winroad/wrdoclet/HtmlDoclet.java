@@ -169,7 +169,7 @@ public class HtmlDoclet extends AbstractDoclet {
 	}
 
 	/**
-	 * Generate the wr.tag documentation.
+	 * Generate the tag documentation.
 	 * 
 	 * @param root
 	 *            the RootDoc of source to document.

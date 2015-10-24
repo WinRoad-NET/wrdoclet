@@ -6,7 +6,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 public class WRMemoTaglet implements Taglet {
-	public static final String NAME = "wr.memo";
+	public static final String NAME = "memo";
 	
 	public String getName() {
 		return NAME;
