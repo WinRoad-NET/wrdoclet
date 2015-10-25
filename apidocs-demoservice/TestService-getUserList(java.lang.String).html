@@ -7,7 +7,7 @@
         <meta name="generator" content="wrdoclet" />
         <meta name="tags" content="TestService" />
         <meta name="brief" content="" />
-    	<meta name="APIUrl" content="updateUser" />
+    	<meta name="APIUrl" content="getUserList(java.lang.String)" />
     	<meta name="tooltip" content="TestService" />
     		<meta name="methodType" content="" />
     	<meta name="systemName" content="demoservice" />
@@ -33,14 +33,14 @@
 
     <body>
   <p class="qualifiedName">
-    	<font size='5'>☞</font>&nbsp;net.winroad.Service.TestService.updateUser
+    	<font size='5'>☞</font>&nbsp;net.winroad.Service.TestService.getUserList
   </p>
     <h3>
       访问路径
     </h3>
     <div class="accessPath">
       	<div class="openAPIUrl">
-        	updateUser
+        	getUserList(java.lang.String)
         </div>
     </div>
     <h3>
@@ -69,39 +69,6 @@
       <tbody>
   <tr>
     <td>
-            arg0
-      </td>
-      <td>
-          net.winroad.Models.User
-      </td>
-      <td>
-          
-      </td>
-      <td style="text-align: center;">
-          	是
-      </td>
-      <td>
-      </td>
-    </tr>
-  <tr>
-    <td>
-          &nbsp;&nbsp;
-            id
-      </td>
-      <td>
-          int
-      </td>
-      <td>
-          
-      </td>
-      <td style="text-align: center;">
-      </td>
-      <td>
-      </td>
-    </tr>
-  <tr>
-    <td>
-          &nbsp;&nbsp;
             name
       </td>
       <td>
@@ -111,22 +78,7 @@
           
       </td>
       <td style="text-align: center;">
-      </td>
-      <td>
-      </td>
-    </tr>
-  <tr>
-    <td>
-          &nbsp;&nbsp;
-            password
-      </td>
-      <td>
-          java.lang.String
-      </td>
-      <td>
-          
-      </td>
-      <td style="text-align: center;">
+          	否
       </td>
       <td>
       </td>
@@ -160,16 +112,84 @@
       <tbody>
   <tr>
     <td>
-            return
+            getUserResult
       </td>
       <td>
-          boolean
+          java.util.List&lt;net.winroad.Models.User&gt;
       </td>
       <td>
-          whether user is updated.
       </td>
       <td style="text-align: center;">
           	是
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          <b>
+            User
+          </b>
+      </td>
+      <td>
+          net.winroad.Models.User
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            id
+      </td>
+      <td>
+          int
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            name
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+          &nbsp;&nbsp;
+            password
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
       </td>
       <td>
       </td>
@@ -182,7 +202,7 @@
 					© <strong>demoservice</strong> |
 				</li>
 				<li>
-					Generated on <strong>2015.10.07 11:12:24</strong> |
+					Generated on <strong>2015.10.25 12:21:39</strong> |
 				</li>
 				<li> Branch : <strong>master</strong> | </li>
 				<li> Powered by <strong>winroad</strong></li>

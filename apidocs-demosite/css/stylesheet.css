@@ -226,6 +226,17 @@ a:hover {
 	background: lightgray;
 }
 
+.sitename {
+	float: left;
+	width: 180px;
+	height: 60px;
+	background: url(../img/sitename.png) no-repeat;
+}
+
+.searchcomponent {
+	padding: 18px;
+}
+
 #searchbox {
 	width: 300px;
 }

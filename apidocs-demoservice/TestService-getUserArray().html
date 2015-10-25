@@ -5,12 +5,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="generator" content="wrdoclet" />
-        <meta name="tags" content="DemoService" />
+        <meta name="tags" content="TestService" />
         <meta name="brief" content="" />
-    	<meta name="APIUrl" content="sayHello" />
-    	<meta name="tooltip" content="DemoService" />
+    	<meta name="APIUrl" content="getUserArray()" />
+    	<meta name="tooltip" content="TestService" />
     		<meta name="methodType" content="" />
-    	<meta name="systemName" content="demodubbo" />
+    	<meta name="systemName" content="demoservice" />
     	<meta name="branchName" content="master" />
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
     </head>
@@ -33,57 +33,20 @@
 
     <body>
   <p class="qualifiedName">
-    	<font size='5'>☞</font>&nbsp;net.winroad.dubbo.DemoService.sayHello
+    	<font size='5'>☞</font>&nbsp;net.winroad.Service.TestService.getUserArray
   </p>
     <h3>
       访问路径
     </h3>
     <div class="accessPath">
       	<div class="openAPIUrl">
-        	sayHello
+        	getUserArray()
         </div>
     </div>
     <h3>
       请求
     </h3>
-    <table id="reqTable" class="reqParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
-      <thead>
-        <tr>
-          <th style="width: 20%;"></span>
-            参数名
-          </th>
-          <th style="width: 22%;"></span>
-            参数类型
-          </th>
-          <th style="width: 20%;"></span>
-            描述
-          </th>
-          <th style="width: 8%;"></span>
-            是否必须
-          </th>
-          <th style="width: 30%;">
-            修订记录
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-  <tr>
-    <td>
-            name
-      </td>
-      <td>
-          java.lang.String
-      </td>
-      <td>
-          
-      </td>
-      <td style="text-align: center;">
-      </td>
-      <td>
-      </td>
-    </tr>
-      </tbody>
-    </table>
+        <p>N/A</p>
 
     <h3>
       响应
@@ -111,9 +74,10 @@
       <tbody>
   <tr>
     <td>
+            return
       </td>
       <td>
-          java.lang.String
+          net.winroad.Models.User
       </td>
       <td>
       </td>
@@ -123,15 +87,63 @@
       <td>
       </td>
     </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            id
+      </td>
+      <td>
+          int
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            name
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            password
+      </td>
+      <td>
+          java.lang.String
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
       </tbody>
     </table>
 		<div class="foot">
 			<ul>
 				<li>
-					© <strong>demodubbo</strong> |
+					© <strong>demoservice</strong> |
 				</li>
 				<li>
-					Generated on <strong>2015.10.07 11:12:13</strong> |
+					Generated on <strong>2015.10.25 12:21:39</strong> |
 				</li>
 				<li> Branch : <strong>master</strong> | </li>
 				<li> Powered by <strong>winroad</strong></li>

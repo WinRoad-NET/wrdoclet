@@ -7,7 +7,7 @@
         <meta name="generator" content="wrdoclet" />
         <meta name="tags" content="TestService" />
         <meta name="brief" content="" />
-    	<meta name="APIUrl" content="addUser" />
+    	<meta name="APIUrl" content="findUser(net.winroad.Models.User)" />
     	<meta name="tooltip" content="TestService" />
     		<meta name="methodType" content="" />
     	<meta name="systemName" content="demoservice" />
@@ -33,14 +33,14 @@
 
     <body>
   <p class="qualifiedName">
-    	<font size='5'>☞</font>&nbsp;net.winroad.Service.TestService.addUser
+    	<font size='5'>☞</font>&nbsp;net.winroad.Service.TestService.findUser
   </p>
     <h3>
       访问路径
     </h3>
     <div class="accessPath">
       	<div class="openAPIUrl">
-        	addUser
+        	findUser(net.winroad.Models.User)
         </div>
     </div>
     <h3>
@@ -69,7 +69,40 @@
       <tbody>
   <tr>
     <td>
-            username
+            arg0
+      </td>
+      <td>
+          net.winroad.Models.User
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+          	否
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            id
+      </td>
+      <td>
+          int
+      </td>
+      <td>
+          
+      </td>
+      <td style="text-align: center;">
+      </td>
+      <td>
+      </td>
+    </tr>
+  <tr>
+    <td>
+          &nbsp;&nbsp;
+            name
       </td>
       <td>
           java.lang.String
@@ -84,7 +117,8 @@
     </tr>
   <tr>
     <td>
-            arg1
+          &nbsp;&nbsp;
+            password
       </td>
       <td>
           java.lang.String
@@ -93,7 +127,6 @@
           
       </td>
       <td style="text-align: center;">
-          	是
       </td>
       <td>
       </td>
@@ -130,7 +163,7 @@
             return
       </td>
       <td>
-          int
+          boolean
       </td>
       <td>
       </td>
@@ -148,7 +181,7 @@
 					© <strong>demoservice</strong> |
 				</li>
 				<li>
-					Generated on <strong>2015.10.07 11:12:24</strong> |
+					Generated on <strong>2015.10.25 12:21:39</strong> |
 				</li>
 				<li> Branch : <strong>master</strong> | </li>
 				<li> Powered by <strong>winroad</strong></li>

@@ -8,15 +8,19 @@
 <script type="text/javascript" src="js/jquery-ui-1.11.4.min.js"></script>
 <script type="text/javascript" src="js/jquery.layout-1.4.0.js"></script>
 <script type="text/javascript" src="js/template.min.js"></script>
+<script type="text/javascript" src="js/wrdoclet.js"></script>
 <script type="text/javascript">
 	Global = {
+		searchEngine : 'http://127.0.0.1:8080/solr/apidocs',
 		// the API tag and link data
-		localData : {"docs":[{"tag":"Class","APIs":[{"url":"/class/del","filepath":"class-del-POST.html","brief":"删除课程","methodType":"POST","tooltip":"ClassController"},{"url":"/class/list","filepath":"class-list-GET.html","brief":"list课程","methodType":"GET","tooltip":"ClassController"}]},{"tag":"ClassController","APIs":[{"url":"/class/add","filepath":"class-add-POST.html","brief":"","methodType":"POST","tooltip":"ClassController"}]},{"tag":"Clazz","APIs":[{"url":"/class/addlist","filepath":"class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]},{"tag":"OPS","APIs":[{"url":"/class/addlist","filepath":"class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]},{"tag":"School","APIs":[{"url":"/class/del","filepath":"class-del-POST.html","brief":"删除课程","methodType":"POST","tooltip":"ClassController"},{"url":"/class/addlist","filepath":"class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]},{"tag":"StudentController","APIs":[{"url":"/student/delete/{name}","filepath":"student-delete--name--POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/update","filepath":"student-update-POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/{name}","filepath":"student--name--GET.html","brief":"","methodType":"GET","tooltip":"StudentController"},{"url":"/student/login","filepath":"student-login-POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/add","filepath":"student-add-POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/getgender/{name}","filepath":"student-getgender--name--GET.html","brief":"","methodType":"GET","tooltip":"StudentController"}]}],"facet_counts":{"facet_fields":{"tags":["Class",2,"ClassController",1,"Clazz",1,"OPS",1,"School",2,"StudentController",6]}}},
+		localData : {"docs":[{"tag":"Class","APIs":[{"url":"{/class/list, /class/listclass}","filepath":"ClassController---class-list, -class-listclass--GET.html","brief":"list课程","methodType":"GET","tooltip":"ClassController"},{"url":"/class/del","filepath":"ClassController--class-del-POST.html","brief":"删除课程","methodType":"POST","tooltip":"ClassController"}]},{"tag":"ClassController","APIs":[{"url":"/class/add","filepath":"ClassController--class-add-POST.html","brief":"","methodType":"POST","tooltip":"ClassController"}]},{"tag":"Clazz","APIs":[{"url":"/class/addlist","filepath":"ClassController--class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]},{"tag":"OPS","APIs":[{"url":"/class/addlist","filepath":"ClassController--class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]},{"tag":"School","APIs":[{"url":"/class/del","filepath":"ClassController--class-del-POST.html","brief":"删除课程","methodType":"POST","tooltip":"ClassController"},{"url":"/class/addlist","filepath":"ClassController--class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]},{"tag":"StudentController","APIs":[{"url":"/student/getgender/{name}","filepath":"StudentController--student-getgender--name--GET.html","brief":"","methodType":"GET","tooltip":"StudentController"},{"url":"/student/name.{json|html}","filepath":"StudentController--student-name.-json-html--GET.html","brief":"","methodType":"GET","tooltip":"StudentController"},{"url":"/student/delete/{name}","filepath":"StudentController--student-delete--name--POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/add","filepath":"StudentController--student-add-POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/login","filepath":"StudentController--student-login-POST.html","brief":"","methodType":"POST","tooltip":"StudentController"},{"url":"/student/update","filepath":"StudentController--student-update-POST.html","brief":"","methodType":"POST","tooltip":"StudentController"}]},{"tag":"测试","APIs":[{"url":"/class/addlist","filepath":"ClassController--class-addlist-POST.html","brief":"添加课程列表","methodType":"POST","tooltip":"ClassController"}]}],"facet_counts":{"facet_fields":{"tags":["Class",2,"ClassController",1,"Clazz",1,"OPS",1,"School",2,"StudentController",6,"测试",1]}}},
+		//localData : {"docs":[{}],"facet_counts":{"facet_fields":{"tags":[]}}}
 		// map key: tag, value: APIs
 		tag2APIsmap : {},
 		pagelayout : {},
 		searchContent : '',
-		searchRows : 10 
+		searchRows : 10,
+		searchOptions : []
 	};
 
 	Request = {
@@ -25,213 +29,6 @@
 			return svalue ? decodeURIComponent( svalue[1] ) : svalue;
 		}
 	};
-
-	function searchCloud() {
-		// todo: configurable solr server address
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=tags&facet.mincount=1&rows=0';
-		Global.searchStart = 0;
-		if(!!document.getElementById("searchbox").value) {
-			Global.searchContent = document.getElementById("searchbox").value;
-			url += '&q=' + Global.searchContent;
-		} else {
-			Global.searchContent = '';
-			url += '&q=*:*';
-		}
-		url += '&fq=systemName:' + document.getElementById("system").value;
-		url += '&fq=branchName:' + document.getElementById("branch").value;
-		$.ajax({
-				type:'get',
-				dataType: "jsonp",
- 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-				url: encodeURI(url),
-				success: function(data){
-					if(data.response.numFound == 0) {
-						alert("没有找到任何记录。可以调整搜索的参数再试试看。");
-					} else {
-						handleTagListDisplay(data, Global.pagelayout);
-						window.parent.loadTagList(data);
-						Global.tag2APIsmap = convertSearchResult(data);
-						if(data.facet_counts.facet_fields.tags[0]) {
-							//render the first tag
-							searchMore(data.facet_counts.facet_fields.tags[0], 0);
-							//loadAPIList( Global.tag2APIsmap[data.facet_counts.facet_fields.tags[0]] );				
-						}
-					}
-				},
-				error: function(e){
-					var str = '出错啦！';
-					for(var p in e) {
-						str += p + "=" + e[p] + ";";
-					}
-					alert(str);
-				}
-			});
-	};
-
-	function searchMore(tagName, searchStart) {
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
-		if(!!Global.searchContent) {
-			url += '&q=' + Global.searchContent;
-		} else {
-			url += '&q=*:*';
-		}
-		url += '&fq=systemName:' + document.getElementById("system").value;
-		url += '&fq=branchName:' + document.getElementById("branch").value;
-		$.ajax({
-				type:'get',
-				dataType: "jsonp",
- 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-				url: encodeURI(url),
-				success: function(data){
-					if(data.response.numFound == 0) {
-						alert("就这么多，没有更多记录了。");
-					} else {
-						var convertedResult = convertSearchResult(data);
-						Global.tag2APIsmap[tagName].APIs = Global.tag2APIsmap[tagName].APIs.concat( convertedResult[tagName].APIs );
-						var html = template('APIURLListTmpl', Global.tag2APIsmap[tagName]);
-						document.getElementById('APIURLList').innerHTML = html;
-						if(searchStart == 0) {
-							$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
-							if($("#APIDetailLink").length && !$("#APIDetailLink")[0].href) {
-								$("#APIDetailLink")[0].click();
-							}
-						}
-					}
-				},
-				error: function(e){
-					var str = '出错啦！';
-					for(var p in e) {
-						str += p + "=" + e[p] + ";";
-					}
-					alert(str);
-				}
-			});
-	};
-
-	function loadSearchBarOptions(){
-		//todo: make solr server address configurable
-		var url = 'http://127.0.0.1:8080/solr/apidocs/select?wt=json&json.wrf=?&facet=true&facet.field=systemName&facet.field=branchName';
-		$.ajax({
-				type:'get',
-				dataType: "jsonp",
- 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-				url: encodeURI(url),
-				success: function(data){
-					var systemSelect = document.getElementById("system");
-					systemSelect.options.length = 0;  
-					for(var i=0; !!data && !!data.facet_counts && i<data.facet_counts.facet_fields.systemName.length; i+=2){
-						if(!!data.facet_counts.facet_fields.systemName[i]) {
-							var option = document.createElement("option");
-							option.text = data.facet_counts.facet_fields.systemName[i];
-							option.value = data.facet_counts.facet_fields.systemName[i];
-							systemSelect.appendChild(option);
-						}
-					}
-
-					var branchSelect = document.getElementById("branch");
-					branchSelect.options.length = 0;  
-					for(var i=0; !!data && !!data.facet_counts && i<data.facet_counts.facet_fields.branchName.length; i+=2){
-						if(!!data.facet_counts.facet_fields.branchName[i]) {
-							var option = document.createElement("option");
-							option.text = data.facet_counts.facet_fields.branchName[i];
-							option.value = data.facet_counts.facet_fields.branchName[i];
-							branchSelect.appendChild(option);
-						}
-					}
-				},
-				error: function(e){
-					var str = '出错啦！';
-					for(var p in e) {
-						str += p + "=" + e[p] + ";";
-					}
-					alert(str);
-				}
-			});
-	};
-
-	function loadTagList(data) {
-		var html = template('tagListTmpl', data);
-		document.getElementById('tagList').innerHTML = html;
-	};
-
-	function convertLocalData(localData) {
-		// map key: tag, value: APIs
-		var tag2APIsmap = {};
-		for(var i in localData.docs) {
-			tag2APIsmap[localData.docs[i].tag] = localData.docs[i];
-		}
-		for (var i = 0; i < localData.facet_counts.facet_fields.tags.length; i += 2) {
-			tag2APIsmap[ localData.facet_counts.facet_fields.tags[i] ].totalCount = localData.facet_counts.facet_fields.tags[i+1];
-		};
-		return tag2APIsmap;
-	};
-
-	function convertSearchResult(searchResult) {
-		var tag2APIsmap = {};
-		for(var i in searchResult.response.docs) {
-			for(var j in searchResult.response.docs[i].tags) {
-				var api = {};
-				api.url = searchResult.response.docs[i].APIUrl;
-				api.tooltip = searchResult.response.docs[i].tooltip;
-				api.methodType = searchResult.response.docs[i].methodType;
-				api.pageContent = searchResult.response.docs[i].pageContent;
-				api.brief = searchResult.response.docs[i].brief;
-				if(!tag2APIsmap[searchResult.response.docs[i].tags[j]]) {
-					tag2APIsmap[searchResult.response.docs[i].tags[j]] = { tag: searchResult.response.docs[i].tags[j], APIs: [] };
-				}
-				tag2APIsmap[searchResult.response.docs[i].tags[j]].APIs.push(api);
-			}
-		}
-		if(searchResult.facet_counts) {
-			for (var i = 0; i < searchResult.facet_counts.facet_fields.tags.length; i += 2) {
-				if(!tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ]) {
-					tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ] = { tag: searchResult.facet_counts.facet_fields.tags[i], APIs: [] };
-				}
-				tag2APIsmap[ searchResult.facet_counts.facet_fields.tags[i] ].totalCount = searchResult.facet_counts.facet_fields.tags[i+1];
-			};
-		}
-		return tag2APIsmap;
-	};
-
-	function loadAPIList(tagAPIs) {
-		if(tagAPIs.APIs.length == 0) {
-			searchMore(tagAPIs.tag, 0);
-		} else {
-			var html = template('APIURLListTmpl', tagAPIs);
-			document.getElementById('APIURLList').innerHTML = html;
-			$("#mainFrame").attr("src",$("#APIDetailLink").length ? $("#APIDetailLink")[0].href : "").trigger("beforeload");
-			/* TODO:
-			Loading page locally, chrome raises ' Uncaught SecurityError: Blocked a frame with origin "null" from accessing a frame with origin "null". ' when clicking search button.
-			*/
-			if($("#APIDetailLink").length && !$("#APIDetailLink")[0].href) {
-				$("#APIDetailLink")[0].click();
-			}
-		}
-	};
-
-	function loadMainFrame(tag, index) {
-		document.getElementById("mainFrame").contentWindow.document.open();
-		document.getElementById("mainFrame").contentWindow.document.write(Global.tag2APIsmap[tag].APIs[index].pageContent);
-		document.getElementById("mainFrame").contentWindow.document.close();
-	};
-
-	function returnLocal() {
-		handleTagListDisplay(Global.localData, Global.pagelayout);
-		loadTagList(Global.localData);
-		Global.tag2APIsmap = convertLocalData(Global.localData);
-		if(Object.keys(Global.tag2APIsmap)[0]) {
-			//render the first tag
-			loadAPIList( Global.tag2APIsmap[Object.keys(Global.tag2APIsmap)[0]] );
-		}
-	};
-	
-	function handleTagListDisplay(data, pagelayout) {
-		if(data.facet_counts.facet_fields.tags.length == 2) {
-			pagelayout.west.children.layout1.close('north');
-		} else {
-			pagelayout.west.children.layout1.open('north');
-		}
-	}
 
 	window.onload=function(){
 		loadSearchBarOptions();
@@ -250,13 +47,13 @@
 
 		Global.pagelayout = $('body').layout({
 			center__maskContents:		true	// IMPORTANT - enable iframe masking
-		,	minSize:					50		// ALL panes
+		,	minSize:					60		// ALL panes
 		,	west__size:					200
 		,	east__size:					200
 		,	stateManagement__enabled:	true
 		,   north : {
 				initClosed:				true
-			,	size:					60
+			,	size:					82
 		    }
 
 		,	west__childOptions:	{
@@ -274,18 +71,21 @@
 <body>
 
 <div id="searchBar" class="ui-layout-north">
-	<input id="searchbox" type="text"/>
+	<div class="sitename"></div>
+	<div class="searchcomponent">
+		<input id="searchbox" type="text"/>
 
-	<label for="system">系统:</label>
-	<select name="system" id="system">
-	</select>
+		<label for="system">系统:</label>
+		<select name="system" id="system" onChange="loadBranchOptions(this.value)">
+		</select>
 
-	<label for="system">代码分支:</label>
-	<select name="branch" id="branch">
-	</select>
+		<label for="system">代码分支:</label>
+		<select name="branch" id="branch">
+		</select>
 
-	<input id="searchbtn" value="搜索云端" onclick='searchCloud()' type="submit"/>	
-	<input id="returnbtn" value="回到本地" onclick='returnLocal()' type="submit"/>	
+		<input id="searchbtn" value="云端问道" onclick='searchCloud()' type="submit"/>	
+		<input id="returnbtn" value="本地取经" onclick='returnLocal()' type="submit"/>
+	</div>
 </div>
 
 <iframe id="mainFrame" name="mainFrame" class="ui-layout-center"
