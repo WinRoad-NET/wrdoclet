@@ -64,6 +64,12 @@
 		});
 
 		handleTagListDisplay(Global.localData, Global.pagelayout);
+
+		$(document).keyup(function(event){
+			if(event.keyCode ==13){
+				$("#searchbtn").trigger("click");
+			}
+		});	
 	});
 </script>
 </head>
