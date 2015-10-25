@@ -87,6 +87,7 @@ public class HtmlDoclet extends AbstractDoclet {
 				api.setTooltip(openAPI.getRequestMapping().getTooltip());
 				api.setMethodType(openAPI.getRequestMapping().getMethodType());
 				String filename = generateWRAPIFileName(openAPI
+						.getRequestMapping().getContainerName(), openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
 				api.setFilepath(filename);
@@ -158,9 +159,11 @@ public class HtmlDoclet extends AbstractDoclet {
 				Util.combineFilePath(this.configuration.destDirName, "img"));
 	}
 
-	protected String generateWRAPIFileName(String url, String methodType) {
+	protected String generateWRAPIFileName(String container, String url,
+			String methodType) {
 		return StringUtils.strip(
-				(url + '-' + methodType + '-').replace('/', '-')
+				(container + '-' + url + (methodType == null ? '-'
+						: '-' + methodType + '-')).replace('/', '-')
 						.replace('\\', '-').replace(':', '-').replace('*', '-')
 						.replace('?', '-').replace('"', '-').replace('<', '-')
 						.replace('>', '-').replace('|', '-').replace('{', '-')
@@ -195,6 +198,7 @@ public class HtmlDoclet extends AbstractDoclet {
 						"systemName",
 						((ConfigurationImpl) wrDoc.getConfiguration()).systemname);
 				String filename = generateWRAPIFileName(openAPI
+						.getRequestMapping().getContainerName(), openAPI
 						.getRequestMapping().getUrl(), openAPI
 						.getRequestMapping().getMethodType());
 				hashMap.put("filePath", filename);

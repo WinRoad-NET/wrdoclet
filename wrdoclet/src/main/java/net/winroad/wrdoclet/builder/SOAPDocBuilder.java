@@ -25,6 +25,7 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 	@Override
 	protected RequestMapping parseRequestMapping(MethodDoc method) {
 		RequestMapping mapping = new RequestMapping();
+		mapping.setContainerName(method.containingClass().simpleTypeName());
 		AnnotationDesc[] annotations = method.annotations();
 		String url = method.toString().replaceFirst(
 				method.containingClass().qualifiedName() + ".", "");
@@ -40,6 +41,7 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 		}
 		mapping.setUrl(url);
 		mapping.setTooltip(method.containingClass().simpleTypeName());
+		mapping.setContainerName(method.containingClass().simpleTypeName());
 		return mapping;
 	}
 

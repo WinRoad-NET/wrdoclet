@@ -145,6 +145,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		}
 		if (result != null) {
 			result.setTooltip(methodDoc.containingClass().simpleTypeName());
+			result.setContainerName(methodDoc.containingClass().simpleTypeName());
 		}
 		return result;
 	}

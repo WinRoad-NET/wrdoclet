@@ -43,9 +43,7 @@ public class TestServiceImpl implements TestService {
 
 	}
 
-	public void delUser() {
-
-	}
+	public void delUser() {}
 	
 	public User getUserById(int userId) {
 		return list.get(userId);

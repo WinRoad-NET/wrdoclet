@@ -47,6 +47,8 @@ public interface TestService {
 	public boolean updateUser(@XmlElement(required=true) User user);
 	
 	public void delUser(int userId);
+	
+	@WebMethod(operationName = "delUserTest")
 	public void delUser();
 	
 	@WebMethod(operationName = "GetUserByTheId", action = "http://www.winroad.net/GetUserByTheId")

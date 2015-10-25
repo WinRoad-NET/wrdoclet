@@ -4,6 +4,7 @@ public class RequestMapping {
 	private String url;
 	private String methodType;
 	private String tooltip;
+	private String containerName;
 	
 	//TODO: take "consumes"，"produces", "params"，"headers" into consideration.
 	
@@ -29,5 +30,13 @@ public class RequestMapping {
 
 	public void setTooltip(String tooltip) {
 		this.tooltip = tooltip;
+	}
+
+	public String getContainerName() {
+		return containerName;
+	}
+
+	public void setContainerName(String containerName) {
+		this.containerName = containerName;
 	}
 }

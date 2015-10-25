@@ -70,6 +70,7 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 		mapping.setUrl(methodDoc.toString().replaceFirst(
 				methodDoc.containingClass().qualifiedName() + ".", ""));
 		mapping.setTooltip(methodDoc.containingClass().simpleTypeName());
+		mapping.setContainerName(methodDoc.containingClass().simpleTypeName());
 		return mapping;
 	}
 
