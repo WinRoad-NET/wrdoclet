@@ -1,5 +1,6 @@
 package net.winroad.wrdoclet.data;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,6 +126,12 @@ public class OpenAPI {
 	public void addTags(Tag[] tags) {
 		for(Tag t : tags) {
 			this.tags.add(t.text());
+		}
+	}
+	
+	public void addTags(Collection<String> tags) {
+		for(String t : tags) {
+			this.tags.add(t);
 		}
 	}
 	

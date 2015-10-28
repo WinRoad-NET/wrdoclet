@@ -157,7 +157,9 @@ public abstract class AbstractDocBuilder {
 				if (methodDoc.tags(WRTagTaglet.NAME).length == 0) {
 					openAPI.addTag(methodDoc.containingClass().simpleTypeName());
 				} else {
-					openAPI.addTags(methodDoc.tags(WRTagTaglet.NAME));
+					for (Tag t : methodDoc.tags(WRTagTaglet.NAME)) {
+						openAPI.addTags(WRTagTaglet.getTagSet(t.text()));
+					}
 				}
 				openAPI.setQualifiedName(methodDoc.qualifiedName());
 				if (StringUtils.isNotBlank(methodDoc.commentText())) {
