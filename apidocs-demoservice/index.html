@@ -13,7 +13,7 @@
 	Global = {
 		searchEngine : 'http://127.0.0.1:8080/solr/apidocs',
 		// the API tag and link data
-		localData : {"docs":[{"tag":"TestService","APIs":[{"url":"delUserTest()","filepath":"TestService-delUserTest().html","brief":"","tooltip":"TestService"},{"url":"getUserMap()","filepath":"TestService-getUserMap().html","brief":"","tooltip":"TestService"},{"url":"findUser(net.winroad.Models.User)","filepath":"TestService-findUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"},{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"","tooltip":"TestService"},{"url":"updateUser(net.winroad.Models.User)","filepath":"TestService-updateUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"delUser(int)","filepath":"TestService-delUser(int).html","brief":"","tooltip":"TestService"},{"url":"getUserArray()","filepath":"TestService-getUserArray().html","brief":"","tooltip":"TestService"},{"url":"GetUserByTheId(int)","filepath":"TestService-GetUserByTheId(int).html","brief":"","tooltip":"TestService"}]}],"facet_counts":{"facet_fields":{"tags":["TestService",9]}}},
+		localData : {"docs":[{"tag":"demo","APIs":[{"url":"delUser(int)","filepath":"TestService-delUser(int).html","brief":"","tooltip":"TestService"},{"url":"getUserMap()","filepath":"TestService-getUserMap().html","brief":"","tooltip":"TestService"},{"url":"getUserArray()","filepath":"TestService-getUserArray().html","brief":"","tooltip":"TestService"},{"url":"updateUser(net.winroad.Models.User)","filepath":"TestService-updateUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"},{"url":"GetUserByTheId(int)","filepath":"TestService-GetUserByTheId(int).html","brief":"","tooltip":"TestService"},{"url":"findUser(net.winroad.Models.User)","filepath":"TestService-findUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"delUserTest()","filepath":"TestService-delUserTest().html","brief":"","tooltip":"TestService"}]},{"tag":"测试","APIs":[{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"}]},{"tag":"用户管理","APIs":[{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"}]},{"tag":"用户展示","APIs":[{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"}]}],"facet_counts":{"facet_fields":{"tags":["demo",9,"测试",1,"用户管理",2,"用户展示",1]}}},
 		//localData : {"docs":[{}],"facet_counts":{"facet_fields":{"tags":[]}}}
 		// map key: tag, value: APIs
 		tag2APIsmap : {},
@@ -31,7 +31,9 @@
 	};
 
 	window.onload=function(){
-		loadSearchBarOptions();
+		if(location.host != "winroad-net.github.io") {
+			loadSearchBarOptions();
+		}
 		if(Global.tag2APIsmap[Request.QueryString("tag")]) {
 			//render the tag specified in the request
 			loadAPIList( Global.tag2APIsmap[Request.QueryString("tag")] );
@@ -64,6 +66,12 @@
 		});
 
 		handleTagListDisplay(Global.localData, Global.pagelayout);
+
+		$(document).keyup(function(event){
+			if(event.keyCode ==13){
+				$("#searchbtn").trigger("click");
+			}
+		});	
 	});
 </script>
 </head>

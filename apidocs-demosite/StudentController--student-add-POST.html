@@ -5,8 +5,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="generator" content="wrdoclet" />
-        <meta name="tags" content="StudentController" />
-        <meta name="brief" content="" />
+        <meta name="tags" content="学生管理" />
+        <meta name="brief" content="添加一个学生" />
     	<meta name="APIUrl" content="/student/add" />
     	<meta name="tooltip" content="StudentController" />
     		<meta name="methodType" content="POST" />
@@ -35,6 +35,12 @@
   <p class="qualifiedName">
     	<font size='5'>☞</font>&nbsp;net.winroad.Controller.StudentController.addStudent
   </p>
+	    <h3>
+	      描述
+	    </h3>
+	    <p>
+        添加一个学生
+	    </p>
     <h3>
       访问路径
     </h3>
@@ -47,6 +53,48 @@
         	/student/add
         </div>
     </div>
+      <table class="modifyHistoryTable">
+        <caption>
+          修改历史
+        </caption>
+    <thead>
+      <tr>
+        <th style="width: 20%;">
+          修改人
+        </th>
+        <th style="width: 60%;">
+          备注
+        </th>
+        <th style="width: 20%;">
+          版本
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              Adams
+          </td>
+          <td>
+              添加接口
+          </td>
+          <td>
+              0.0.1
+          </td>
+        </tr>
+        <tr>
+          <td>
+              Bob
+          </td>
+          <td>
+              fix bug
+          </td>
+          <td>
+              0.0.2
+          </td>
+        </tr>
+    </tbody>
+      </table>
     <h3>
       请求
     </h3>
@@ -80,11 +128,51 @@
       </td>
       <td>
           @RequestBody
+要添加的学生
       </td>
       <td style="text-align: center;">
           	是
       </td>
       <td>
+          <table class="innerTable">
+    <thead>
+      <tr>
+        <th style="width: 20%;">
+          修改人
+        </th>
+        <th style="width: 60%;">
+          备注
+        </th>
+        <th style="width: 20%;">
+          版本
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              AdamsLi
+          </td>
+          <td>
+              init create
+          </td>
+          <td>
+              0.1
+          </td>
+        </tr>
+        <tr>
+          <td>
+              AdamsLi
+          </td>
+          <td>
+              init create
+          </td>
+          <td>
+              0.1
+          </td>
+        </tr>
+    </tbody>
+          </table>
       </td>
     </tr>
   <tr>
@@ -112,7 +200,6 @@
           boolean
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -128,7 +215,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -144,7 +230,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -160,7 +245,6 @@
           int
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -176,7 +260,6 @@
           Enum[MALE,FEMALE]
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -192,7 +275,6 @@
           double
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -208,7 +290,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -224,7 +305,6 @@
           net.winroad.Models.Address
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -241,7 +321,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -258,7 +337,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -275,7 +353,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -292,7 +369,6 @@
           java.lang.String
       </td>
       <td>
-          
       </td>
       <td style="text-align: center;">
       </td>
@@ -308,9 +384,10 @@
           java.lang.String
       </td>
       <td>
-          
+          学校名称
       </td>
       <td style="text-align: center;">
+          	是
       </td>
       <td>
       </td>
@@ -324,11 +401,51 @@
           java.lang.String
       </td>
       <td>
-          
+          学号
       </td>
       <td style="text-align: center;">
+          	否
       </td>
       <td>
+          <table class="innerTable">
+    <thead>
+      <tr>
+        <th style="width: 20%;">
+          修改人
+        </th>
+        <th style="width: 60%;">
+          备注
+        </th>
+        <th style="width: 20%;">
+          版本
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              Bob
+          </td>
+          <td>
+              添加学号字段
+          </td>
+          <td>
+              0.0.1
+          </td>
+        </tr>
+        <tr>
+          <td>
+              Adams
+          </td>
+          <td>
+              修改为可选字段
+          </td>
+          <td>
+              0.0.2
+          </td>
+        </tr>
+    </tbody>
+          </table>
       </td>
     </tr>
       </tbody>
@@ -337,6 +454,9 @@
     <h3>
       响应
     </h3>
+      <span class='returnCode'>
+      <b>响应码：</b>400 404 503
+      </span>
     <table id="resTable" class="resParamTable" width="100%" border="0" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
@@ -365,6 +485,7 @@
           java.lang.Object
       </td>
       <td>
+          被添加的学生
       </td>
       <td style="text-align: center;">
           	是
@@ -380,7 +501,7 @@
 					© <strong>demosite</strong> |
 				</li>
 				<li>
-					Generated on <strong>2015.10.25 12:19:51</strong> |
+					Generated on <strong>2015.10.31 22:14:43</strong> |
 				</li>
 				<li> Branch : <strong>master</strong> | </li>
 				<li> Powered by <strong>winroad</strong></li>
