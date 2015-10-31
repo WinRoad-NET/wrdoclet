@@ -12,6 +12,11 @@ import javax.xml.ws.ResponseWrapper;
 
 import net.winroad.Models.User;
 
+/**
+ * @tag demo
+ * @author AdamsLi
+ *
+ */
 @WebService
 public interface TestService {
 	/* 悲催，这种注释doclet不认
@@ -31,9 +36,30 @@ public interface TestService {
 	 * 
 	 * @memo fix bug
 	 */
+	/**
+	 * 获取用户列表
+	 * @param name 用户名称
+	 * @tag 用户管理， 用户展示
+	 * 
+	 * @author Adams
+	 * @version 0.0.1
+	 * @memo init create
+	 * 
+	 * @author Bob
+	 * @version 0.0.2
+	 * @memo fix bug
+	 * 
+	 * @return 用户列表
+	 */
 	@WebResult(name = "getUserResult")
 	public List<User> getUserList(@XmlElement(required=false) @WebParam(name = "name") String name);
 
+	/**
+	 * @tag 用户管理， 测试
+	 * @param name 名字
+	 * @param password 密码
+	 * @return
+	 */
 	public int addUser(
 			@WebParam(name = "username", partName = "stupidPartName") String name,
 			@XmlElement(required=true) String password);

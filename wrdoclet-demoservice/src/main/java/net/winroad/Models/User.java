@@ -25,14 +25,21 @@ public class User {
 		return name;
 	}
 
+	/**
+	 * 姓名
+	 * @param name 名字
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return 密码
+	 */
 	public String getPassword() {
 		return password;
 	}
-
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}

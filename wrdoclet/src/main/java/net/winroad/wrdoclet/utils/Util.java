@@ -15,8 +15,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 public class Util {
-	protected static Logger logger = LoggerFactory.getLogger(Util.class);
-
+	private static Logger logger = LoggerFactory.getLogger(Util.class);
+	private static YUICompressorWrapper compressor = new YUICompressorWrapper();
+	
 	public static String combineFilePath(String path1, String path2) {
 		return new File(path1, path2).toString();
 	}
@@ -81,12 +82,24 @@ public class Util {
 							}
 						}
 					} else {
-						InputStream inputStream = Util.class
-								.getResourceAsStream("/" + name);
-						if (inputStream == null) {
-							logger.error("No resource is found:" + name);
-						} else {
-							Util.outputFile(inputStream, resDestDir);
+						InputStream inputStream = null;
+						try {
+							inputStream = Util.class
+									.getResourceAsStream("/" + name);
+							if (inputStream == null) {
+								logger.error("No resource is found:" + name);
+							} else {
+								Util.outputFile(inputStream, resDestDir);
+							}
+							/* TODO: compress js files
+							inputStream = Util.class
+									.getResourceAsStream("/" + name);
+							compressor.compress(inputStream, name, destDir);
+							*/
+						} finally {
+							if( inputStream != null) {
+								inputStream.close();
+							}
 						}
 					}
 				}

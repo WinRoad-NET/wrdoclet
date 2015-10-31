@@ -31,6 +31,21 @@ public class StudentController {
 		return s;
 	}
 
+	/**
+	 * 添加一个学生
+	 * @tag 学生管理
+	 * @param student 要添加的学生
+	 * 
+	 * @author Adams 
+	 * @version 0.0.1 
+	 * @memo 添加接口
+	 * @author Bob 
+	 * @version 0.0.2 
+	 * @memo fix bug
+	 * 
+	 * @return 被添加的学生
+	 * @returnCode 400 404 503
+	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
 	Object addStudent(@RequestBody Student student) {

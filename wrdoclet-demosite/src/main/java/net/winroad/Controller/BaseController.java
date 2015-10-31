@@ -6,6 +6,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 
+ * @author AdamsLi
+ * @version 0.1
+ * @memo init create
+ */
 public abstract class BaseController {
 	/**
 	 * 取得输入参数

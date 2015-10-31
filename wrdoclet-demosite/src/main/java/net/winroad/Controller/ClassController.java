@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * 
+ * @author AdamsLi
+ * @version 0.1
+ * @memo init create
+ */
 @Controller
 public class ClassController extends BaseController {
 	// 悲催，这种注释doclet不认

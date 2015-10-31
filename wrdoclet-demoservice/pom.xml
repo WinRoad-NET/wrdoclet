@@ -43,12 +43,10 @@
 						<artifactId>wrdoclet</artifactId>
 						<version>0.0.1-SNAPSHOT</version>
 					</docletArtifact>
-					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important 
-						! -->
+					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
 					<additionalparam>
 						-systemname ${wrdoclet.systemname}
-						-branchname
-						${wrdoclet.branchname}
+						-branchname ${wrdoclet.branchname}
 						-encoding utf-8
 						-charset utf-8
 						-d

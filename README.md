@@ -101,3 +101,28 @@ supported dubbo service example:
 	
 	<dubbo:service interface="net.winroad.dubbo.DemoService" ref="demoService" />
 
+
+利用maven-javadoc-plugin插件接入非常方便, 将下面配置添加到pom.xml中的<build><plugins>...</plugins></build>内即可。命令行执行 mvn javadoc:javadoc 即可开始生成接口文档。
+
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-javadoc-plugin</artifactId>
+		<version>2.10.3</version>
+		<configuration>
+			<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
+			<docletArtifact>
+				<groupId>net.winroad</groupId>
+				<artifactId>wrdoclet</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</docletArtifact>
+			<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
+			<additionalparam>
+				-systemname ${wrdoclet.systemname}
+				-branchname ${wrdoclet.branchname}
+				-encoding utf-8
+				-charset utf-8
+				-d
+				../../../../../wrdoclet-gh-pages/apidocs-demoservice
+			</additionalparam>
+		</configuration>
+	</plugin>

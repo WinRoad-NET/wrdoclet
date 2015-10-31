@@ -1,5 +1,11 @@
 package net.winroad.Models;
 
+/**
+ * 人
+ * @author AdamsLi
+ * @version 0.1
+ * @memo init create
+ */
 public class Person {
 	private String name;
 	private int age;

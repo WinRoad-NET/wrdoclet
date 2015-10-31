@@ -31,7 +31,9 @@
 	};
 
 	window.onload=function(){
-		loadSearchBarOptions();
+		if(location.host != "winroad-net.github.io") {
+			loadSearchBarOptions();
+		}
 		if(Global.tag2APIsmap[Request.QueryString("tag")]) {
 			//render the tag specified in the request
 			loadAPIList( Global.tag2APIsmap[Request.QueryString("tag")] );
