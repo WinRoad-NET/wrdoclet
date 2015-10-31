@@ -6,16 +6,92 @@ This doclet tries to generate API doc for Spring MVC service, SOAP service, dubb
 
 supported Spring MVC service example:
 
+	/**
+	 * 添加一个学生
+	 * @tag 学生管理
+	 * @param student 要添加的学生
+	 * 
+	 * @author Adams 
+	 * @version 0.0.1 
+	 * @memo 添加接口
+	 * 
+	 * @author Bob 
+	 * @version 0.0.2 
+	 * @memo fix bug
+	 * 
+	 * @return 被添加的学生
+	 * @returnCode 400 404 503
+	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
 	Student addStudent(@RequestBody Student student) {
 		return student;
 	}	
 	
+	public class Student extends Person {
+		...
+		
+		/**
+		 * @occurs required
+		 * @param schoolName 学校名称
+		 */
+		public void setSchoolName(String schoolName) {
+			this.schoolName = schoolName;
+		}
+
+		/**
+		 * @author Bob
+		 * @version 0.0.1
+		 * @memo 添加学号字段
+		 * 
+		 * @author Adams
+		 * @version 0.0.2
+		 * @memo 修改为可选字段
+		 * @occurs optional
+		 * @param sno 学号
+		 */
+		public void setSno(String sno) {
+			this.sno = sno;
+		}
+
+		private String schoolName;
+		private String sno;
+	}	
+	
 supported SOAP service example:
 
+	/**
+	 * 获取用户列表
+	 * @param name 用户名称
+	 * @tag 用户管理， 用户展示
+	 * 
+	 * @author Adams
+	 * @version 0.0.1
+	 * @memo init create
+	 * 
+	 * @author Bob
+	 * @version 0.0.2
+	 * @memo fix bug
+	 * 
+	 * @return 用户列表
+	 */
 	@WebResult(name = "getUserResult")
 	public List<User> getUserList(@XmlElement(required=false) @WebParam(name = "name") String name);
+	
+
+	public class User {
+		private String password;
+		
+		...
+		
+		/**
+		 * @return 密码
+		 */
+		public String getPassword() {
+			return password;
+		}
+	}	
+	
 	
 supported dubbo service example:
 
@@ -24,3 +100,4 @@ supported dubbo service example:
 	}
 	
 	<dubbo:service interface="net.winroad.dubbo.DemoService" ref="demoService" />
+
