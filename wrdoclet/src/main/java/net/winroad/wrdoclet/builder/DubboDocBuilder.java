@@ -102,8 +102,7 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 				APIParameter p = new APIParameter();
 				p.setName(methodParameters[i].name());
 				p.setType(this.getTypeName(methodParameters[i].type()));
-				p.setDescription("");
-				// p.setDescription(this.getParamComment(method, p.getName()));
+				p.setDescription(this.getParamComment(methodDoc, methodParameters[i].name()));
 				HashSet<String> processingClasses = new HashSet<String>();
 				p.setFields(this.getFields(methodParameters[i].type(),
 						ParameterType.Request, processingClasses));

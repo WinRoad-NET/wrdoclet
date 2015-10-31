@@ -443,7 +443,17 @@ public abstract class AbstractDocBuilder {
 				}
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(methodDoc.tags())));
-				param.setDescription(methodDoc.commentText());
+				if(StringUtils.isEmpty(methodDoc.commentText())) {
+					if(paramType == ParameterType.Request) {
+						param.setDescription(this.getParamComment(methodDoc, methodDoc.parameters()[0].name()));
+					} else {
+						for (Tag tag : methodDoc.tags("return")) {
+							param.setDescription(tag.text());
+						}
+					}
+				} else {
+					param.setDescription(methodDoc.commentText());
+				}
 				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
 						.tags(WROccursTaglet.NAME)));
 				result.add(param);

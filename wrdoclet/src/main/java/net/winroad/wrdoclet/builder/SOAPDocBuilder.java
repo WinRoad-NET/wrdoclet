@@ -119,9 +119,7 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 					p.setName("arg" + i);
 				}
 				p.setType(this.getTypeName(methodParameters[i].type()));
-				p.setDescription("");
-				// TODO:
-				// p.setDescription(this.getParamComment(method, p.getName()));
+				p.setDescription(this.getParamComment(method, methodParameters[i].name()));
 				HashSet<String> processingClasses = new HashSet<String>();
 				p.setFields(this.getFields(methodParameters[i].type(),
 						ParameterType.Request, processingClasses));
