@@ -6,7 +6,7 @@ import getopt
 import solr
 import uuid
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, isdir
 from BeautifulSoup import BeautifulSoup
 from xml.etree.ElementTree import parse
 
@@ -15,12 +15,78 @@ if sys.getdefaultencoding() != default_encoding:
     reload(sys)
     sys.setdefaultencoding(default_encoding)
 
+class PublishException(Exception):
+	def __init__(self, error, publishedCount):
+		Exception.__init__(self, error, publishedCount)
+		self.error = error
+		self.publishedCount = publishedCount
+
 def usage():
 	print 'solrPublish.py -i <inputpath> -s <solraddr>'
 
 def printSummary(publishedCount):
 	print "-------------Publish Summary---------------"
 	print "Published API count: " + str(publishedCount)
+
+def publishToSolr(solrInstance, path):
+	publishedCount = 0
+	filelist = [ join(path,f) for f in listdir(path) if isfile(join(path,f)) and f.endswith('.html') and f != "index.html" ]
+	for file in filelist:
+		with open(file, "r") as filecontent:
+			soup = BeautifulSoup(filecontent) # Try to parse the HTML of the page
+			if soup.html == None: # Check if there is an <html> tag
+				print "Error: No HTML tag found at file: " + file
+			tags = None
+			if soup.html.head.find("meta", {"name":"tags"}) != None:
+				tags = str(soup.html.head.find("meta", {"name":"tags"})['content']).decode("utf-8").split(", ")
+			brief = None
+			if soup.html.head.find("meta", {"name":"brief"}) != None:
+				brief = str(soup.html.head.find("meta", {"name":"brief"})['content']).decode("utf-8")
+			APIUrl = None
+			if soup.html.head.find("meta", {"name":"APIUrl"}) != None:
+				APIUrl = str(soup.html.head.find("meta", {"name":"APIUrl"})['content']).decode("utf-8")
+			tooltip = None
+			if soup.html.head.find("meta", {"name":"tooltip"}) != None:
+				tooltip = str(soup.html.head.find("meta", {"name":"tooltip"})['content']).decode("utf-8")
+			methodType = None
+			if soup.html.head.find("meta", {"name":"methodType"}) != None:
+				methodType = str(soup.html.head.find("meta", {"name":"methodType"})['content']).decode("utf-8")
+			systemName = None
+			if soup.html.head.find("meta", {"name":"systemName"}) != None:
+				systemName = str(soup.html.head.find("meta", {"name":"systemName"})['content']).decode("utf-8")
+			branchName = None
+			if soup.html.head.find("meta", {"name":"branchName"}) != None:
+				branchName = str(soup.html.head.find("meta", {"name":"branchName"})['content']).decode("utf-8")
+			if tags == None or brief == None or APIUrl == None or tooltip == None or methodType == None or systemName == None or branchName == None:
+				raise PublishException("Invalid API detail html page: " + file, publishedCount)
+			try:
+				with open(file, "r") as fl:
+					doc = { # just for print
+						"id":str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"),
+						"tags":tags, 
+						"brief":brief, 			
+						"APIUrl":APIUrl, 
+						"tooltip":tooltip, 
+						"methodType":methodType, 
+						"systemName":systemName, 
+						"branchName":branchName
+						}
+					print doc
+					solrInstance.add(_id=str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"), 
+						tags=tags,
+						brief=brief, 			
+						APIUrl=APIUrl, 
+						tooltip=tooltip, 
+						methodType=methodType, 
+						systemName=systemName,
+						branchName=branchName,
+						pageContent=fl.read() # instead of using soup.html, because there is a bug that it will modify some special characters.
+						)
+					solrInstance.commit()
+					publishedCount += 1
+			except Exception,data: 
+				raise PublishException(data, publishedCount)
+	return publishedCount
 
 def main(argv):
 	#solrUrl = 'http://127.0.0.1:8080/solr/apidocs' # The URL of the solr instance
@@ -50,66 +116,18 @@ def main(argv):
 	print "solr address url: ", solrUrl
 
 	solrInstance = solr.SolrConnection(solrUrl) # Solr Connection object
-	filelist = [ join(path,f) for f in listdir(path) if isfile(join(path,f)) and f.endswith('.html') and f != "index.html" ]
 	publishedCount = 0
-	for file in filelist:
-		with open(file, "r") as filecontent:
-			soup = BeautifulSoup(filecontent) # Try to parse the HTML of the page
-			if soup.html == None: # Check if there is an <html> tag
-				print "Error: No HTML tag found at file: " + file
-			tags = None
-			if soup.html.head.find("meta", {"name":"tags"}) != None:
-				tags = str(soup.html.head.find("meta", {"name":"tags"})['content']).decode("utf-8").split(", ")
-			brief = None
-			if soup.html.head.find("meta", {"name":"brief"}) != None:
-				brief = str(soup.html.head.find("meta", {"name":"brief"})['content']).decode("utf-8")
-			APIUrl = None
-			if soup.html.head.find("meta", {"name":"APIUrl"}) != None:
-				APIUrl = str(soup.html.head.find("meta", {"name":"APIUrl"})['content']).decode("utf-8")
-			tooltip = None
-			if soup.html.head.find("meta", {"name":"tooltip"}) != None:
-				tooltip = str(soup.html.head.find("meta", {"name":"tooltip"})['content']).decode("utf-8")
-			methodType = None
-			if soup.html.head.find("meta", {"name":"methodType"}) != None:
-				methodType = str(soup.html.head.find("meta", {"name":"methodType"})['content']).decode("utf-8")
-			systemName = None
-			if soup.html.head.find("meta", {"name":"systemName"}) != None:
-				systemName = str(soup.html.head.find("meta", {"name":"systemName"})['content']).decode("utf-8")
-			branchName = None
-			if soup.html.head.find("meta", {"name":"branchName"}) != None:
-				branchName = str(soup.html.head.find("meta", {"name":"branchName"})['content']).decode("utf-8")
-			if tags == None or brief == None or APIUrl == None or tooltip == None or methodType == None or systemName == None or branchName == None:
-				print "Invalid API detail html page: " + file
-				printSummary(publishedCount)
-				sys.exit()
-			try:
-				with open(file, "r") as fl:
-					doc = { # just for print
-						"id":str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"),
-						"tags":tags, 
-						"brief":brief, 			
-						"APIUrl":APIUrl, 
-						"tooltip":tooltip, 
-						"methodType":methodType, 
-						"systemName":systemName, 
-						"branchName":branchName
-						}
-					print doc
-					solrInstance.add(_id=str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"), 
-						tags=tags,
-						brief=brief, 			
-						APIUrl=APIUrl, 
-						tooltip=tooltip, 
-						methodType=methodType, 
-						systemName=systemName,
-						branchName=branchName,
-						pageContent=fl.read() # instead of using soup.html, because there is a bug that it will modify some special characters.
-						)
-					solrInstance.commit()
-					publishedCount += 1
-			except: 
-				printSummary(publishedCount)
-				raise
+	try:
+		publishedCount = publishedCount + publishToSolr(solrInstance, path)
+		pathlist = [ join(path,f) for f in listdir(path) if isdir(join(path,f)) and f.startswith('detail') ]
+		for p in pathlist:
+			publishedCount = publishedCount + publishToSolr(solrInstance, p)
+	except PublishException, ex: 
+		printSummary(publishedCount + ex.publishedCount)
+		raise
+	except:
+		printSummary(publishedCount)
+		raise
 	printSummary(publishedCount)
 
 if __name__ == "__main__":

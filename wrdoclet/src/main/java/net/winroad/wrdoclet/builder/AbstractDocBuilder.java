@@ -34,6 +34,7 @@ import net.winroad.wrdoclet.utils.ApplicationContextConfig;
 import net.winroad.wrdoclet.utils.Logger;
 import net.winroad.wrdoclet.utils.LoggerFactory;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -90,6 +91,11 @@ public abstract class AbstractDocBuilder {
 	protected abstract void processOpenAPIClasses(ClassDoc[] classDocs,
 			Configuration configuration);
 
+	protected Tag[] getTagTaglets(MethodDoc methodDoc) {
+		return (Tag[]) ArrayUtils.addAll(methodDoc.tags(WRTagTaglet.NAME),
+				methodDoc.containingClass().tags(WRTagTaglet.NAME));
+	}
+
 	protected void processOpenAPIMethod(MethodDoc methodDoc,
 			Configuration configuration) {
 		if ((configuration.nodeprecated && Util.isDeprecated(methodDoc))
@@ -97,7 +103,7 @@ public abstract class AbstractDocBuilder {
 			return;
 		}
 
-		Tag[] methodTagArray = methodDoc.tags(WRTagTaglet.NAME);
+		Tag[] methodTagArray = getTagTaglets(methodDoc);
 		if (methodTagArray.length == 0) {
 			String tag = methodDoc.containingClass().simpleTypeName();
 			this.wrDoc.getWRTags().add(tag);
