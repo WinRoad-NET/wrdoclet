@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class Util {
 	private static Logger logger = LoggerFactory.getLogger(Util.class);
-	private static YUICompressorWrapper compressor = new YUICompressorWrapper();
+	//private static YUICompressorWrapper compressor = new YUICompressorWrapper();
 	
 	public static String combineFilePath(String path1, String path2) {
 		return new File(path1, path2).toString();

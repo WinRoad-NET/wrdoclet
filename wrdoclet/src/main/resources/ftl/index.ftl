@@ -14,7 +14,7 @@
 		searchEngine : '${searchengine}',
 		// the API tag and link data
 		localData : ${response},
-		//localData : {"docs":[{}],"facet_counts":{"facet_fields":{"tags":[]}}}
+		//localData : {"docs":[{}],"facet_counts":{"facet_fields":{"tags":[]}}},
 		// map key: tag, value: APIs
 		tag2APIsmap : {},
 		pagelayout : {},
@@ -38,7 +38,7 @@
 			//render the tag specified in the request
 			loadAPIList( Global.tag2APIsmap[Request.QueryString("tag")] );
 		} else {
-			if(Object.keys(Global.tag2APIsmap)[0]) {
+			if(Object.keys(Global.tag2APIsmap)[0] && Object.keys(Global.tag2APIsmap)[0] != "undefined") {
 				//render the first tag
 				loadAPIList( Global.tag2APIsmap[Object.keys(Global.tag2APIsmap)[0]] );
 			}

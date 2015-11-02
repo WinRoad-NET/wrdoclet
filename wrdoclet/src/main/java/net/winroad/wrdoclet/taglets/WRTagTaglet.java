@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
@@ -67,6 +69,7 @@ public class WRTagTaglet implements Taglet {
 	 * @return set of tags.
 	 */
 	public static Set<String> getTagSet(String tags) {
+		tags = StringUtils.substringBefore(tags, "\n");
 		String[] tagArr = tags.split("[\\s,，;；]");
 		Set<String> tagSet = new HashSet<String>();
 		for (int i = 0; i < tagArr.length; i++) {
