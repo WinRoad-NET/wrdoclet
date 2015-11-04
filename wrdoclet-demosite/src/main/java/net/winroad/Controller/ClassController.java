@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 
+ * @tag Class
+ * Created by Adams at 2014.1.1
  * @author AdamsLi
  * @version 0.1
  * @memo init create

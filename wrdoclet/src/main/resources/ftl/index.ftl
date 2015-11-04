@@ -6,9 +6,9 @@
 <link rel="stylesheet" type="text/css" href="css/layout-default-1.4.0.css" title="Style" />
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.11.4.min.js"></script>
-<script type="text/javascript" src="js/jquery.layout-1.4.0.js"></script>
+<script type="text/javascript" src="js/jquery.layout-1.4.0.min.js"></script>
 <script type="text/javascript" src="js/template.min.js"></script>
-<script type="text/javascript" src="js/wrdoclet.js"></script>
+<script type="text/javascript" src="js/wrdoclet.min.js"></script>
 <script type="text/javascript">
 	Global = {
 		searchEngine : '${searchengine}',

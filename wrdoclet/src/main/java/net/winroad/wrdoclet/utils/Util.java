@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class Util {
 	private static Logger logger = LoggerFactory.getLogger(Util.class);
-	//private static YUICompressorWrapper compressor = new YUICompressorWrapper();
+	private static YUICompressorWrapper compressor = new YUICompressorWrapper();
 	
 	public static String combineFilePath(String path1, String path2) {
 		return new File(path1, path2).toString();
@@ -91,11 +91,11 @@ public class Util {
 							} else {
 								Util.outputFile(inputStream, resDestDir);
 							}
-							/* TODO: compress js files
+							
+							/* compress js files */
 							inputStream = Util.class
 									.getResourceAsStream("/" + name);
 							compressor.compress(inputStream, name, destDir);
-							*/
 						} finally {
 							if( inputStream != null) {
 								inputStream.close();
@@ -113,7 +113,7 @@ public class Util {
 					File dest = new File(destDir);
 					FileUtils.copyDirectory(src, dest);
 				} catch (URISyntaxException ex) {
-					// never happens
+					logger.error(ex);
 				}
 			}
 		}

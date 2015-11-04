@@ -15,7 +15,7 @@ import net.winroad.Models.User;
 /**
  * @tag demo
  * @author AdamsLi
- *
+ * Created by Adams at 2015.1.1
  */
 @WebService
 public interface TestService {
