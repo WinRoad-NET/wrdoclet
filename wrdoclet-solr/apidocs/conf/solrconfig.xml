@@ -930,7 +930,7 @@
        <!-- Query settings -->
        <str name="defType">edismax</str>
        <str name="qf">
-          text^0.5 tags^3.0 brief^2.5 APIUrl^2.0 systemName^1.0 branchName^0.8 pageContent^1.5
+          en_splitting_text^0.5 text^0.5 tags^3.0 brief^2.5 APIUrl^2.0 systemName^1.0 branchName^0.8 pageContent^1.5
        </str>
        <str name="df">text</str>
        <str name="mm">100%</str>

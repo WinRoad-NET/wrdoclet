@@ -136,6 +136,7 @@
       <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
    <field name="text" type="text_zh" indexed="true" stored="false" multiValued="true"/>
+   <field name="en_splitting_text" type="text_en_splitting" indexed="true" stored="false" multiValued="true"/>
 
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->
@@ -237,6 +238,12 @@
    <copyField source="systemName" dest="text"/>
    <copyField source="branchName" dest="text"/>
    <copyField source="pageContent" dest="text"/>
+   <copyField source="tags" dest="en_splitting_text"/>
+   <copyField source="brief" dest="en_splitting_text"/>
+   <copyField source="APIUrl" dest="en_splitting_text"/>
+   <copyField source="systemName" dest="en_splitting_text"/>
+   <copyField source="branchName" dest="en_splitting_text"/>
+   <copyField source="pageContent" dest="en_splitting_text"/>
 
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
