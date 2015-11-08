@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 public class Util {
 	private static Logger logger = LoggerFactory.getLogger(Util.class);
 	private static YUICompressorWrapper compressor = new YUICompressorWrapper();
-	
+
 	public static String combineFilePath(String path1, String path2) {
 		return new File(path1, path2).toString();
 	}
@@ -84,20 +84,20 @@ public class Util {
 					} else {
 						InputStream inputStream = null;
 						try {
-							inputStream = Util.class
-									.getResourceAsStream("/" + name);
+							inputStream = Util.class.getResourceAsStream("/"
+									+ name);
 							if (inputStream == null) {
 								logger.error("No resource is found:" + name);
 							} else {
 								Util.outputFile(inputStream, resDestDir);
 							}
-							
+
 							/* compress js files */
-							inputStream = Util.class
-									.getResourceAsStream("/" + name);
+							inputStream = Util.class.getResourceAsStream("/"
+									+ name);
 							compressor.compress(inputStream, name, destDir);
 						} finally {
-							if( inputStream != null) {
+							if (inputStream != null) {
 								inputStream.close();
 							}
 						}
@@ -112,10 +112,26 @@ public class Util {
 					final File src = new File(url.toURI());
 					File dest = new File(destDir);
 					FileUtils.copyDirectory(src, dest);
+					Util.compressFilesInDir(src, destDir);
 				} catch (URISyntaxException ex) {
 					logger.error(ex);
 				}
 			}
+		}
+	}
+
+	public static void compressFilesInDir(File file, String destDir)
+			throws IOException {
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			for (File f : files) {
+				compressFilesInDir(
+						f,
+						f.isDirectory() ? Util.combineFilePath(destDir,
+								f.getName()) : destDir);
+			}
+		} else {
+			compressor.compress(file, destDir);
 		}
 	}
 

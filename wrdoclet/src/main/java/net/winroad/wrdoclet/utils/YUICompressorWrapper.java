@@ -1,6 +1,7 @@
 package net.winroad.wrdoclet.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,23 @@ public class YUICompressorWrapper implements JSCompressor {
 	}
 
 	@Override
+	public String compress(File inFile, String destDir) throws IOException {
+		if (StringUtils.endsWith(inFile.getName(), ".js")
+				&& !StringUtils.endsWith(inFile.getName(), ".min.js")) {
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(inFile);
+				return this.compress(fis, inFile.getName(), destDir);
+			} finally {
+				if (fis != null) {
+					fis.close();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public String compress(InputStream inputStream, String inFileName,
 			String resDestDir) throws IOException {
 		if (StringUtils.endsWith(inFileName, ".js")
@@ -53,7 +71,8 @@ public class YUICompressorWrapper implements JSCompressor {
 			OutputStreamWriter outFile = null;
 			try {
 				inFile = new InputStreamReader(inputStream, "UTF-8");
-				outFile = new OutputStreamWriter(new FileOutputStream(outFileName),"UTF-8");
+				outFile = new OutputStreamWriter(new FileOutputStream(
+						outFileName), "UTF-8");
 				JavaScriptCompressor compressor = new JavaScriptCompressor(
 						inFile, new JSCompressorErrorReporter());
 				compressor.compress(outFile, lineBreakPosition, munge, warn,
