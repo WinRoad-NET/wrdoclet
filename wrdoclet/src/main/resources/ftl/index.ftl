@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
 <link rel="stylesheet" type="text/css" href="css/layout-default-1.4.0.css" title="Style" />
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.11.4.min.js"></script>
 <script type="text/javascript" src="js/jquery.layout-1.4.0.min.js"></script>
 <script type="text/javascript" src="js/template.min.js"></script>
@@ -22,66 +23,14 @@
 		searchRows : 10,
 		searchOptions : []
 	};
-
-	Request = {
-		QueryString : function(item){
-			var svalue = location.search.match(new RegExp("[\?\&]" + item + "=([^\&]+)","i"));
-			return svalue ? decodeURIComponent( svalue[1] ) : svalue;
-		}
-	};
-
-	window.onload=function(){
-		if(location.host != "winroad-net.github.io") {
-			loadSearchBarOptions();
-		}
-		if(Global.tag2APIsmap[Request.QueryString("tag")]) {
-			//render the tag specified in the request
-			loadAPIList( Global.tag2APIsmap[Request.QueryString("tag")] );
-		} else {
-			if(Object.keys(Global.tag2APIsmap)[0] && Object.keys(Global.tag2APIsmap)[0] != "undefined") {
-				//render the first tag
-				loadAPIList( Global.tag2APIsmap[Object.keys(Global.tag2APIsmap)[0]] );
-			}
-		}
-	};
-
-	$(document).ready(function() {
-
-		Global.pagelayout = $('body').layout({
-			center__maskContents:		true	// IMPORTANT - enable iframe masking
-		,	minSize:					60		// ALL panes
-		,	west__size:					200
-		,	east__size:					200
-		,	stateManagement__enabled:	true
-		,   north : {
-				initClosed:				true
-			,	size:					82
-		    }
-
-		,	west__childOptions:	{
-				minSize:				50		// ALL panes
-			,	north__size:			300
-			}
-
-		});
-
-		handleTagListDisplay(Global.localData, Global.pagelayout);
-
-		$(document).keyup(function(event){
-			if(event.keyCode ==13){
-				$("#searchbtn").trigger("click");
-			}
-		});	
-	});
 </script>
 </head>
-
 <body>
 
 <div id="searchBar" class="ui-layout-north">
 	<div class="sitename"></div>
 	<div class="searchcomponent">
-		<input id="searchbox" type="text"/>
+		<input id="searchbox" type="text" class="cls-button" />
 
 		<label for="system">系统:</label>
 		<select name="system" id="system" onChange="loadBranchOptions(this.value)">
