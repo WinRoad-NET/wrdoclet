@@ -1,6 +1,8 @@
 # wrdoclet
-wrdoclet主要用来自动化生成接口文档，隐藏内部实现细节，只暴露调用方需要关心的接口细节。目前主要支持的是Spring MVC，SOAP服务，dubbo服务。因依赖于jdk的tools.jar包，工具目前只能在jdk1.7编译通过。jdk1.6存在严重bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6709246 因此无法支持。jdk1.8后续会考虑支持。
-生成的接口文档示例请参见：http://winroad-net.github.io/wrdoclet/
+wrdoclet主要用来自动化生成接口文档，隐藏内部实现细节，只暴露调用方需要关心的接口细节。目前主要支持的是Spring MVC，JAX-WSd的SOAP服务，dubbo服务。因依赖于jdk的tools.jar包，工具目前只能在jdk1.7编译通过。jdk1.6存在严重bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6709246 因此无法支持。jdk1.8后续会考虑支持。
+生成的接口文档示例请参见：http://winroad-net.github.io/wrdoclet/ 
+
+使用手册：http://wrdoclet.winroad.net/
 
 This doclet tries to generate API doc for Spring MVC service, SOAP service, dubbo service.
 
