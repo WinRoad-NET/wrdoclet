@@ -267,3 +267,19 @@ a:hover {
 #loadMore:hover {
 	color: #666;
 }
+
+input.cls-button {    
+    background-repeat:no-repeat;
+    background-image:url(../img/cls-button.png);
+    background-position:200% 0%;
+    padding-right:20px;    
+}
+input.cls-button.show{ /* 显示按钮 */
+    background-position:100% 0%;
+}
+input.cls-button.hide{ /* 隐藏按钮 */
+    background-position:200% 0%;
+}
+input.cls-button.focus{ /* 获取焦点 */
+    cursor: pointer;
+}
