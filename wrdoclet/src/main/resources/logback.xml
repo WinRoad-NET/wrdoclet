@@ -6,8 +6,6 @@
 
 	<contextName>MacroteaLogging</contextName>
 
-	<property name="logback.logs.path" value="D:\\Git\\wrdoclet\\logs" />
-
 	<timestamp key="byDay" datePattern="yyyyMMdd" />
 
 	<!--appender 模块 -->
@@ -20,7 +18,7 @@
 	</appender>
 
 	<appender name="file" class="ch.qos.logback.core.FileAppender">
-		<file>${logback.logs.path}\\log_${byDay}.log</file>
+		<file>${user.dir}\\logs\\log_${byDay}.log</file>
 		<encoder charset="UTF-8">
 			<pattern>%n[%level] - %date - %logger#%line%n %msg%n</pattern>
 		</encoder>
