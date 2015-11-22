@@ -105,7 +105,7 @@ function loadSearchBarOptions(){
 	$.ajax({
 			type:'get',
 			dataType: "jsonp",
-				contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			url: encodeURI(url),
 			timeout: 1000,
 			success: function(data){
@@ -422,6 +422,26 @@ $(document).ready(function() {
 			$("#searchbtn").trigger("click");
 		}
 	});	
+
+	var url = Global.searchEngine + '/select?q=*&wt=json&json.wrf=?&rows=0&facet=true&facet.field=text&facet.mincount=1';
+    $( "#searchbox" ).autocomplete({  
+        source: function( request, response ) {  
+                $.ajax({  
+					type:'get',
+					contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+                    url: encodeURI(url + '&fq=systemName:' + $("#system").find("option:selected").text() + '&fq=branchName:' + $("#branch").find("option:selected").text()),  
+                    dataType: "jsonp",  
+                    data: {  
+                        'facet.prefix': request.term  
+                    },  
+                    success: function( data ) {  
+                        response(data.facet_counts.facet_fields.text)  
+                    }  
+                });  
+            },  
+		minLength: 1 
+    });  
+	
 });
 
 var _hmt = _hmt || [];

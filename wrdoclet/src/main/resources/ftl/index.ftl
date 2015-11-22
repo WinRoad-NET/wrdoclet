@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
 <link rel="stylesheet" type="text/css" href="css/layout-default-1.4.0.css" title="Style" />
+<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.12.0-pre.css" title="Style" />
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.11.4.min.js"></script>
