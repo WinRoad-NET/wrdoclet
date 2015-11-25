@@ -435,7 +435,10 @@ $(document).ready(function() {
                         'facet.prefix': request.term  
                     },  
                     success: function( data ) {  
-                        response(data.facet_counts.facet_fields.text)  
+						var tmp = $.grep( data.facet_counts.facet_fields.text, function(val,key) { 
+							return key%2==0;
+						});
+                        response( tmp );  
                     }  
                 });  
             },  
