@@ -2,6 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="shortcut icon" href="img/favicon.ico"/>
+<link rel="bookmark" href="img/favicon.ico"/>
 <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
 <link rel="stylesheet" type="text/css" href="css/layout-default-1.4.0.css" title="Style" />
 <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.12.0-pre.css" title="Style" />

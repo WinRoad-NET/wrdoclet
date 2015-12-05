@@ -404,7 +404,7 @@ $(document).ready(function() {
 	,	east__size:					200
 	,	stateManagement__enabled:	true
 	,   north : {
-			initClosed:				true
+			initClosed:				false
 		,	size:					82
 	    }
 
@@ -444,7 +444,7 @@ $(document).ready(function() {
             },  
 		minLength: 1 
     });  
-	
+
 });
 
 var _hmt = _hmt || [];
