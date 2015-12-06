@@ -97,4 +97,15 @@ public class ClassController extends BaseController {
 		return result;
 	}
 	
+	/**
+	 * 自路由用例
+	 * @api /class/foo
+	 * @refReq body net.winroad.Models.Clazz
+	 * @refResp net.winroad.Models.Address
+	 */
+	public void foo(HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) {
+		
+	}
+	
 }

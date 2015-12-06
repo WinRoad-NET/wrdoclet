@@ -16,6 +16,10 @@ import net.winroad.wrdoclet.data.ParameterOccurs;
 import net.winroad.wrdoclet.data.ParameterType;
 import net.winroad.wrdoclet.data.RequestMapping;
 import net.winroad.wrdoclet.data.WRDoc;
+import net.winroad.wrdoclet.taglets.WRAPITaglet;
+import net.winroad.wrdoclet.taglets.WROccursTaglet;
+import net.winroad.wrdoclet.taglets.WRRefReqTaglet;
+import net.winroad.wrdoclet.taglets.WRRefRespTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.UniversalNamespaceCache;
 
@@ -105,7 +109,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				continue;
 			}
 
-			if (this.isController(classDocs[i])) {
+			if (this.isController(classDocs[i]) || this.isAPIClass(classDocs[i])) {
 				this.processControllerClass(classDocs[i], configuration);
 				MethodDoc[] methods = classDocs[i].methods();
 				for (int l = 0; l < methods.length; l++) {
@@ -123,8 +127,20 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		ClassDoc controllerClass = methodDoc.containingClass();
 		AnnotationDesc[] baseAnnotations = controllerClass.annotations();
 		RequestMapping baseMapping = this.parseRequestMapping(baseAnnotations);
+		if(baseMapping == null) {
+			Tag[] tags = controllerClass.tags(WRAPITaglet.NAME);
+			if(tags.length > 0) {
+				baseMapping = this.parseRequestMapping(tags[0]);
+			}
+		}
 		AnnotationDesc[] annotations = methodDoc.annotations();
 		RequestMapping mapping = this.parseRequestMapping(annotations);
+		if(mapping == null) {
+			Tag[] tags = methodDoc.tags(WRAPITaglet.NAME);
+			if(tags.length > 0) {
+				mapping = this.parseRequestMapping(tags[0]);
+			}
+		}
 		RequestMapping result;
 		if (baseMapping == null) {
 			result = mapping;
@@ -179,6 +195,23 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		}
 		return requestMapping;
 	}
+	
+	private RequestMapping parseRequestMapping(Tag tag) {
+		RequestMapping requestMapping = null;
+		if(!StringUtils.isEmpty(tag.text())) {
+			requestMapping = new RequestMapping();
+			int index = tag.text().indexOf(" ");
+			if(index > 0) {
+				String methodType = tag.text().substring(0, index);
+				String url = tag.text().substring(index+1);
+				requestMapping.setMethodType(methodType);
+				requestMapping.setUrl(url);
+			} else {
+				requestMapping.setUrl(tag.text());
+			}
+		}
+		return requestMapping;
+	}
 
 	/*
 	 * Simplify the methodType of @RequestMapping to display.
@@ -207,6 +240,27 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					.returnType()));
 		} else {
 			apiParameter = this.parseCustomizedReturn(method);
+		}
+		
+		apiParameter = handleRefResp(method, apiParameter);
+		return apiParameter;
+	}
+
+	private APIParameter handleRefResp(MethodDoc method,
+			APIParameter apiParameter) {
+		if(apiParameter == null) {
+			Tag[] tags = method.tags(WRRefRespTaglet.NAME);
+			if(tags.length > 0) {
+				apiParameter = new APIParameter();
+				apiParameter.setType(tags[0].text());
+				apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+				HashSet<String> processingClasses = new HashSet<String>();
+				ClassDoc c = this.wrDoc.getConfiguration().root.classNamed(apiParameter.getType());
+				if(c != null) {
+					apiParameter.setFields(this.getFields(c,
+							ParameterType.Response, processingClasses));
+				}
+			}
 		}
 		return apiParameter;
 	}
@@ -292,8 +346,44 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				paramList.add(apiParameter);
 			}
 		}
-
+		
+		handleRefReq(method, paramList);
 		return paramList;
+	}
+
+	private void handleRefReq(MethodDoc method, List<APIParameter> paramList) {
+		Tag[] tags = method.tags(WRRefReqTaglet.NAME);
+		for(int i = 0; i< tags.length; i++) {
+			APIParameter apiParameter = new APIParameter();
+			String[] strArr = tags[i].text().split(" ");
+			for(int j = 0; j< strArr.length; j++) {
+				switch(j) {
+				case 0:
+					apiParameter.setName(strArr[j]);
+					break;
+				case 1:
+					apiParameter.setType(strArr[j]);
+					break;
+				case 2:
+					apiParameter.setDescription(strArr[j]);
+					break;
+				case 3:
+					if(StringUtils.equalsIgnoreCase(strArr[j], WROccursTaglet.REQUIRED)) {
+						apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
+					} else if(StringUtils.equalsIgnoreCase(strArr[j], WROccursTaglet.OPTIONAL)) {
+						apiParameter.setParameterOccurs(ParameterOccurs.OPTIONAL);
+					} 
+					break;
+				}
+			}
+			HashSet<String> processingClasses = new HashSet<String>();
+			ClassDoc c = this.wrDoc.getConfiguration().root.classNamed(apiParameter.getType());
+			if(c != null) {
+				apiParameter.setFields(this.getFields(c,
+						ParameterType.Request, processingClasses));
+			}
+			paramList.add(apiParameter);
+		}
 	}
 
 	/*
@@ -302,6 +392,11 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	 */
 	private boolean isController(ClassDoc classDoc) {
 		return this.isClassDocAnnotatedWith(classDoc, "Controller");
+	}
+	
+	private boolean isAPIClass(ClassDoc classDoc) {
+		Tag[] t = classDoc.tags(WRAPITaglet.NAME);
+		return t.length > 0;
 	}
 
 	/*
@@ -335,7 +430,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	}
 
 	/*
-	 * The method has spring "@RequestMapping".
+	 * The method has spring "@RequestMapping" or tagged as "api".
 	 */
 	protected boolean isOpenAPIMethod(MethodDoc methodDoc) {
 		AnnotationDesc[] annotations = methodDoc.annotations();
@@ -346,7 +441,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				break;
 			}
 		}
-		return isActionMethod;
+		Tag[] t = methodDoc.tags(WRAPITaglet.NAME);
+		return isActionMethod || t.length > 0;
 	}
 
 	/*
