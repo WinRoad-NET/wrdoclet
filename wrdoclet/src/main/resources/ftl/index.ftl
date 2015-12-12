@@ -36,7 +36,7 @@
 		<input id="searchbox" type="text" class="cls-button" />
 
 		<label for="system">系统:</label>
-		<select name="system" id="system" onChange="loadBranchOptions(this.value)">
+		<select name="system" id="system" onChange="document.getElementById('searchbox').value='';loadBranchOptions(this.value)">
 		</select>
 
 		<label for="system">代码分支:</label>
