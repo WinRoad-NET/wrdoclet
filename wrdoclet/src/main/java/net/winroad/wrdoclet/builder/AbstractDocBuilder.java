@@ -544,10 +544,10 @@ public abstract class AbstractDocBuilder {
 				&& methodDoc.parameters().length == 0
 				&& (!"boolean".equalsIgnoreCase(methodDoc.returnType()
 						.qualifiedTypeName()) && methodDoc.name().matches(
-						"^get[A-Z].+"))
+						"^get.+"))
 				|| (("boolean".equalsIgnoreCase(methodDoc.returnType()
 						.qualifiedTypeName()) && methodDoc.name().matches(
-						"^is[A-Z].+")))) {
+						"^is.+")))) {
 			return true;
 		}
 		return false;
@@ -559,7 +559,7 @@ public abstract class AbstractDocBuilder {
 	protected boolean isSetterMethod(MethodDoc methodDoc) {
 		if (methodDoc.parameters() != null
 				&& methodDoc.parameters().length == 1
-				&& methodDoc.name().matches("^set[A-Z].+")) {
+				&& methodDoc.name().matches("^set.+")) {
 			return true;
 		}
 		return false;
