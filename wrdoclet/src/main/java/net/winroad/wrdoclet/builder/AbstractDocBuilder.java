@@ -401,7 +401,8 @@ public abstract class AbstractDocBuilder {
 			return result;
 		}
 
-		FieldDoc[] fieldDocs = classDoc.fields();
+		FieldDoc[] fieldDocs = classDoc.fields(false);
+		HashMap<String, String> privateFieldDesc = new HashMap<String, String>();
 		for (FieldDoc fieldDoc : fieldDocs) {
 			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
 				APIParameter param = new APIParameter();
@@ -418,6 +419,8 @@ public abstract class AbstractDocBuilder {
 				param.setParameterOccurs(this.parseParameterOccurs(fieldDoc
 						.tags(WROccursTaglet.NAME)));
 				result.add(param);
+			} else {
+				privateFieldDesc.put(fieldDoc.name(), fieldDoc.commentText());
 			}
 		}
 
@@ -455,6 +458,11 @@ public abstract class AbstractDocBuilder {
 				} else {
 					param.setDescription(methodDoc.commentText());
 				}
+				
+				if(StringUtils.isEmpty(param.getDescription())) {
+					param.setDescription(privateFieldDesc.get(param.getName()));
+				}
+				
 				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
 						.tags(WROccursTaglet.NAME)));
 				result.add(param);

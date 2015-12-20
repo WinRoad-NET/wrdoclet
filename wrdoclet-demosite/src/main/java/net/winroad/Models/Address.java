@@ -21,10 +21,17 @@ public class Address {
 		return county;
 	}
 
+	/**
+	 * @param county 县
+	 */
 	public void setCounty(String county) {
 		this.county = county;
 	}
 
+	/**
+	 * 详细地址
+	 * @return
+	 */
 	public String getAddr() {
 		return addr;
 	}
@@ -33,9 +40,19 @@ public class Address {
 		this.addr = addr;
 	}
 
+	/**
+	 * 城市
+	 */
 	private String city;
 	private String province;
+	/**
+	 * 县名
+	 */
 	private String county;
+	
+	/**
+	 * 地址
+	 */
 	private String addr;
 
 }
