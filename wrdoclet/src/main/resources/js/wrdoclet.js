@@ -27,7 +27,6 @@ function searchCloud() {
 				if(data.response.numFound == 0) {
 					alert("道可道，非常道。您搜的东西没找到:(");
 				} else {
-					handleTagListDisplay(data, Global.pagelayout);
 					window.parent.loadTagList(data);
 					if(!!document.getElementById("searchbox").value) {
 						Global.searchContent = document.getElementById("searchbox").value;
@@ -218,7 +217,6 @@ function loadMainFrame(tag, index) {
 };
 
 function returnLocal() {
-	handleTagListDisplay(Global.localData, Global.pagelayout);
 	loadTagList(Global.localData);
 	Global.tag2APIsmap = convertLocalData(Global.localData);
 	if(Object.keys(Global.tag2APIsmap)[0]) {
@@ -226,15 +224,6 @@ function returnLocal() {
 		loadAPIList( Global.tag2APIsmap[Object.keys(Global.tag2APIsmap)[0]] );
 	}
 };
-
-function handleTagListDisplay(data, pagelayout) {
-	if(data.facet_counts.facet_fields.tags.length == 2) {
-		pagelayout.west.children.layout1.close('north');
-	} else {
-		pagelayout.west.children.layout1.open('north');
-	}
-}
-
 
 $.fn.ClsButton = function(cfg){
     
@@ -414,8 +403,6 @@ $(document).ready(function() {
 		}
 
 	});
-
-	handleTagListDisplay(Global.localData, Global.pagelayout);
 
 	$(document).keyup(function(event){
 		if(event.keyCode ==13){
