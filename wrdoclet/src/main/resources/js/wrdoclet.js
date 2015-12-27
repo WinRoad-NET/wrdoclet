@@ -16,6 +16,9 @@ function searchCloud() {
 	} else {
 		url += '&q=*:*';
 	}
+	if(!!document.getElementById("tagfilter").value) {
+		url += '&fq=tags:' + document.getElementById("tagfilter").value.replace("," , " or ");
+	}
 	url += '&fq=systemName:' + $("#system").find("option:selected").text();
 	url += '&fq=branchName:' + $("#branch").find("option:selected").text();
 	$.ajax({
@@ -33,6 +36,8 @@ function searchCloud() {
 					} else {
 						Global.searchContent = '';
 					}
+					Global.searchSystem = $("#system").find("option:selected").text();
+					Global.searchBranch = $("#branch").find("option:selected").text();					
 					Global.tag2APIsmap = convertSearchResult(data);
 					if(data.facet_counts.facet_fields.tags[0]) {
 						//render the first tag
@@ -62,8 +67,8 @@ function searchMore(tagName, searchStart) {
 	} else {
 		url += '&q=*:*';
 	}
-	url += '&fq=systemName:' + $("#system").find("option:selected").text();
-	url += '&fq=branchName:' + $("#branch").find("option:selected").text();
+	url += '&fq=systemName:' + Global.searchSystem;
+	url += '&fq=branchName:' + Global.searchBranch;
 	$.ajax({
 			type:'get',
 			dataType: "jsonp",
@@ -110,11 +115,17 @@ function loadSearchBarOptions(){
 			success: function(data){
 				var systemSelect = document.getElementById("system");
 				systemSelect.options.length = 0;  
+				var systemSelectedIndex = 0;
 				for(var i=0; !!data && !!data.facet_counts && data.facet_counts.facet_pivot && i<data.facet_counts.facet_pivot[Object.keys(data.facet_counts.facet_pivot)[0]].length; i+=1){
 					var sysBranchArr = data.facet_counts.facet_pivot[Object.keys(data.facet_counts.facet_pivot)[0]];
 					var option = document.createElement("option");
 					option.text = sysBranchArr[i].value;
 					option.value = i;
+					//URL中指定了选中的系统
+					if(sysBranchArr[i].value == Request.QueryString("system")) {
+						option.selected = true;
+						systemSelectedIndex = i;
+					}
 					systemSelect.appendChild(option);
 					var branchOptions = [];
 					for(var j=0; !!sysBranchArr[i].pivot && j<sysBranchArr[i].pivot.length; j+=1) {
@@ -123,7 +134,7 @@ function loadSearchBarOptions(){
 					Global.searchOptions.push(branchOptions);
 				}
 
-				loadBranchOptions(0);
+				loadBranchOptions(systemSelectedIndex, Request.QueryString("branch"));
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				if(textStatus === "timeout") {
@@ -139,13 +150,16 @@ function loadSearchBarOptions(){
 		});
 };
 
-function loadBranchOptions(index) {
+function loadBranchOptions(index, defaultValue) {
 	var branchSelect = document.getElementById("branch");
 	branchSelect.options.length = 0;  
 	for(var i=0; !!Global.searchOptions && !!Global.searchOptions[index] && i<Global.searchOptions[index].length; i+=1){
 		var option = document.createElement("option");
 		option.text = Global.searchOptions[index][i];
 		option.value = i;
+		if( defaultValue == Global.searchOptions[index][i] ) {
+			option.selected = true;
+		}
 		branchSelect.appendChild(option);
 	}
 }
@@ -373,6 +387,15 @@ window.onload=function(){
 	if(location.host != "") {
 		$("#returnbtn").css('display','none'); 
 	}
+	if(Request.QueryString("filter") == "true") {
+		$("#tagfilter").css('display','inline');
+		$("#tagfilterlabel").css('display','inline');
+		document.getElementById("tagfilter").value = Request.QueryString("tag");
+	} else {
+		$("#tagfilter").css('display','none');
+		$("#tagfilterlabel").css('display','none');
+		document.getElementById("tagfilter").value = "";
+	}
 	if(Global.tag2APIsmap[Request.QueryString("tag")]) {
 		//render the tag specified in the request
 		loadAPIList( Global.tag2APIsmap[Request.QueryString("tag")] );
@@ -404,12 +427,14 @@ $(document).ready(function() {
 
 	});
 
+	//回车搜索
 	$(document).keyup(function(event){
 		if(event.keyCode ==13){
 			$("#searchbtn").trigger("click");
 		}
 	});	
 
+	//搜索框提示
 	var url = Global.searchEngine + '/select?q=*&wt=json&json.wrf=?&rows=0&facet=true&facet.field=text&facet.mincount=1';
     $( "#searchbox" ).autocomplete({  
         source: function( request, response ) {  

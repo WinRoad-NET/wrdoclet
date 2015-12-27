@@ -23,6 +23,8 @@
 		tag2APIsmap : {},
 		pagelayout : {},
 		searchContent : '',
+		searchBranch : '',
+		searchSystem : '',
 		searchRows : 10,
 		searchOptions : []
 	};
@@ -32,9 +34,11 @@
 
 <div id="searchBar" class="ui-layout-north">
 	<div class="sitename"></div>
+	<div class="help"><a href="http://wrdoclet.winroad.net/" target="_blank">help</a></div>
 	<div class="searchcomponent">
 		<input id="searchbox" type="text" class="cls-button" />
-
+		<label for="tagfilter" id="tagfilterlabel">过滤标签:</label>
+		<input name="tagfilter" id="tagfilter" type="text" />
 		<label for="system">系统:</label>
 		<select name="system" id="system" onChange="document.getElementById('searchbox').value='';loadBranchOptions(this.value)">
 		</select>

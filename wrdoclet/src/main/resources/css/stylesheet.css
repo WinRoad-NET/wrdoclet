@@ -233,12 +233,20 @@ a:hover {
 	background: url(../img/sitename.png) no-repeat;
 }
 
+.help {
+	float: right;
+}
+
 .searchcomponent {
 	padding: 18px;
 }
 
 #searchbox {
 	width: 300px;
+}
+
+#tagfilter {
+	width: 100px;
 }
 
 #system {
