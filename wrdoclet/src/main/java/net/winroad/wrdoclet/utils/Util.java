@@ -36,22 +36,23 @@ public class Util {
 			throws IOException {
 		File file = new File(filename);
 		if (!file.exists()) {
-			file.createNewFile();
+			if(file.createNewFile()) {
+				logger.debug("File created: "+ filename);
+			} else {
+				logger.debug("File already exists when creating: " + filename);
+			}
 		}
-		OutputStream outputStream = null;
+		OutputStream outputStream = new FileOutputStream(filename);
 		try {
-			outputStream = new FileOutputStream(filename);
 			int byteCount = 0;
 			byte[] bytes = new byte[1024];
 			while ((byteCount = inputStream.read(bytes)) != -1) {
 				outputStream.write(bytes, 0, byteCount);
 			}
 		} finally {
+			outputStream.close();
 			if (inputStream != null) {
 				inputStream.close();
-			}
-			if (outputStream != null) {
-				outputStream.close();
 			}
 		}
 	}
@@ -77,7 +78,7 @@ public class Util {
 						if (!newDir.exists()) {
 							boolean mkdirRes = newDir.mkdirs();
 							if (!mkdirRes) {
-								logger.equals("Failed to create directory "
+								logger.error("Failed to create directory "
 										+ resDestDir);
 							}
 						}
@@ -124,11 +125,13 @@ public class Util {
 			throws IOException {
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
-			for (File f : files) {
-				compressFilesInDir(
-						f,
-						f.isDirectory() ? Util.combineFilePath(destDir,
-								f.getName()) : destDir);
+			if(files != null) {
+				for (File f : files) {
+					compressFilesInDir(
+							f,
+							f.isDirectory() ? Util.combineFilePath(destDir,
+									f.getName()) : destDir);
+				}
 			}
 		} else {
 			compressor.compress(file, destDir);

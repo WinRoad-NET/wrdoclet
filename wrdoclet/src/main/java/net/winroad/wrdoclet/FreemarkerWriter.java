@@ -29,12 +29,12 @@ public class FreemarkerWriter {
 		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
 
-	public boolean generateHtmlFile(String tmplFilePath, String tmplFileName,
+	public boolean generateHtmlFile(String tmplFileName,
 			@SuppressWarnings("rawtypes") Map propMap, String outputPath,
 			String outputFileName) {
 		Writer outputWriter = null;
 		try {
-			Template tmpl = this.getTemplate(tmplFilePath, tmplFileName);
+			Template tmpl = this.getTemplate(tmplFileName);
 			Util.ensureDirectoryExist(outputPath);
 			File outputDir = new File(outputPath);
 			File htmlFile = new File(outputDir,
@@ -57,20 +57,14 @@ public class FreemarkerWriter {
 		return tmplFileName.replaceAll(".ftl$", ".html");
 	}
 
-	protected Template getTemplate(String tmplFilePath, String tmplFileName)
+	protected Template getTemplate(String tmplFileName)
 			throws IOException {
 		Configuration cfg = new Configuration();
 		cfg.setEncoding(DEFAULT_LOCALE, DEFAULT_ENCODING);
-		if (tmplFilePath == null) {
-			this.logger.debug("reading ftl " + tmplFileName
-					+ " from class path " + freemarkerTemplateDefaultFilePath);
-			cfg.setClassForTemplateLoading(this.getClass(),
-					freemarkerTemplateDefaultFilePath);
-		} else {
-			this.logger.debug("reading ftl " + tmplFileName + " from path "
-					+ tmplFilePath);
-			cfg.setDirectoryForTemplateLoading(new File(tmplFilePath));
-		}
+		this.logger.debug("reading ftl " + tmplFileName
+				+ " from class path " + freemarkerTemplateDefaultFilePath);
+		cfg.setClassForTemplateLoading(this.getClass(),
+				freemarkerTemplateDefaultFilePath);
 		Template tmpl = cfg.getTemplate(tmplFileName);
 		tmpl.setEncoding(DEFAULT_ENCODING);
 		return tmpl;

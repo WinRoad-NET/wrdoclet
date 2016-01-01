@@ -194,7 +194,12 @@ public abstract class AbstractDocBuilder {
 		}
 	}
 
-	protected abstract Boolean isAPIAuthNeeded(String url);
+	/**
+	 * 
+	 * @param url
+	 * @return 0 for anonymous allowed, 1 for authentication needed, others for not specified.
+	 */
+	protected abstract int isAPIAuthNeeded(String url);
 
 	protected abstract boolean isOpenAPIMethod(MethodDoc methodDoc);
 
@@ -235,7 +240,7 @@ public abstract class AbstractDocBuilder {
 		if (classDoc != null) {
 			LinkedList<ModificationRecord> list = this
 					.getModificationRecords(classDoc);
-			history.AddModificationRecords(list);
+			history.addModificationRecords(list);
 		}
 		return history;
 	}
@@ -245,7 +250,7 @@ public abstract class AbstractDocBuilder {
 	 */
 	protected ModificationHistory getModificationHistory(MethodDoc methodDoc) {
 		ModificationHistory history = new ModificationHistory();
-		history.AddModificationRecords(this.parseModificationRecords(methodDoc
+		history.addModificationRecords(this.parseModificationRecords(methodDoc
 				.tags()));
 		return history;
 	}

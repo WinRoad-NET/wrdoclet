@@ -117,7 +117,7 @@ public abstract class AbstractWRParamTaglet implements Taglet {
 					}
 				}
 				ModificationHistory history = new ModificationHistory();
-				history.AddModificationRecords(list);
+				history.addModificationRecords(list);
 				result.setHistory(history);
 				break;
 			default:

@@ -283,7 +283,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 						&& annotations[j].elementValues().length != 0) {
 					for (ElementValuePair pair : annotations[j].elementValues()) {
 						if (pair.element().name().equals("required")) {
-							if (annotations[j].elementValues()[0].value()
+							if (annotations[j].elementValues()[0].value().value()
 									.equals(true)) {
 								apiParameter
 										.setParameterOccurs(ParameterOccurs.REQUIRED);
@@ -319,7 +319,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 							}
 						}
 						if (pair.element().name().equals("required")) {
-							if (annotations[j].elementValues()[0].value()
+							if (annotations[j].elementValues()[0].value().value()
 									.equals(true)) {
 								apiParameter
 										.setParameterOccurs(ParameterOccurs.REQUIRED);
@@ -330,14 +330,17 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 						}
 					}
 				}
-				String desc = "@" + annotations[j].annotationType().name();
+				StringBuffer buf = new StringBuffer();
+				buf.append("@");
+				buf.append(annotations[j].annotationType().name());
 				for (Tag tag : method.tags("param")) {
 					if (parameters[i].name().equals(
 							((ParamTag) tag).parameterName())) {
-						desc += "\n" + ((ParamTag) tag).parameterComment();
+						buf.append("\n");
+						buf.append(((ParamTag) tag).parameterComment());
 					}
 				}
-				apiParameter.setDescription(desc);
+				apiParameter.setDescription(buf.toString());
 				HashSet<String> processingClasses = new HashSet<String>();
 				apiParameter.setFields(this.getFields(parameters[i].type(),
 						ParameterType.Request, processingClasses));
@@ -374,6 +377,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 						apiParameter.setParameterOccurs(ParameterOccurs.OPTIONAL);
 					} 
 					break;
+				default:
+					logger.warn("Unexpected tag:" + tags[i].text());
 				}
 			}
 			HashSet<String> processingClasses = new HashSet<String>();
@@ -459,7 +464,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	}
 
 	@Override
-	protected Boolean isAPIAuthNeeded(String url) {
+	protected int isAPIAuthNeeded(String url) {
 		if (url != null && this.excludedUrls != null
 				&& this.excludedUrls.size() != 0) {
 			if (url.startsWith("{") && url.endsWith("}")) {
@@ -469,13 +474,13 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			for (String u : urls) {
 				for (String excludedUrl : this.excludedUrls) {
 					if (matcher.match(excludedUrl, u)) {
-						return false;
+						return 0;
 					}
 				}
-				return true;
+				return 1;
 			}
 		}
-		return null;
+		return -1;
 	}
 
 }

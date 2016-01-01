@@ -1,5 +1,6 @@
 package net.winroad.wrdoclet.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -22,6 +23,13 @@ public class ApplicationContextConfig {
 				LoggerFactory.getLogger(ApplicationContextConfig.class).error(
 						"不能读取属性文件. "
 						+ "请确保wrdoclet.properties在CLASSPATH指定的路径中");
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

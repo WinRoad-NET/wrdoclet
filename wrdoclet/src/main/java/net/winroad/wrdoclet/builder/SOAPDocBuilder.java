@@ -136,7 +136,8 @@ public class SOAPDocBuilder extends AbstractServiceDocBuilder {
 	}
 
 	@Override
-	protected Boolean isAPIAuthNeeded(String url) {
-		return null;
+	protected int isAPIAuthNeeded(String url) {
+		//no authentication
+		return -1;
 	}
 }

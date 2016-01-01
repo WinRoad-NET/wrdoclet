@@ -22,7 +22,7 @@ public class OpenAPI {
 	private APIParameter outParameter;
 	private List<APIParameter> inParameters = new LinkedList<APIParameter>();
 	private String qualifiedName;
-	private Boolean authNeeded;
+	private int authNeeded;
 	private Set<String> tags = new HashSet<String>();
 	
 	/*
@@ -107,11 +107,11 @@ public class OpenAPI {
 		this.qualifiedName = qualifiedName;
 	}
 
-	public Boolean getAuthNeeded() {
+	public int getAuthNeeded() {
 		return authNeeded;
 	}
 
-	public void setAuthNeeded(Boolean authNeeded) {
+	public void setAuthNeeded(int authNeeded) {
 		this.authNeeded = authNeeded;
 	}
 

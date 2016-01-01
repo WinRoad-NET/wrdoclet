@@ -3,7 +3,6 @@ package net.winroad.wrdoclet;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
@@ -15,37 +14,19 @@ import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.ProgramElementDoc;
 import com.sun.javadoc.RootDoc;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
-import com.sun.tools.doclets.internal.toolkit.util.DirectoryManager;
 import com.sun.tools.doclets.internal.toolkit.util.MessageRetriever;
 
 /**
  * Configure the output based on the command line options.
  * <p>
  * Also determine the length of the command line option. For example,
- * for a option "-header" there will be a string argument associated, then the
- * the length of option "-header" is two. But for option "-nohelp" no argument
- * is needed so it's length is 1.
  * </p>
- * <p>
- * Also do the error checking on the options used. For example it is illegal to
- * use "-helpfile" option when already "-nohelp" option is used.
- * </p>
- *
- * @author Robert Field.
- * @author Atul Dambalkar.
- * @author Jamie Ho
- * @author Bhavesh Patel (Modified)
  * @author Adams Lee
  */
 public class ConfigurationImpl extends Configuration {
 
     private static ConfigurationImpl instance = new ConfigurationImpl();
 
-	/**
-	 * The freemarker template file path.
-	 */
-	public String freemarkerTemplateFilePath = null;
-	
     /**
      * The build date.  Note: For now, we will use
      * a version number instead of a date.
@@ -56,110 +37,6 @@ public class ConfigurationImpl extends Configuration {
      * The name of the constant values file.
      */
     public static final String CONSTANTS_FILE_NAME = "constant-values.html";
-
-    /**
-     * Argument for command line option "-header".
-     */
-    public String header = "";
-
-    /**
-     * Argument for command line option "-packagesheader".
-     */
-    public String packagesheader = "";
-
-    /**
-     * Argument for command line option "-footer".
-     */
-    public String footer = "";
-
-    /**
-     * Argument for command line option "-doctitle".
-     */
-    public String doctitle = "";
-
-    /**
-     * Argument for command line option "-windowtitle".
-     */
-    public String windowtitle = "";
-
-    /**
-     * Argument for command line option "-top".
-     */
-    public String top = "";
-
-    /**
-     * Argument for command line option "-bottom".
-     */
-    public String bottom = "";
-
-    /**
-     * Argument for command line option "-helpfile".
-     */
-    public String helpfile = "";
-
-    /**
-     * Argument for command line option "-stylesheetfile".
-     */
-    public String stylesheetfile = "";
-
-    /**
-     * Argument for command line option "-Xdocrootparent".
-     */
-    public String docrootparent = "";
-
-    /**
-     * True if command line option "-nohelp" is used. Default value is false.
-     */
-    public boolean nohelp = false;
-
-    /**
-     * True if command line option "-splitindex" is used. Default value is
-     * false.
-     */
-    public boolean splitindex = false;
-
-    /**
-     * False if command line option "-noindex" is used. Default value is true.
-     */
-    public boolean createindex = true;
-
-    /**
-     * True if command line option "-use" is used. Default value is false.
-     */
-    public boolean classuse = false;
-
-    /**
-     * False if command line option "-notree" is used. Default value is true.
-     */
-    public boolean createtree = true;
-
-    /**
-     * True if command line option "-nodeprecated" is used. Default value is
-     * false.
-     */
-    public boolean nodeprecatedlist = false;
-
-    /**
-     * True if command line option "-nonavbar" is used. Default value is false.
-     */
-    public boolean nonavbar = false;
-
-    /**
-     * True if command line option "-nooverview" is used. Default value is
-     * false
-     */
-    private boolean nooverview = false;
-
-    /**
-     * True if command line option "-overview" is used. Default value is false.
-     */
-    public boolean overview = false;
-
-    /**
-     * This is true if option "-overview" is used or option "-overview" is not
-     * used and number of packages is more than one.
-     */
-    public boolean createoverview = false;
 
     /**
      * True if command line option "-noframe" is used. Default value is false.
@@ -202,18 +79,6 @@ public class ConfigurationImpl extends Configuration {
     public final MessageRetriever standardmessage;
 
     /**
-     * First file to appear in the right-hand frame in the generated
-     * documentation.
-     */
-    public String topFile = "";
-
-    /**
-     * The classdoc for the class file getting generated.
-     */
-    public ClassDoc currentcd = null;  // Set this classdoc in the
-    // ClassWriter.
-
-    /**
      * Constructor. Initialises resource for the
      * {@link com.sun.tools.doclets.MessageRetriever}.
      */
@@ -235,10 +100,6 @@ public class ConfigurationImpl extends Configuration {
         return instance;
     }
 
-	public String getFreemarkerTemplateFilePath() {
-		return freemarkerTemplateFilePath;
-	}
-
 	/**
      * Return the build date for the doclet.
      */
@@ -256,47 +117,9 @@ public class ConfigurationImpl extends Configuration {
         for (int oi = 0; oi < options.length; ++oi) {
             String[] os = options[oi];
             String opt = os[0].toLowerCase();
-            if (opt.equals("-footer")) {
-                footer = os[1];
-            } else if (opt.equals("-header")) {
-                header = os[1];
-            } else if (opt.equals("-packagesheader")) {
-                packagesheader = os[1];
-            } else if (opt.equals("-doctitle")) {
-                doctitle = os[1];
-            } else if (opt.equals("-windowtitle")) {
-                windowtitle = os[1].replaceAll("\\<.*?>", "");
-            } else if (opt.equals("-top")) {
-                top = os[1];
-            } else if (opt.equals("-bottom")) {
-                bottom = os[1];
-            } else if (opt.equals("-helpfile")) {
-                helpfile = os[1];
-            } else if (opt.equals("-stylesheetfile")) {
-                stylesheetfile = os[1];
-            } else if (opt.equals("-charset")) {
+            if (opt.equals("-charset")) {
                 charset = os[1];
-            } else if (opt.equals("-xdocrootparent")) {
-                docrootparent = os[1];
-            } else if (opt.equals("-nohelp")) {
-                nohelp = true;
-            } else if (opt.equals("-splitindex")) {
-                splitindex = true;
-            } else if (opt.equals("-noindex")) {
-                createindex = false;
-            } else if (opt.equals("-use")) {
-                classuse = true;
-            } else if (opt.equals("-notree")) {
-                createtree = false;
-            } else if (opt.equals("-nodeprecatedlist")) {
-                nodeprecatedlist = true;
-            } else if (opt.equals("-nonavbar")) {
-                nonavbar = true;
-            } else if (opt.equals("-nooverview")) {
-                nooverview = true;
-            } else if (opt.equals("-overview")) {
-                overview = true;
-            } else if (opt.equals("-noframe")) {
+            }  else if (opt.equals("-noframe")) {
                 noframe = true;
             } else if (opt.equals("-dubboconfigpath")) {
                 dubboconfigpath = os[1];
@@ -323,8 +146,6 @@ public class ConfigurationImpl extends Configuration {
                 }
             }
         }
-        setCreateOverview();
-        setTopFile(root);
     }
 
     /**
@@ -509,37 +330,6 @@ public class ConfigurationImpl extends Configuration {
         return standardmessage;
     }
 
-    /**
-     * Decide the page which will appear first in the right-hand frame. It will
-     * be "overview-summary.html" if "-overview" option is used or no
-     * "-overview" but the number of packages is more than one. It will be
-     * "package-summary.html" of the respective package if there is only one
-     * package to document. It will be a class page(first in the sorted order),
-     * if only classes are provided on the command line.
-     *
-     * @param root Root of the program structure.
-     */
-    protected void setTopFile(RootDoc root) {
-        if (!checkForDeprecation(root)) {
-            return;
-        }
-        if (createoverview) {
-            topFile = "overview-summary.html";
-        } else {
-            if (packages.length == 1 && packages[0].name().equals("")) {
-                if (root.classes().length > 0) {
-                    ClassDoc[] classarr = root.classes();
-                    Arrays.sort(classarr);
-                    ClassDoc cd = getValidClass(classarr);
-                    topFile = DirectoryManager.getPathToClass(cd);
-                }
-            } else {
-                topFile = DirectoryManager.getPathToPackage(packages[0],
-                                                            "package-summary.html");
-            }
-        }
-    }
-
     protected ClassDoc getValidClass(ClassDoc[] classarr) {
         if (!nodeprecated) {
             return classarr[0];
@@ -560,16 +350,6 @@ public class ConfigurationImpl extends Configuration {
             }
         }
         return false;
-    }
-
-    /**
-     * Generate "overview.html" page if option "-overview" is used or number of
-     * packages is more than one. Sets {@link #createoverview} field to true.
-     */
-    protected void setCreateOverview() {
-        if ((overview || packages.length > 1) && !nooverview) {
-            createoverview = true;
-        }
     }
 
     /**

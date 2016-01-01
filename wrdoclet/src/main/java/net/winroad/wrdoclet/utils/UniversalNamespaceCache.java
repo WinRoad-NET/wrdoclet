@@ -30,9 +30,9 @@ public class UniversalNamespaceCache implements NamespaceContext {
 	public UniversalNamespaceCache(Document document, boolean toplevelOnly) {
 		examineNode(document.getFirstChild(), toplevelOnly);
 		System.out.println("The list of the cached namespaces:");
-		for (String key : prefix2Uri.keySet()) {
+		for (Map.Entry<String, String> entry : prefix2Uri.entrySet()) {
 			System.out
-					.println("prefix " + key + ": uri " + prefix2Uri.get(key));
+					.println("prefix " + entry.getKey() + ": uri " + entry.getValue());
 		}
 	}
 

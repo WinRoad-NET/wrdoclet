@@ -18,11 +18,11 @@ public class ModificationHistory {
 		return modificationRecordList;
 	}
 
-	public void AddModificationRecord(ModificationRecord record) {
+	public void addModificationRecord(ModificationRecord record) {
 		this.modificationRecordList.add(record);
 	}
 
-	public void AddModificationRecords(LinkedList<ModificationRecord> record) {
+	public void addModificationRecords(LinkedList<ModificationRecord> record) {
 		this.modificationRecordList.addAll(record);
 	}
 

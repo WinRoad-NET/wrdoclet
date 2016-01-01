@@ -40,13 +40,13 @@ import com.sun.tools.doclets.internal.toolkit.util.DocletAbortException;
 public class HtmlDoclet extends AbstractDoclet {
 
 	public HtmlDoclet() {
-		configuration = (ConfigurationImpl) configuration();
+		configurationEx = (ConfigurationImpl) configuration();
 	}
 
 	/**
 	 * The global configuration information for this run.
 	 */
-	public ConfigurationImpl configuration;
+	public ConfigurationImpl configurationEx;
 
 	/**
 	 * The "start" method as required by Javadoc.
@@ -102,7 +102,7 @@ public class HtmlDoclet extends AbstractDoclet {
 	@Override
 	protected void generateWRDocFiles(RootDoc root, WRDoc wrDoc)
 			throws Exception {
-		if (this.configuration.noframe) {
+		if (this.configurationEx.noframe) {
 			this.generateWRNoFrameFile(root, wrDoc);
 		} else {
 			this.generateWRFrameFiles(root, wrDoc);
@@ -113,13 +113,12 @@ public class HtmlDoclet extends AbstractDoclet {
 			throws Exception {
 		Map<String, Map<String, List<OpenAPI>>> tagMap = new HashMap<String, Map<String, List<OpenAPI>>>();
 		tagMap.put("tagedOpenAPIs", wrDoc.getTaggedOpenAPIs());
-		this.configuration
+		this.configurationEx
 				.getWriterFactory()
 				.getFreemarkerWriter()
 				.generateHtmlFile(
-						this.configuration.getFreemarkerTemplateFilePath(),
 						"wrNoFrame.ftl", tagMap,
-						this.configuration.destDirName, "index.html");
+						this.configurationEx.destDirName, "index.html");
 		this.generateCommonFiles(root);
 	}
 
@@ -139,24 +138,23 @@ public class HtmlDoclet extends AbstractDoclet {
 		DocData bean = this.generateDocData(wrDoc);
 		Gson gson = new Gson();
 		tagMap.put("response", gson.toJson(bean));
-		tagMap.put("searchengine", this.configuration.searchengine);
-		this.configuration
+		tagMap.put("searchengine", this.configurationEx.searchengine);
+		this.configurationEx
 				.getWriterFactory()
 				.getFreemarkerWriter()
 				.generateHtmlFile(
-						this.configuration.getFreemarkerTemplateFilePath(),
-						"index.ftl", tagMap, this.configuration.destDirName,
+						"index.ftl", tagMap, this.configurationEx.destDirName,
 						null);
 	}
 
 	protected void generateCommonFiles(RootDoc root) throws Exception {
 		// copy folders
 		Util.copyResourceFolder("/css/",
-				Util.combineFilePath(this.configuration.destDirName, "css"));
+				Util.combineFilePath(this.configurationEx.destDirName, "css"));
 		Util.copyResourceFolder("/js/",
-				Util.combineFilePath(this.configuration.destDirName, "js"));
+				Util.combineFilePath(this.configurationEx.destDirName, "js"));
 		Util.copyResourceFolder("/img/",
-				Util.combineFilePath(this.configuration.destDirName, "img"));
+				Util.combineFilePath(this.configurationEx.destDirName, "img"));
 	}
 
 	protected String generateWRAPIFileName(String container, String url,
@@ -203,14 +201,12 @@ public class HtmlDoclet extends AbstractDoclet {
 						.getRequestMapping().getMethodType());
 				hashMap.put("filePath", filename);
 				if (!filesGenerated.contains(filename)) {
-					this.configuration
+					this.configurationEx
 							.getWriterFactory()
 							.getFreemarkerWriter()
 							.generateHtmlFile(
-									this.configuration
-											.getFreemarkerTemplateFilePath(),
 									"wrAPIDetail.ftl", hashMap,
-									this.configuration.destDirName, filename);
+									this.configurationEx.destDirName, filename);
 					filesGenerated.add(filename);
 				}
 			}
@@ -222,7 +218,7 @@ public class HtmlDoclet extends AbstractDoclet {
 
 		Arrays.sort(arr);
 		for (int i = 0; i < arr.length; i++) {
-			if (!(configuration.isGeneratedDoc(arr[i]) && arr[i].isIncluded())) {
+			if (!(configurationEx.isGeneratedDoc(arr[i]) && arr[i].isIncluded())) {
 				continue;
 			}
 			ClassDoc prev = (i == 0) ? null : arr[i - 1];
@@ -230,12 +226,12 @@ public class HtmlDoclet extends AbstractDoclet {
 			ClassDoc next = (i + 1 == arr.length) ? null : arr[i + 1];
 			try {
 				if (curr.isAnnotationType()) {
-					AbstractBuilder annotationTypeBuilder = configuration
+					AbstractBuilder annotationTypeBuilder = configurationEx
 							.getBuilderFactory().getAnnotationTypeBuilder(
 									(AnnotationTypeDoc) curr, prev, next);
 					annotationTypeBuilder.build();
 				} else {
-					AbstractBuilder classBuilder = configuration
+					AbstractBuilder classBuilder = configurationEx
 							.getBuilderFactory().getClassBuilder(curr, prev,
 									next, classtree);
 					classBuilder.build();

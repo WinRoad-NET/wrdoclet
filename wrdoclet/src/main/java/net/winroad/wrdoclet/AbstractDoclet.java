@@ -1,8 +1,6 @@
 package net.winroad.wrdoclet;
 
 import net.winroad.wrdoclet.data.WRDoc;
-import net.winroad.wrdoclet.utils.Logger;
-import net.winroad.wrdoclet.utils.LoggerFactory;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
@@ -14,10 +12,8 @@ import com.sun.tools.doclets.internal.toolkit.builders.BuilderFactory;
 import com.sun.tools.doclets.internal.toolkit.util.ClassTree;
 
 public abstract class AbstractDoclet {
-	protected Logger logger;
 
 	public AbstractDoclet() {
-		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
 
 	/**

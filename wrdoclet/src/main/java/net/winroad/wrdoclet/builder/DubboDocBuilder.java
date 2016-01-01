@@ -14,7 +14,6 @@ import net.winroad.wrdoclet.data.ParameterOccurs;
 import net.winroad.wrdoclet.data.ParameterType;
 import net.winroad.wrdoclet.data.RequestMapping;
 import net.winroad.wrdoclet.data.WRDoc;
-import net.winroad.wrdoclet.utils.Logger;
 import net.winroad.wrdoclet.utils.LoggerFactory;
 import net.winroad.wrdoclet.utils.UniversalNamespaceCache;
 
@@ -29,7 +28,6 @@ import com.sun.javadoc.Tag;
 
 public class DubboDocBuilder extends AbstractServiceDocBuilder {
 	protected List<String> dubboInterfaces = null;
-	protected Logger logger;
 
 	public DubboDocBuilder(WRDoc wrDoc) {
 		super(wrDoc);
@@ -119,8 +117,9 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 	}
 
 	@Override
-	protected Boolean isAPIAuthNeeded(String url) {
-		return null;
+	protected int isAPIAuthNeeded(String url) {
+		//no authentication
+		return -1;
 	}
 
 }
