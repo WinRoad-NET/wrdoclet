@@ -8,6 +8,13 @@
 	<name>wrdoclet</name>
 	<url>https://github.com/WinRoad-NET/wrdoclet</url>
 	<description>wrdoclet is a javadoc doclet that tries to generate API doc for Spring MVC service, JAX-WS service, dubbo service</description>
+
+
+	<properties>  
+		<!-- 文件拷贝时的编码 -->  
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
+	</properties>  
 	
 	<modules>
 		<module>wrdoclet</module>
@@ -44,6 +51,17 @@
          <url>https://github.com/WinRoad-NET/wrdoclet/issues</url> 
      </issueManagement> 
 
+	<distributionManagement>
+	  <snapshotRepository>
+		<id>ossrh</id>
+		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	  </snapshotRepository>
+	  <repository>
+		<id>ossrh</id>
+		<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	  </repository>
+	</distributionManagement>
+	 
     <profiles> 
          <profile> 
              <id>release-sign-artifacts</id> 
@@ -58,7 +76,7 @@
                      <plugin> 
                          <groupId>org.apache.maven.plugins</groupId> 
                          <artifactId>maven-gpg-plugin</artifactId> 
-                         <version>1.4</version> 
+                         <version>1.5</version> 
                          <executions> 
                              <execution> 
                                  <id>sign-artifacts</id> 
@@ -83,12 +101,16 @@
                  <configuration> 
                      <source>1.7</source> 
                      <target>1.7</target> 
+					 <encoding>UTF-8</encoding>
                  </configuration> 
              </plugin> 
              <plugin> 
                  <groupId>org.apache.maven.plugins</groupId> 
                  <artifactId>maven-source-plugin</artifactId> 
                  <version>2.2.1</version> 
+                 <configuration> 
+					 <encoding>UTF-8</encoding>
+                 </configuration> 				 
                  <executions> 
                      <execution> 
                          <id>attach-sources</id> 
@@ -114,15 +136,29 @@
              <plugin> 
                  <groupId>org.apache.maven.plugins</groupId> 
                  <artifactId>maven-release-plugin</artifactId> 
-                 <version>2.4.1</version> 
+                 <version>2.5</version> 
                  <configuration> 
-                     <autoVersionSubmodules>true</autoVersionSubmodules> 
+                     <autoVersionSubmodules>true</autoVersionSubmodules>
+					 <useReleaseProfile>false</useReleaseProfile>
+					 <releaseProfiles>release-sign-artifacts</releaseProfiles>
                      <mavenExecutorId>forked-path</mavenExecutorId> 
                      <tagNameFormat>v@{project.version}</tagNameFormat> 
-                     <preparationGoals>clean test</preparationGoals> 
+                     <preparationGoals>clean test</preparationGoals>
+					 <goals>deploy</goals>
                  </configuration> 
-             </plugin> 
-             <plugin> 
+             </plugin>
+			<plugin>
+			  <groupId>org.sonatype.plugins</groupId>
+			  <artifactId>nexus-staging-maven-plugin</artifactId>
+			  <version>1.6.6</version>
+			  <extensions>true</extensions>
+			  <configuration>
+				<serverId>ossrh</serverId>
+				<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+				<autoReleaseAfterClose>true</autoReleaseAfterClose>
+			  </configuration>
+			</plugin>
+			<plugin> 
                  <groupId>org.codehaus.mojo</groupId> 
                  <artifactId>findbugs-maven-plugin</artifactId> 
                  <version>3.0.1</version> 

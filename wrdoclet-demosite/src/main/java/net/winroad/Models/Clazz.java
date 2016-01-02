@@ -3,6 +3,8 @@ package net.winroad.Models;
 import java.util.List;
 import java.util.Map;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class Clazz {
 
 	/**
@@ -51,5 +53,6 @@ public class Clazz {
 	private String name;
 	private List<Student> students;
 	private List<Clazz> relatedClasses;
+	@SuppressFBWarnings(value="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD", justification = "just for demo")
 	public Map.Entry<Address, List<Person>> properties;
 }

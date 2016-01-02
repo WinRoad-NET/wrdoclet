@@ -1,5 +1,7 @@
 package net.winroad.Models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * 人
  * @author AdamsLi
@@ -19,6 +21,7 @@ public class Person {
 	private Address address;
 	
 	public final static String PET_PHRASE = "MY GOD!";
+	@SuppressFBWarnings(value="SS_SHOULD_BE_STATIC", justification = "just for demo")
 	public final String hobby = "hot girl";
 	public static String favStar = "Jackie Chen";
 
@@ -55,6 +58,7 @@ public class Person {
 	}
 
 	@SuppressWarnings("unused")
+	@SuppressFBWarnings(value="URF_UNREAD_FIELD", justification = "just for demo")
 	private void setW(double weight) {
 		this.weight = weight;
 	}
