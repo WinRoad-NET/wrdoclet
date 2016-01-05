@@ -64,7 +64,7 @@
 	 
     <profiles> 
          <profile> 
-             <id>release-sign-artifacts</id> 
+             <id>wrdoclet-release</id> 
              <activation> 
                  <property> 
                      <name>performRelease</name> 
@@ -140,7 +140,8 @@
                  <configuration> 
                      <autoVersionSubmodules>true</autoVersionSubmodules>
 					 <useReleaseProfile>false</useReleaseProfile>
-					 <releaseProfiles>release-sign-artifacts</releaseProfiles>
+					 <arguments>-Pwrdoclet-release</arguments>
+					 <releaseProfiles>wrdoclet-release</releaseProfiles>
                      <mavenExecutorId>forked-path</mavenExecutorId> 
                      <tagNameFormat>v@{project.version}</tagNameFormat> 
                      <preparationGoals>clean test</preparationGoals>
