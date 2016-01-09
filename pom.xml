@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.winroad</groupId>
 	<artifactId>wrdoclet-parent</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>wrdoclet</name>
 	<url>https://github.com/WinRoad-NET/wrdoclet</url>
@@ -66,8 +66,8 @@
              <id>wrdoclet-release</id> 
              <activation> 
                  <property> 
-                     <name>performRelease</name> 
-             <value>true</value> 
+                    <name>performRelease</name> 
+					<value>true</value> 
                  </property> 
              </activation> 
              <build> 
@@ -93,6 +93,20 @@
  
      <build> 
          <plugins> 
+			 <plugin> 
+				 <groupId>org.apache.maven.plugins</groupId> 
+				 <artifactId>maven-gpg-plugin</artifactId> 
+				 <version>1.5</version> 
+				 <executions> 
+					 <execution> 
+						 <id>sign-artifacts</id> 
+						 <phase>verify</phase> 
+						 <goals> 
+							 <goal>sign</goal> 
+						 </goals> 
+					 </execution> 
+				 </executions> 
+			 </plugin> 
              <plugin> 
                  <groupId>org.apache.maven.plugins</groupId> 
                  <artifactId>maven-compiler-plugin</artifactId> 
@@ -139,11 +153,9 @@
                  <configuration> 
                      <autoVersionSubmodules>true</autoVersionSubmodules>
 					 <useReleaseProfile>false</useReleaseProfile>
-					 <arguments>-Pwrdoclet-release</arguments>
 					 <releaseProfiles>wrdoclet-release</releaseProfiles>
-                     <mavenExecutorId>forked-path</mavenExecutorId> 
-                     <tagNameFormat>v@{project.version}</tagNameFormat> 
-                     <preparationGoals>clean test</preparationGoals>
+					 <pushChanges>false</pushChanges>
+					 <localCheckout>true</localCheckout>
 					 <goals>deploy</goals>
                  </configuration> 
              </plugin>
