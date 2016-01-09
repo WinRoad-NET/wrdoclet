@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2</version>
 	</parent>
 	
 	<artifactId>wrdoclet</artifactId>
@@ -132,4 +132,8 @@
          </plugins> 
      </build> 
 	
+
+  <scm>
+    <tag>wrdoclet-parent-1.0.2</tag>
+  </scm>
 </project>
