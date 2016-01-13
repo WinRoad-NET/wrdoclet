@@ -32,19 +32,23 @@ public abstract class AbstractServiceDocBuilder extends AbstractDocBuilder {
 				this.processServiceClass(classes[i], configuration);
 				MethodDoc[] methods = classes[i].methods();
 				for (int l = 0; l < methods.length; l++) {
+					if (configuration.nodeprecated
+							&& Util.isDeprecated(methods[l])) {
+						continue;
+					}
 					this.processOpenAPIMethod(methods[l], configuration);
 				}
 			}
 		}
 	}
-	
+
 	abstract boolean isServiceInterface(ClassDoc classDoc);
 
 	@Override
 	protected boolean isOpenAPIMethod(MethodDoc methodDoc) {
 		return methodDoc.isPublic();
 	}
-	
+
 	/*
 	 * Process the tag on the Service.
 	 */
@@ -62,6 +66,10 @@ public abstract class AbstractServiceDocBuilder extends AbstractDocBuilder {
 				}
 				// all method of this service should be processed later.
 				for (int j = 0; j < service.methods().length; j++) {
+					if (configuration.nodeprecated
+							&& Util.isDeprecated(service.methods()[j])) {
+						continue;
+					}
 					this.taggedOpenAPIMethods.get(tag)
 							.add(service.methods()[j]);
 				}
@@ -69,5 +77,5 @@ public abstract class AbstractServiceDocBuilder extends AbstractDocBuilder {
 
 			this.wrDoc.getWRTags().addAll(serviceTags);
 		}
-	}	
+	}
 }

@@ -109,7 +109,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				continue;
 			}
 
-			if (this.isController(classDocs[i]) || this.isAPIClass(classDocs[i])) {
+			if (this.isController(classDocs[i])
+					|| this.isAPIClass(classDocs[i])) {
 				this.processControllerClass(classDocs[i], configuration);
 				MethodDoc[] methods = classDocs[i].methods();
 				for (int l = 0; l < methods.length; l++) {
@@ -127,17 +128,17 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		ClassDoc controllerClass = methodDoc.containingClass();
 		AnnotationDesc[] baseAnnotations = controllerClass.annotations();
 		RequestMapping baseMapping = this.parseRequestMapping(baseAnnotations);
-		if(baseMapping == null) {
+		if (baseMapping == null) {
 			Tag[] tags = controllerClass.tags(WRAPITaglet.NAME);
-			if(tags.length > 0) {
+			if (tags.length > 0) {
 				baseMapping = this.parseRequestMapping(tags[0]);
 			}
 		}
 		AnnotationDesc[] annotations = methodDoc.annotations();
 		RequestMapping mapping = this.parseRequestMapping(annotations);
-		if(mapping == null) {
+		if (mapping == null) {
 			Tag[] tags = methodDoc.tags(WRAPITaglet.NAME);
-			if(tags.length > 0) {
+			if (tags.length > 0) {
 				mapping = this.parseRequestMapping(tags[0]);
 			}
 		}
@@ -161,7 +162,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		}
 		if (result != null) {
 			result.setTooltip(methodDoc.containingClass().simpleTypeName());
-			result.setContainerName(methodDoc.containingClass().simpleTypeName());
+			result.setContainerName(methodDoc.containingClass()
+					.simpleTypeName());
 		}
 		return result;
 	}
@@ -195,15 +197,15 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		}
 		return requestMapping;
 	}
-	
+
 	private RequestMapping parseRequestMapping(Tag tag) {
 		RequestMapping requestMapping = null;
-		if(!StringUtils.isEmpty(tag.text())) {
+		if (!StringUtils.isEmpty(tag.text())) {
 			requestMapping = new RequestMapping();
 			int index = tag.text().indexOf(" ");
-			if(index > 0) {
+			if (index > 0) {
 				String methodType = tag.text().substring(0, index);
-				String url = tag.text().substring(index+1);
+				String url = tag.text().substring(index + 1);
 				requestMapping.setMethodType(methodType);
 				requestMapping.setUrl(url);
 			} else {
@@ -241,22 +243,23 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		} else {
 			apiParameter = this.parseCustomizedReturn(method);
 		}
-		
+
 		apiParameter = handleRefResp(method, apiParameter);
 		return apiParameter;
 	}
 
 	private APIParameter handleRefResp(MethodDoc method,
 			APIParameter apiParameter) {
-		if(apiParameter == null) {
+		if (apiParameter == null) {
 			Tag[] tags = method.tags(WRRefRespTaglet.NAME);
-			if(tags.length > 0) {
+			if (tags.length > 0) {
 				apiParameter = new APIParameter();
 				apiParameter.setType(tags[0].text());
 				apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
 				HashSet<String> processingClasses = new HashSet<String>();
-				ClassDoc c = this.wrDoc.getConfiguration().root.classNamed(apiParameter.getType());
-				if(c != null) {
+				ClassDoc c = this.wrDoc.getConfiguration().root
+						.classNamed(apiParameter.getType());
+				if (c != null) {
 					apiParameter.setFields(this.getFields(c,
 							ParameterType.Response, processingClasses));
 				}
@@ -283,8 +286,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 						&& annotations[j].elementValues().length != 0) {
 					for (ElementValuePair pair : annotations[j].elementValues()) {
 						if (pair.element().name().equals("required")) {
-							if (annotations[j].elementValues()[0].value().value()
-									.equals(true)) {
+							if (annotations[j].elementValues()[0].value()
+									.value().equals(true)) {
 								apiParameter
 										.setParameterOccurs(ParameterOccurs.REQUIRED);
 							} else {
@@ -319,8 +322,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 							}
 						}
 						if (pair.element().name().equals("required")) {
-							if (annotations[j].elementValues()[0].value().value()
-									.equals(true)) {
+							if (annotations[j].elementValues()[0].value()
+									.value().equals(true)) {
 								apiParameter
 										.setParameterOccurs(ParameterOccurs.REQUIRED);
 							} else {
@@ -349,18 +352,18 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				paramList.add(apiParameter);
 			}
 		}
-		
+
 		handleRefReq(method, paramList);
 		return paramList;
 	}
 
 	private void handleRefReq(MethodDoc method, List<APIParameter> paramList) {
 		Tag[] tags = method.tags(WRRefReqTaglet.NAME);
-		for(int i = 0; i< tags.length; i++) {
+		for (int i = 0; i < tags.length; i++) {
 			APIParameter apiParameter = new APIParameter();
 			String[] strArr = tags[i].text().split(" ");
-			for(int j = 0; j< strArr.length; j++) {
-				switch(j) {
+			for (int j = 0; j < strArr.length; j++) {
+				switch (j) {
 				case 0:
 					apiParameter.setName(strArr[j]);
 					break;
@@ -371,21 +374,26 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					apiParameter.setDescription(strArr[j]);
 					break;
 				case 3:
-					if(StringUtils.equalsIgnoreCase(strArr[j], WROccursTaglet.REQUIRED)) {
-						apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-					} else if(StringUtils.equalsIgnoreCase(strArr[j], WROccursTaglet.OPTIONAL)) {
-						apiParameter.setParameterOccurs(ParameterOccurs.OPTIONAL);
-					} 
+					if (StringUtils.equalsIgnoreCase(strArr[j],
+							WROccursTaglet.REQUIRED)) {
+						apiParameter
+								.setParameterOccurs(ParameterOccurs.REQUIRED);
+					} else if (StringUtils.equalsIgnoreCase(strArr[j],
+							WROccursTaglet.OPTIONAL)) {
+						apiParameter
+								.setParameterOccurs(ParameterOccurs.OPTIONAL);
+					}
 					break;
 				default:
 					logger.warn("Unexpected tag:" + tags[i].text());
 				}
 			}
 			HashSet<String> processingClasses = new HashSet<String>();
-			ClassDoc c = this.wrDoc.getConfiguration().root.classNamed(apiParameter.getType());
-			if(c != null) {
-				apiParameter.setFields(this.getFields(c,
-						ParameterType.Request, processingClasses));
+			ClassDoc c = this.wrDoc.getConfiguration().root
+					.classNamed(apiParameter.getType());
+			if (c != null) {
+				apiParameter.setFields(this.getFields(c, ParameterType.Request,
+						processingClasses));
 			}
 			paramList.add(apiParameter);
 		}
@@ -398,7 +406,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	private boolean isController(ClassDoc classDoc) {
 		return this.isClassDocAnnotatedWith(classDoc, "Controller");
 	}
-	
+
 	private boolean isAPIClass(ClassDoc classDoc) {
 		Tag[] t = classDoc.tags(WRAPITaglet.NAME);
 		return t.length > 0;
@@ -423,6 +431,10 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 				// all action method of this controller should be processed
 				// later.
 				for (int j = 0; j < controller.methods().length; j++) {
+					if (configuration.nodeprecated
+							&& Util.isDeprecated(controller.methods()[j])) {
+						continue;
+					}
 					if (isOpenAPIMethod(controller.methods()[j])) {
 						this.taggedOpenAPIMethods.get(tag).add(
 								controller.methods()[j]);

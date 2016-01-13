@@ -55,6 +55,7 @@ public interface TestService {
 	public List<User> getUserList(@XmlElement(required=false) @WebParam(name = "name") String name);
 
 	/**
+	 * @deprecated
 	 * @tag 用户管理， 测试
 	 * @param name 名字
 	 * @param password 密码
