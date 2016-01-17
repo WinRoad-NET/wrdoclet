@@ -1,6 +1,8 @@
 package net.winroad.wrdoclet;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,17 +23,21 @@ import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
 import net.winroad.wrdoclet.utils.Util;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.Gson;
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.builders.AbstractBuilder;
 import com.sun.tools.doclets.internal.toolkit.util.ClassTree;
 import com.sun.tools.doclets.internal.toolkit.util.DocletAbortException;
+
+import org.pegdown.PegDownProcessor;
 
 /**
  * @author AdamsLee
@@ -41,12 +47,15 @@ public class HtmlDoclet extends AbstractDoclet {
 
 	public HtmlDoclet() {
 		configurationEx = (ConfigurationImpl) configuration();
+		this.pegDownProcessor = new PegDownProcessor();
 	}
 
 	/**
 	 * The global configuration information for this run.
 	 */
 	public ConfigurationImpl configurationEx;
+
+	private PegDownProcessor pegDownProcessor;
 
 	/**
 	 * The "start" method as required by Javadoc.
@@ -107,6 +116,33 @@ public class HtmlDoclet extends AbstractDoclet {
 		} else {
 			this.generateWRFrameFiles(root, wrDoc);
 		}
+		this.generatePackageFiles(root);
+	}
+
+	protected void generatePackageFiles(RootDoc root) {
+		PackageDoc[] packageDocs = root.specifiedPackages();
+		for (PackageDoc pdoc : packageDocs) {
+			if (StringUtils.isNotBlank(pdoc.commentText())) {
+				String html = this.pegDownProcessor.markdownToHtml(pdoc
+						.commentText());
+				Map<String, String> tagMap = new HashMap<String, String>();
+				tagMap.put("branchName", this.configurationEx.branchname);
+				tagMap.put("systemName", this.configurationEx.systemname);
+				String tags = WRTagTaglet.concatToString(pdoc.tags(WRTagTaglet.NAME));
+				if(StringUtils.isBlank(tags)) {
+					tagMap.put("tags", pdoc.name());
+				} else {
+					tagMap.put("tags", tags);
+				}
+				tagMap.put("APIUrl", pdoc.name());
+				tagMap.put("bodyContent", html );				
+				this.configurationEx
+						.getWriterFactory()
+						.getFreemarkerWriter()
+						.generateHtmlFile("packageInfo.ftl", tagMap,
+								this.configurationEx.destDirName, pdoc.name() + ".html");
+			}
+		}
 	}
 
 	protected void generateWRNoFrameFile(RootDoc root, WRDoc wrDoc)
@@ -116,8 +152,7 @@ public class HtmlDoclet extends AbstractDoclet {
 		this.configurationEx
 				.getWriterFactory()
 				.getFreemarkerWriter()
-				.generateHtmlFile(
-						"wrNoFrame.ftl", tagMap,
+				.generateHtmlFile("wrNoFrame.ftl", tagMap,
 						this.configurationEx.destDirName, "index.html");
 		this.generateCommonFiles(root);
 	}
@@ -142,9 +177,8 @@ public class HtmlDoclet extends AbstractDoclet {
 		this.configurationEx
 				.getWriterFactory()
 				.getFreemarkerWriter()
-				.generateHtmlFile(
-						"index.ftl", tagMap, this.configurationEx.destDirName,
-						null);
+				.generateHtmlFile("index.ftl", tagMap,
+						this.configurationEx.destDirName, null);
 	}
 
 	protected void generateCommonFiles(RootDoc root) throws Exception {
@@ -204,8 +238,7 @@ public class HtmlDoclet extends AbstractDoclet {
 					this.configurationEx
 							.getWriterFactory()
 							.getFreemarkerWriter()
-							.generateHtmlFile(
-									"wrAPIDetail.ftl", hashMap,
+							.generateHtmlFile("wrAPIDetail.ftl", hashMap,
 									this.configurationEx.destDirName, filename);
 					filesGenerated.add(filename);
 				}

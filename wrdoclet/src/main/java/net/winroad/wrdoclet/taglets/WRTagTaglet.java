@@ -50,6 +50,10 @@ public class WRTagTaglet implements Taglet {
 	}
 
 	public String toString(Tag[] tags) {
+		return WRTagTaglet.concatToString(tags);
+	}
+
+	public static String concatToString(Tag[] tags) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < tags.length - 1; i++) {
 			result.append(tags[i].text());
@@ -60,7 +64,7 @@ public class WRTagTaglet implements Taglet {
 		}
 		return result.toString();
 	}
-
+	
 	/**
 	 * Split string to get tag set.
 	 * 
