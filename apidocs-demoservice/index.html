@@ -2,8 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="shortcut icon" href="img/favicon.ico"/>
+<link rel="bookmark" href="img/favicon.ico"/>
 <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
 <link rel="stylesheet" type="text/css" href="css/layout-default-1.4.0.css" title="Style" />
+<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.12.0-pre.css" title="Style" />
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.11.4.min.js"></script>
@@ -14,12 +17,14 @@
 	Global = {
 		searchEngine : 'http://127.0.0.1:8080/solr/apidocs',
 		// the API tag and link data
-		localData : {"docs":[{"tag":"demo","APIs":[{"url":"delUser(int)","filepath":"TestService-delUser(int).html","brief":"","tooltip":"TestService"},{"url":"getUserMap()","filepath":"TestService-getUserMap().html","brief":"","tooltip":"TestService"},{"url":"getUserArray()","filepath":"TestService-getUserArray().html","brief":"","tooltip":"TestService"},{"url":"updateUser(net.winroad.Models.User)","filepath":"TestService-updateUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"},{"url":"GetUserByTheId(int)","filepath":"TestService-GetUserByTheId(int).html","brief":"","tooltip":"TestService"},{"url":"findUser(net.winroad.Models.User)","filepath":"TestService-findUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"delUserTest()","filepath":"TestService-delUserTest().html","brief":"","tooltip":"TestService"}]},{"tag":"测试","APIs":[{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"}]},{"tag":"用户管理","APIs":[{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"}]},{"tag":"用户展示","APIs":[{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"}]}],"facet_counts":{"facet_fields":{"tags":["demo",9,"测试",1,"用户管理",2,"用户展示",1]}}},
+		localData : {"docs":[{"tag":"demo","APIs":[{"url":"getUserArray()","filepath":"TestService-getUserArray().html","brief":"","tooltip":"TestService"},{"url":"delUserTest()","filepath":"TestService-delUserTest().html","brief":"","tooltip":"TestService"},{"url":"getUserMap()","filepath":"TestService-getUserMap().html","brief":"","tooltip":"TestService"},{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"},{"url":"updateUser(net.winroad.Models.User)","filepath":"TestService-updateUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"GetUserByTheId(int)","filepath":"TestService-GetUserByTheId(int).html","brief":"","tooltip":"TestService"},{"url":"findUser(net.winroad.Models.User)","filepath":"TestService-findUser(net.winroad.Models.User).html","brief":"","tooltip":"TestService"},{"url":"delUser(int)","filepath":"TestService-delUser(int).html","brief":"","tooltip":"TestService"}]},{"tag":"测试","APIs":[{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"}]},{"tag":"用户管理","APIs":[{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"},{"url":"addUser(java.lang.String, java.lang.String)","filepath":"TestService-addUser(java.lang.String, java.lang.String).html","brief":"","tooltip":"TestService"}]},{"tag":"用户展示","APIs":[{"url":"getUserList(java.lang.String)","filepath":"TestService-getUserList(java.lang.String).html","brief":"获取用户列表","tooltip":"TestService"}]}],"facet_counts":{"facet_fields":{"tags":["demo",9,"测试",1,"用户管理",2,"用户展示",1]}}},
 		//localData : {"docs":[{}],"facet_counts":{"facet_fields":{"tags":[]}}},
 		// map key: tag, value: APIs
 		tag2APIsmap : {},
 		pagelayout : {},
 		searchContent : '',
+		searchBranch : '',
+		searchSystem : '',
 		searchRows : 10,
 		searchOptions : []
 	};
@@ -29,11 +34,13 @@
 
 <div id="searchBar" class="ui-layout-north">
 	<div class="sitename"></div>
+	<div class="help"><a href="http://wrdoclet.winroad.net/" target="_blank">help</a></div>
 	<div class="searchcomponent">
 		<input id="searchbox" type="text" class="cls-button" />
-
+		<label for="tagfilter" id="tagfilterlabel">过滤标签:</label>
+		<input name="tagfilter" id="tagfilter" type="text" />
 		<label for="system">系统:</label>
-		<select name="system" id="system" onChange="loadBranchOptions(this.value)">
+		<select name="system" id="system" onChange="document.getElementById('searchbox').value='';loadBranchOptions(this.value)">
 		</select>
 
 		<label for="system">代码分支:</label>
