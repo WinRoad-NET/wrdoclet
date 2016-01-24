@@ -38,6 +38,9 @@
 
 
     <body>
+    	<#if openAPI.deprecated>
+    		<div class="deprecated">已废弃</div>
+    	</#if>
         <#include "APIDetailTmpl.ftl">
 		<div class="foot">
 			<ul>

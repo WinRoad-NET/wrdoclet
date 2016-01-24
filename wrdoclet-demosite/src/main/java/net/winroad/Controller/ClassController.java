@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @memo init create
  */
 @Controller
+@Deprecated
 public class ClassController extends BaseController {
 	// 悲催，这种注释doclet不认
 	// 添加课程

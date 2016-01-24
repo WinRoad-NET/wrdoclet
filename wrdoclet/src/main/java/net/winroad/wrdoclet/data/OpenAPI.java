@@ -24,6 +24,7 @@ public class OpenAPI {
 	private String qualifiedName;
 	private int authNeeded;
 	private Set<String> tags = new HashSet<String>();
+	private boolean deprecated = false;
 	
 	/*
 	 * Possible return code list.
@@ -145,5 +146,13 @@ public class OpenAPI {
 
 	public void setBrief(String brief) {
 		this.brief = brief;
+	}
+
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	public void setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
 	}
 }

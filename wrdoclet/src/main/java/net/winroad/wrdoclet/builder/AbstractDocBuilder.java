@@ -160,6 +160,9 @@ public abstract class AbstractDocBuilder {
 					.hasNext();) {
 				MethodDoc methodDoc = mthIter.next();
 				OpenAPI openAPI = new OpenAPI();
+				openAPI.setDeprecated(Util.isDeprecated(methodDoc)
+						|| Util.isDeprecated(methodDoc.containingClass())
+						|| Util.isDeprecated(methodDoc.containingPackage()));
 				Tag[] tags = this.getTagTaglets(methodDoc);
 				if (tags.length == 0) {
 					openAPI.addTag(methodDoc.containingClass().simpleTypeName());
@@ -197,7 +200,8 @@ public abstract class AbstractDocBuilder {
 	/**
 	 * 
 	 * @param url
-	 * @return 0 for anonymous allowed, 1 for authentication needed, others for not specified.
+	 * @return 0 for anonymous allowed, 1 for authentication needed, others for
+	 *         not specified.
 	 */
 	protected abstract int isAPIAuthNeeded(String url);
 
@@ -452,9 +456,10 @@ public abstract class AbstractDocBuilder {
 				}
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(methodDoc.tags())));
-				if(StringUtils.isEmpty(methodDoc.commentText())) {
-					if(paramType == ParameterType.Request) {
-						param.setDescription(this.getParamComment(methodDoc, methodDoc.parameters()[0].name()));
+				if (StringUtils.isEmpty(methodDoc.commentText())) {
+					if (paramType == ParameterType.Request) {
+						param.setDescription(this.getParamComment(methodDoc,
+								methodDoc.parameters()[0].name()));
 					} else {
 						for (Tag tag : methodDoc.tags("return")) {
 							param.setDescription(tag.text());
@@ -463,11 +468,11 @@ public abstract class AbstractDocBuilder {
 				} else {
 					param.setDescription(methodDoc.commentText());
 				}
-				
-				if(StringUtils.isEmpty(param.getDescription())) {
+
+				if (StringUtils.isEmpty(param.getDescription())) {
 					param.setDescription(privateFieldDesc.get(param.getName()));
 				}
-				
+
 				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
 						.tags(WROccursTaglet.NAME)));
 				result.add(param);

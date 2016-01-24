@@ -51,7 +51,7 @@ public class Test {
 				"net.winroad.Models",
 				"net.winroad.dubbo",
 				"org.springframework.web.bind.annotation",
-				"-nodeprecated",
+				//"-nodeprecated",
 				"-classpath",
 				new File(
 						System.getProperty("user.home"),
