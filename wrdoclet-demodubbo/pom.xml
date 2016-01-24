@@ -3,11 +3,11 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.3</version>
 	</parent>
 
 	<artifactId>wrdoclet-demodubbo</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.3</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wrdoclet.systemname>demodubbo</wrdoclet.systemname>
