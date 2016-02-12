@@ -116,10 +116,10 @@ public class HtmlDoclet extends AbstractDoclet {
 		} else {
 			this.generateWRFrameFiles(root, wrDoc);
 		}
-		this.generatePackageFiles(root);
+		this.generatePackageFiles(root, wrDoc);
 	}
 
-	protected void generatePackageFiles(RootDoc root) {
+	protected void generatePackageFiles(RootDoc root, WRDoc wrDoc) {
 		PackageDoc[] packageDocs = root.specifiedPackages();
 		for (PackageDoc pdoc : packageDocs) {
 			if (StringUtils.isNotBlank(pdoc.commentText())) {
@@ -128,19 +128,27 @@ public class HtmlDoclet extends AbstractDoclet {
 				Map<String, String> tagMap = new HashMap<String, String>();
 				tagMap.put("branchName", this.configurationEx.branchname);
 				tagMap.put("systemName", this.configurationEx.systemname);
-				String tags = WRTagTaglet.concatToString(pdoc.tags(WRTagTaglet.NAME));
-				if(StringUtils.isBlank(tags)) {
+				String tags = WRTagTaglet.concatToString(pdoc
+						.tags(WRTagTaglet.NAME));
+				if (StringUtils.isBlank(tags)) {
 					tagMap.put("tags", pdoc.name());
 				} else {
 					tagMap.put("tags", tags);
 				}
 				tagMap.put("APIUrl", pdoc.name());
-				tagMap.put("bodyContent", html );				
+				if (StringUtils.isWhitespace(this.configurationEx.buildid)) {
+					tagMap.put("buildID", wrDoc.getDocGeneratedTime());
+				} else {
+					tagMap.put("buildID", this.configurationEx.buildid);
+				}
+
+				tagMap.put("bodyContent", html);
 				this.configurationEx
 						.getWriterFactory()
 						.getFreemarkerWriter()
 						.generateHtmlFile("packageInfo.ftl", tagMap,
-								this.configurationEx.destDirName, pdoc.name() + ".html");
+								this.configurationEx.destDirName,
+								pdoc.name() + ".html");
 			}
 		}
 	}
@@ -229,6 +237,14 @@ public class HtmlDoclet extends AbstractDoclet {
 				hashMap.put(
 						"systemName",
 						((ConfigurationImpl) wrDoc.getConfiguration()).systemname);
+				if (StringUtils.isWhitespace(((ConfigurationImpl) wrDoc
+						.getConfiguration()).buildid)) {
+					hashMap.put("buildID", wrDoc.getDocGeneratedTime());
+				} else {
+					hashMap.put(
+							"buildID",
+							((ConfigurationImpl) wrDoc.getConfiguration()).buildid);
+				}
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getContainerName(), openAPI
 						.getRequestMapping().getUrl(), openAPI

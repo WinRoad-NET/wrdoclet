@@ -82,6 +82,11 @@ public class ConfigurationImpl extends Configuration {
 	public String searchengine = "http://127.0.0.1:8080/solr/apidocs";
 
 	/**
+	 * Argument for command line option "-buildid".
+	 */
+	public String buildid = "";
+
+	/**
 	 * Unique Resource Handler for this package.
 	 */
 	public final MessageRetriever standardmessage;
@@ -144,9 +149,11 @@ public class ConfigurationImpl extends Configuration {
 				searchengine = os[1];
 			} else if (opt.equals("-codeurl")) {
 				codeurl = os[1];
+			} else if (opt.equals("-buildid")) {
+				buildid = os[1];
 			}
 		}
-		//if branchname is not specified, try to resolve it from codeurl.
+		// if branchname is not specified, try to resolve it from codeurl.
 		if (StringUtils.isEmpty(branchname) && StringUtils.isNotEmpty(codeurl)) {
 			codeurl = StringUtils.removeEnd(codeurl, "/");
 			String[] parts = StringUtils.split(codeurl, '/');
@@ -207,7 +214,7 @@ public class ConfigurationImpl extends Configuration {
 				|| option.equals("-springcontextconfigpath")
 				|| option.equals("-excludedurlsxpath")
 				|| option.equals("-systemname") || option.equals("-branchname")
-				|| option.equals("-searchengine")
+				|| option.equals("-searchengine") || option.equals("-buildid")
 				|| option.equals("-codeurl")) {
 			return 2;
 		} else {

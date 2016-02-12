@@ -35,6 +35,8 @@ public class Test {
 				"demodubbo",
 				"-searchengine",
 				"http://127.0.0.1:8080/solr/apidocs",
+				//"-buildid",
+				//"003",
 				"-dubboconfigpath",
 				"D:/Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml",
 				//"-springcontextconfigpath",

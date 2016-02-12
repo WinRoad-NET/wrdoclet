@@ -18,6 +18,7 @@
     	</#if>
     	<meta name="systemName" content="${systemName}" />
     	<meta name="branchName" content="${branchName}" />
+    	<meta name="buildID" content="${buildID}" />
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css" title="Style" />
     </head>
   <script  src="js/jquery-1.11.3.min.js"></script>

@@ -10,6 +10,7 @@
     	<meta name="methodType" content="" />
     	<meta name="systemName" content="${systemName}" />
     	<meta name="branchName" content="${branchName}" />
+    	<meta name="buildID" content="${buildID}" />
     </head>
 
     <body>
