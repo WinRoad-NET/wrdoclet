@@ -21,6 +21,7 @@ public class StudentController {
 	 * @param name the name of student.
 	 * @return the student object.
 	 */
+	@Deprecated
 	@RequestMapping(value = "name.{json|html}", method = RequestMethod.GET)
 	public @ResponseBody
 	Student getStudentInJSON(@PathVariable("json|html") String name) {

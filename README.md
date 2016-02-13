@@ -120,7 +120,7 @@ supported dubbo service example:
 			<docletArtifact>
 				<groupId>net.winroad</groupId>
 				<artifactId>wrdoclet</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>1.0.5-SNAPSHOT</version>
 			</docletArtifact>
 			<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
 			<additionalparam>
