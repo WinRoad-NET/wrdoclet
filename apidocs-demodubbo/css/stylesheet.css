@@ -241,6 +241,23 @@ a:hover {
 	padding: 18px;
 }
 
+.deprecated {
+	transform: rotate(-45deg);
+	color: white;
+	font-size: large;
+	text-align: center;
+	background-color: red;
+	transform-origin: 0 100% 0;
+	margin-left: -10px;
+	margin-top: 95px;
+	width: 180px;
+	position: absolute;
+	filter: alpha(Opacity=80);
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+	font-weight: bolder;
+}
+
 #searchbox {
 	width: 300px;
 }
