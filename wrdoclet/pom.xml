@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.0.5</version>
+		<version>1.0.6-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>wrdoclet</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
 	<name>wrdoclet</name>
 	<description>winroad doclet</description>
 	<properties>
