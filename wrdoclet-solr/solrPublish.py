@@ -82,7 +82,7 @@ def publishToSolr(solrInstance, path, buildIDToPublish):
 							"methodType":methodType, 
 							"systemName":systemName, 
 							"branchName":branchName,
-							"buildID":buildIDToPublish
+							"buildID_s":buildIDToPublish
 							}
 						print doc
 						solrInstance.add(_id=str(systemName).decode("utf-8") + '_' + str(branchName).decode("utf-8") + '_' + str(APIUrl).decode("utf-8") + '_' + str(methodType).decode("utf-8"), 
@@ -93,7 +93,7 @@ def publishToSolr(solrInstance, path, buildIDToPublish):
 							methodType=methodType, 
 							systemName=systemName,
 							branchName=branchName,
-							buildID=buildIDToPublish,
+							buildID_s=buildIDToPublish,
 							pageContent=fl.read() # instead of using soup.html, because there is a bug that it will modify some special characters.
 							)
 						solrInstance.commit()
@@ -104,7 +104,7 @@ def publishToSolr(solrInstance, path, buildIDToPublish):
 	return (publishedCount, skippedCount, processedSet)
 
 def cleanupDocs(solrInstance, systemName, branchName, buildID):
-	query = "-buildID:" + buildID + " AND systemName:" + systemName + " AND branchName:" + branchName
+	query = "-buildID_s:\"" + buildID + "\" AND systemName:" + systemName + " AND branchName:" + branchName
 	#query = "*:*"
 	print "Cleaning up docs by query: '" + query + "'"
 	solrInstance.delete_query(query)

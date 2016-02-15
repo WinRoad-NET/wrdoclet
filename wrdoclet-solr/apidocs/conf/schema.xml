@@ -132,7 +132,6 @@
    <field name="pageContent" type="text_general" indexed="true" stored="true" multiValued="false"/>
    <field name="systemName" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="branchName" type="string" indexed="true" stored="true" multiValued="false"/>
-   <field name="buildID" type="string" indexed="true" stored="true" multiValued="false"/>
 
       <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->

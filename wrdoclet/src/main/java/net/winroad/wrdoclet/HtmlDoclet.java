@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +33,7 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
+import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
 import com.sun.tools.doclets.internal.toolkit.builders.AbstractBuilder;
 import com.sun.tools.doclets.internal.toolkit.util.ClassTree;
@@ -143,6 +145,15 @@ public class HtmlDoclet extends AbstractDoclet {
 				}
 
 				tagMap.put("bodyContent", html);
+				
+				Tag[] ts = pdoc.tags(WRTagTaglet.NAME);
+				for(Tag t : ts) {
+					if (!wrDoc.getTaggedOpenAPIs().containsKey(t.name())) {
+						wrDoc.getTaggedOpenAPIs().put(t.name(),
+								new LinkedList<OpenAPI>());
+					}
+				}
+				
 				this.configurationEx
 						.getWriterFactory()
 						.getFreemarkerWriter()
