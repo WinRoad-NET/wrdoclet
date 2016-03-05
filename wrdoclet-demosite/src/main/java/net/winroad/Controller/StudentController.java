@@ -6,6 +6,7 @@ import net.winroad.Models.Gender;
 import net.winroad.Models.Student;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -49,7 +50,7 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public @ResponseBody
-	Object addStudent(@RequestBody Student student) {
+	Object addStudent(@Validated @RequestBody Student student) {
 		student.setAge(student.getAge() + 10);
 		student.setName(student.saySomething() + student.getTEast());
 		return student;

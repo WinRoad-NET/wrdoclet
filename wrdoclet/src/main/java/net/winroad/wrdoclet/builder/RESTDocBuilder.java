@@ -277,65 +277,23 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		Parameter[] parameters = method.parameters();
 		for (int i = 0; i < parameters.length; i++) {
 			AnnotationDesc[] annotations = parameters[i].annotations();
-			for (int j = 0; j < annotations.length; j++) {
-				APIParameter apiParameter = new APIParameter();
+			APIParameter apiParameter = new APIParameter();
+			if (annotations.length > 0) {
 				apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-				if ("org.springframework.web.bind.annotation.RequestBody"
-						.equals(annotations[j].annotationType().qualifiedName())
-						&& annotations[j].elementValues() != null
-						&& annotations[j].elementValues().length != 0) {
-					for (ElementValuePair pair : annotations[j].elementValues()) {
-						if (pair.element().name().equals("required")) {
-							if (annotations[j].elementValues()[0].value()
-									.value().equals(true)) {
-								apiParameter
-										.setParameterOccurs(ParameterOccurs.REQUIRED);
-							} else {
-								apiParameter
-										.setParameterOccurs(ParameterOccurs.OPTIONAL);
-							}
-						}
-					}
-				}
 				apiParameter.setType(this.getTypeName(parameters[i].type()));
 				apiParameter.setName(parameters[i].name());
-				if ("org.springframework.web.bind.annotation.PathVariable"
-						.equals(annotations[j].annotationType().qualifiedName())) {
-					for (ElementValuePair pair : annotations[j].elementValues()) {
-						if (pair.element().name().equals("value")) {
-							if (annotations[j].elementValues()[0].value() != null) {
-								apiParameter.setName(annotations[j]
-										.elementValues()[0].value().toString()
-										.replace("\"", ""));
-							}
-						}
-					}
-				}
-				if ("org.springframework.web.bind.annotation.RequestParam"
-						.equals(annotations[j].annotationType().qualifiedName())) {
-					for (ElementValuePair pair : annotations[j].elementValues()) {
-						if (pair.element().name().equals("value")) {
-							if (annotations[j].elementValues()[0].value() != null) {
-								apiParameter.setName(annotations[j]
-										.elementValues()[0].value().toString()
-										.replace("\"", ""));
-							}
-						}
-						if (pair.element().name().equals("required")) {
-							if (annotations[j].elementValues()[0].value()
-									.value().equals(true)) {
-								apiParameter
-										.setParameterOccurs(ParameterOccurs.REQUIRED);
-							} else {
-								apiParameter
-										.setParameterOccurs(ParameterOccurs.OPTIONAL);
-							}
-						}
-					}
-				}
+				HashSet<String> processingClasses = new HashSet<String>();
+				apiParameter.setFields(this.getFields(parameters[i].type(),
+						ParameterType.Request, processingClasses));
+				apiParameter.setHistory(this
+						.getModificationHistory(parameters[i].type()));
 				StringBuffer buf = new StringBuffer();
-				buf.append("@");
-				buf.append(annotations[j].annotationType().name());
+				for (int j = 0; j < annotations.length; j++) {
+					processAnnotations(annotations[j], apiParameter);
+					buf.append("@");
+					buf.append(annotations[j].annotationType().name());
+					buf.append(" ");
+				}
 				for (Tag tag : method.tags("param")) {
 					if (parameters[i].name().equals(
 							((ParamTag) tag).parameterName())) {
@@ -344,17 +302,65 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 					}
 				}
 				apiParameter.setDescription(buf.toString());
-				HashSet<String> processingClasses = new HashSet<String>();
-				apiParameter.setFields(this.getFields(parameters[i].type(),
-						ParameterType.Request, processingClasses));
-				apiParameter.setHistory(this
-						.getModificationHistory(parameters[i].type()));
 				paramList.add(apiParameter);
 			}
 		}
 
 		handleRefReq(method, paramList);
 		return paramList;
+	}
+
+	private void processAnnotations(AnnotationDesc annotation,
+			APIParameter apiParameter) {
+		if ("org.springframework.web.bind.annotation.RequestBody"
+				.equals(annotation.annotationType().qualifiedName())
+				&& annotation.elementValues() != null
+				&& annotation.elementValues().length != 0) {
+			for (ElementValuePair pair : annotation.elementValues()) {
+				if (pair.element().name().equals("required")) {
+					if (annotation.elementValues()[0].value().value()
+							.equals(true)) {
+						apiParameter
+								.setParameterOccurs(ParameterOccurs.REQUIRED);
+					} else {
+						apiParameter
+								.setParameterOccurs(ParameterOccurs.OPTIONAL);
+					}
+				}
+			}
+		}
+		if ("org.springframework.web.bind.annotation.PathVariable"
+				.equals(annotation.annotationType().qualifiedName())) {
+			for (ElementValuePair pair : annotation.elementValues()) {
+				if (pair.element().name().equals("value")) {
+					if (annotation.elementValues()[0].value() != null) {
+						apiParameter.setName(annotation.elementValues()[0]
+								.value().toString().replace("\"", ""));
+					}
+				}
+			}
+		}
+		if ("org.springframework.web.bind.annotation.RequestParam"
+				.equals(annotation.annotationType().qualifiedName())) {
+			for (ElementValuePair pair : annotation.elementValues()) {
+				if (pair.element().name().equals("value")) {
+					if (annotation.elementValues()[0].value() != null) {
+						apiParameter.setName(annotation.elementValues()[0]
+								.value().toString().replace("\"", ""));
+					}
+				}
+				if (pair.element().name().equals("required")) {
+					if (annotation.elementValues()[0].value().value()
+							.equals(true)) {
+						apiParameter
+								.setParameterOccurs(ParameterOccurs.REQUIRED);
+					} else {
+						apiParameter
+								.setParameterOccurs(ParameterOccurs.OPTIONAL);
+					}
+				}
+			}
+		}
 	}
 
 	private void handleRefReq(MethodDoc method, List<APIParameter> paramList) {
