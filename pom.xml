@@ -42,7 +42,7 @@
          <connection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</connection> 
          <developerConnection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</developerConnection> 
          <url>https://github.com/WinRoad-NET/wrdoclet.git</url> 
-         <tag>v1.0.5</tag> 
+         <tag>v1.0.6</tag> 
     </scm> 
  
      <issueManagement> 
