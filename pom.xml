@@ -42,7 +42,7 @@
          <connection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</connection> 
          <developerConnection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</developerConnection> 
          <url>https://github.com/WinRoad-NET/wrdoclet.git</url> 
-         <tag>v1.0.4</tag> 
+         <tag>v1.0.5</tag> 
     </scm> 
  
      <issueManagement> 
@@ -72,20 +72,20 @@
              </activation> 
              <build> 
                  <plugins> 
-                     <plugin> 
-                         <groupId>org.apache.maven.plugins</groupId> 
-                         <artifactId>maven-gpg-plugin</artifactId> 
-                         <version>1.5</version> 
-                         <executions> 
-                             <execution> 
-                                 <id>sign-artifacts</id> 
-                                 <phase>verify</phase> 
-                                 <goals> 
-                                     <goal>sign</goal> 
-                                 </goals> 
-                             </execution> 
-                         </executions> 
-                     </plugin> 
+					 <plugin> 
+						 <groupId>org.apache.maven.plugins</groupId> 
+						 <artifactId>maven-gpg-plugin</artifactId> 
+						 <version>1.5</version> 
+						 <executions> 
+							 <execution> 
+								 <id>sign-artifacts</id> 
+								 <phase>verify</phase> 
+								 <goals> 
+									 <goal>sign</goal> 
+								 </goals> 
+							 </execution> 
+						 </executions> 
+					 </plugin> 
                  </plugins> 
              </build> 
          </profile> 
@@ -95,70 +95,56 @@
          <plugins> 
 			 <plugin> 
 				 <groupId>org.apache.maven.plugins</groupId> 
-				 <artifactId>maven-gpg-plugin</artifactId> 
-				 <version>1.5</version> 
+				 <artifactId>maven-compiler-plugin</artifactId> 
+				 <version>2.5.1</version> 
+				 <configuration> 
+					 <source>1.7</source> 
+					 <target>1.7</target> 
+					 <encoding>UTF-8</encoding>
+				 </configuration> 
+			 </plugin> 
+			 <plugin> 
+				 <groupId>org.apache.maven.plugins</groupId> 
+				 <artifactId>maven-source-plugin</artifactId> 
+				 <version>2.2.1</version> 
+				 <configuration> 
+					 <encoding>UTF-8</encoding>
+				 </configuration> 				 
 				 <executions> 
 					 <execution> 
-						 <id>sign-artifacts</id> 
-						 <phase>verify</phase> 
+						 <id>attach-sources</id> 
 						 <goals> 
-							 <goal>sign</goal> 
+							 <goal>jar</goal> 
 						 </goals> 
 					 </execution> 
 				 </executions> 
 			 </plugin> 
-             <plugin> 
-                 <groupId>org.apache.maven.plugins</groupId> 
-                 <artifactId>maven-compiler-plugin</artifactId> 
-                 <version>2.5.1</version> 
-                 <configuration> 
-                     <source>1.7</source> 
-                     <target>1.7</target> 
-					 <encoding>UTF-8</encoding>
-                 </configuration> 
-             </plugin> 
-             <plugin> 
-                 <groupId>org.apache.maven.plugins</groupId> 
-                 <artifactId>maven-source-plugin</artifactId> 
-                 <version>2.2.1</version> 
-                 <configuration> 
-					 <encoding>UTF-8</encoding>
-                 </configuration> 				 
-                 <executions> 
-                     <execution> 
-                         <id>attach-sources</id> 
-                         <goals> 
-                             <goal>jar</goal> 
-                         </goals> 
-                     </execution> 
-                 </executions> 
-             </plugin> 
-             <plugin> 
-                 <groupId>org.apache.maven.plugins</groupId> 
-                 <artifactId>maven-javadoc-plugin</artifactId> 
-                 <version>2.9</version> 
-                 <executions> 
-                     <execution> 
-                         <id>attach-javadocs</id> 
-                         <goals> 
-                             <goal>jar</goal> 
-                         </goals> 
-                     </execution> 
-                 </executions> 
-             </plugin> 
-             <plugin> 
-                 <groupId>org.apache.maven.plugins</groupId> 
-                 <artifactId>maven-release-plugin</artifactId> 
-                 <version>2.5</version> 
-                 <configuration> 
-                     <autoVersionSubmodules>true</autoVersionSubmodules>
+			 <plugin> 
+				 <groupId>org.apache.maven.plugins</groupId> 
+				 <artifactId>maven-javadoc-plugin</artifactId> 
+				 <version>2.9</version> 
+				 <executions> 
+					 <execution> 
+						 <id>attach-javadocs</id> 
+						 <goals> 
+							 <goal>jar</goal> 
+						 </goals> 
+					 </execution> 
+				 </executions> 
+			 </plugin> 
+			 <plugin> 
+				 <groupId>org.apache.maven.plugins</groupId> 
+				 <artifactId>maven-release-plugin</artifactId> 
+				 <version>2.5</version> 
+				 <configuration> 
+					 <autoVersionSubmodules>true</autoVersionSubmodules>
 					 <useReleaseProfile>false</useReleaseProfile>
 					 <releaseProfiles>wrdoclet-release</releaseProfiles>
 					 <pushChanges>false</pushChanges>
 					 <localCheckout>true</localCheckout>
 					 <goals>deploy</goals>
-                 </configuration> 
-             </plugin>
+				 </configuration> 
+			 </plugin>
 			<plugin>
 			  <groupId>org.sonatype.plugins</groupId>
 			  <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -169,7 +155,7 @@
 				<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 				<autoReleaseAfterClose>true</autoReleaseAfterClose>
 			  </configuration>
-			</plugin>
+			</plugin>		 
 			<plugin> 
                  <groupId>org.codehaus.mojo</groupId> 
                  <artifactId>findbugs-maven-plugin</artifactId> 
