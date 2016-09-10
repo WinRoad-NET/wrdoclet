@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 	
 	<artifactId>wrdoclet-demoservice</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.6-SNAPSHOT</version>
+	<version>1.0.6</version>
 	<description>demo service for wrdoclet</description>
 	
 	<properties>
