@@ -18,7 +18,7 @@
 	</appender>
 
 	<appender name="file" class="ch.qos.logback.core.FileAppender">
-		<file>${user.dir}\\logs\\log_${byDay}.log</file>
+		<file>${user.dir}/logs/log_${byDay}.log</file>
 		<encoder charset="UTF-8">
 			<pattern>%n[%level] - %date - %logger#%line%n %msg%n</pattern>
 		</encoder>
