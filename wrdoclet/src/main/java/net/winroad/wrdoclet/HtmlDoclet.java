@@ -22,6 +22,8 @@ import net.winroad.wrdoclet.doc.DocData;
 import net.winroad.wrdoclet.taglets.WRMemoTaglet;
 import net.winroad.wrdoclet.taglets.WRReturnCodeTaglet;
 import net.winroad.wrdoclet.taglets.WRTagTaglet;
+import net.winroad.wrdoclet.utils.Logger;
+import net.winroad.wrdoclet.utils.LoggerFactory;
 import net.winroad.wrdoclet.utils.Util;
 
 import org.apache.commons.io.FileUtils;
@@ -59,6 +61,8 @@ public class HtmlDoclet extends AbstractDoclet {
 
 	private PegDownProcessor pegDownProcessor;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	/**
 	 * The "start" method as required by Javadoc.
 	 * 
@@ -143,6 +147,7 @@ public class HtmlDoclet extends AbstractDoclet {
 				} else {
 					tagMap.put("buildID", this.configurationEx.buildid);
 				}
+				this.logger.info("buildid:" + tagMap.get("buildID"));
 
 				tagMap.put("bodyContent", html);
 				
