@@ -142,7 +142,8 @@ public class HtmlDoclet extends AbstractDoclet {
 					tagMap.put("tags", tags);
 				}
 				tagMap.put("APIUrl", pdoc.name());
-				if (StringUtils.isWhitespace(this.configurationEx.buildid)) {
+				if (StringUtils.isWhitespace(this.configurationEx.buildid) || 
+						this.configurationEx.buildid.equalsIgnoreCase("time")) {
 					tagMap.put("buildID", wrDoc.getDocGeneratedTime());
 				} else {
 					tagMap.put("buildID", this.configurationEx.buildid);
@@ -249,18 +250,19 @@ public class HtmlDoclet extends AbstractDoclet {
 				hashMap.put("generatedTime", wrDoc.getDocGeneratedTime());
 				hashMap.put(
 						"branchName",
-						((ConfigurationImpl) wrDoc.getConfiguration()).branchname);
+						this.configurationEx.branchname);
 				hashMap.put(
 						"systemName",
-						((ConfigurationImpl) wrDoc.getConfiguration()).systemname);
-				if (StringUtils.isWhitespace(((ConfigurationImpl) wrDoc
-						.getConfiguration()).buildid)) {
+						this.configurationEx.systemname);
+				if (StringUtils.isWhitespace(this.configurationEx.buildid) || 
+						this.configurationEx.buildid.equalsIgnoreCase("time")) {
 					hashMap.put("buildID", wrDoc.getDocGeneratedTime());
 				} else {
 					hashMap.put(
 							"buildID",
-							((ConfigurationImpl) wrDoc.getConfiguration()).buildid);
+							this.configurationEx.buildid);
 				}
+				this.logger.info("buildid:" + hashMap.get("buildID"));
 				String filename = generateWRAPIFileName(openAPI
 						.getRequestMapping().getContainerName(), openAPI
 						.getRequestMapping().getUrl(), openAPI

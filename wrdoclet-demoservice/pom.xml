@@ -17,6 +17,7 @@
 		<java.version>1.7</java.version>
 		<wrdoclet.systemname>demoservice</wrdoclet.systemname>
 		<wrdoclet.branchname>master</wrdoclet.branchname>
+		<wrdoclet.buildid>time</wrdoclet.buildid>
 	</properties>
 	<build>
 		<finalName>wrdoclet-demoservice</finalName>
@@ -53,6 +54,7 @@
 					<additionalparam>
 						-systemname ${wrdoclet.systemname}
 						-branchname ${wrdoclet.branchname}
+						-buildid ${wrdoclet.buildid}
 						-encoding utf-8
 						-charset utf-8
 						-d

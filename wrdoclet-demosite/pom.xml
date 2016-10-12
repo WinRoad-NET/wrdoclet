@@ -15,6 +15,7 @@
 		<jackson.version>1.9.10</jackson.version>
 		<wrdoclet.systemname>demosite</wrdoclet.systemname>
 		<wrdoclet.branchname>master</wrdoclet.branchname>
+		<wrdoclet.buildid>time</wrdoclet.buildid>
 	</properties>
 	<build>
 		<plugins>
@@ -51,6 +52,7 @@
 					<additionalparam>
 						-systemname ${wrdoclet.systemname} 
 						-branchname ${wrdoclet.branchname} 
+						-buildid ${wrdoclet.buildid}
 						-encoding utf-8 
 						-charset utf-8 
 						-d ../../../../../wrdoclet-gh-pages/apidocs-demosite

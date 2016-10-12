@@ -12,6 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wrdoclet.systemname>demodubbo</wrdoclet.systemname>
 		<wrdoclet.branchname>master</wrdoclet.branchname>
+		<wrdoclet.buildid>time</wrdoclet.buildid>
 	</properties>
 	<build>
 		<plugins>
@@ -60,6 +61,7 @@
 					<additionalparam>
 						-systemname ${wrdoclet.systemname} 
 						-branchname ${wrdoclet.branchname} 
+						-buildid ${wrdoclet.buildid}
 						-encoding utf-8 
 						-charset utf-8
 						-dubboconfigpath ${project.basedir}/src/main/resources/provider.xml
