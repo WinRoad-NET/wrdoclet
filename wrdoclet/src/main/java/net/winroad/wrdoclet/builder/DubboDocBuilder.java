@@ -78,7 +78,7 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 		if (methodDoc.returnType() != null) {
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(this.getTypeName(methodDoc.returnType()));
+			apiParameter.setType(this.getTypeName(methodDoc.returnType(), false));
 			for (Tag tag : methodDoc.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
@@ -99,7 +99,7 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 			for (int i = 0; i < methodParameters.length; i++) {
 				APIParameter p = new APIParameter();
 				p.setName(methodParameters[i].name());
-				p.setType(this.getTypeName(methodParameters[i].type()));
+				p.setType(this.getTypeName(methodParameters[i].type(), false));
 				p.setDescription(this.getParamComment(methodDoc, methodParameters[i].name()));
 				HashSet<String> processingClasses = new HashSet<String>();
 				p.setFields(this.getFields(methodParameters[i].type(),

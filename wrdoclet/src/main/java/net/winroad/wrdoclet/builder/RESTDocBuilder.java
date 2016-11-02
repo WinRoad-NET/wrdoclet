@@ -231,7 +231,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		if (this.isAnnotatedResponseBody(method)) {
 			apiParameter = new APIParameter();
 			apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-			apiParameter.setType(this.getTypeName(method.returnType()));
+			apiParameter.setType(this.getTypeName(method.returnType(), false));
 			for (Tag tag : method.tags("return")) {
 				apiParameter.setDescription(tag.text());
 			}
@@ -280,7 +280,7 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 			APIParameter apiParameter = new APIParameter();
 			if (annotations.length > 0) {
 				apiParameter.setParameterOccurs(ParameterOccurs.REQUIRED);
-				apiParameter.setType(this.getTypeName(parameters[i].type()));
+				apiParameter.setType(this.getTypeName(parameters[i].type(), false));
 				apiParameter.setName(parameters[i].name());
 				HashSet<String> processingClasses = new HashSet<String>();
 				apiParameter.setFields(this.getFields(parameters[i].type(),

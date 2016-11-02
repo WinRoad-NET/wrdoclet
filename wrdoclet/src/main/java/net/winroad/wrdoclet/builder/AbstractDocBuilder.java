@@ -371,7 +371,7 @@ public abstract class AbstractDocBuilder {
 				for (Type arg : pt.typeArguments()) {
 					APIParameter tmp = new APIParameter();
 					tmp.setName(arg.simpleTypeName());
-					tmp.setType(this.getTypeName(arg));
+					tmp.setType(this.getTypeName(arg, false));
 					tmp.setDescription("");
 					tmp.setParentTypeArgument(true);
 					if (!processingClasses.contains(arg.qualifiedTypeName())) {
@@ -416,7 +416,7 @@ public abstract class AbstractDocBuilder {
 			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
 				APIParameter param = new APIParameter();
 				param.setName(fieldDoc.name());
-				param.setType(this.getTypeName(fieldDoc.type()));
+				param.setType(this.getTypeName(fieldDoc.type(), false));
 				if (!processingClasses.contains(fieldDoc.type()
 						.qualifiedTypeName())) {
 					param.setFields(this.getFields(fieldDoc.type(), paramType,
@@ -448,7 +448,7 @@ public abstract class AbstractDocBuilder {
 				} else {
 					typeToProcess = methodDoc.returnType();
 				}
-				param.setType(this.getTypeName(typeToProcess));
+				param.setType(this.getTypeName(typeToProcess, false));
 				if (!processingClasses.contains(typeToProcess
 						.qualifiedTypeName())) {
 					param.setFields(this.getFields(typeToProcess, paramType,
@@ -481,7 +481,7 @@ public abstract class AbstractDocBuilder {
 		return result;
 	}
 
-	protected String getTypeName(Type typeToProcess) {
+	protected String getTypeName(Type typeToProcess, boolean ignoreSuperType) {
 		// special type to process e.g. java.util.Map.Entry<Address,Person>
 		ParameterizedType pt = typeToProcess.asParameterizedType();
 		if (pt != null && pt.typeArguments().length > 0) {
@@ -489,7 +489,7 @@ public abstract class AbstractDocBuilder {
 			strBuilder.append(typeToProcess.qualifiedTypeName());
 			strBuilder.append("<");
 			for (Type arg : pt.typeArguments()) {
-				strBuilder.append(this.getTypeName(arg));
+				strBuilder.append(this.getTypeName(arg, true));
 				strBuilder.append(",");
 			}
 			int len = strBuilder.length();
@@ -499,24 +499,27 @@ public abstract class AbstractDocBuilder {
 			return strBuilder.toString();
 		}
 
-		// handle enum to output enum values into doc
 		if (typeToProcess.asClassDoc() != null) {
 			ClassDoc superClass = typeToProcess.asClassDoc().superclass();
-			if (superClass != null
-					&& "java.lang.Enum".equals(superClass.qualifiedTypeName())) {
-				FieldDoc[] enumConstants = typeToProcess.asClassDoc()
-						.enumConstants();
-				StringBuilder strBuilder = new StringBuilder();
-				strBuilder.append("Enum[");
-				for (FieldDoc enumConstant : enumConstants) {
-					strBuilder.append(enumConstant.name());
-					strBuilder.append(",");
+			if (superClass != null) {
+				// handle enum to output enum values into doc
+				if ("java.lang.Enum".equals(superClass.qualifiedTypeName())) {
+					FieldDoc[] enumConstants = typeToProcess.asClassDoc()
+							.enumConstants();
+					StringBuilder strBuilder = new StringBuilder();
+					strBuilder.append("Enum[");
+					for (FieldDoc enumConstant : enumConstants) {
+						strBuilder.append(enumConstant.name());
+						strBuilder.append(",");
+					}
+					int len = strBuilder.length();
+					// trim the last ","
+					strBuilder.deleteCharAt(len - 1);
+					strBuilder.append("]");
+					return strBuilder.toString();
+				} else if(!ignoreSuperType && !this.isInStopClasses(superClass)) {
+					return typeToProcess.qualifiedTypeName() + " extends " + this.getTypeName(typeToProcess.asClassDoc().superclassType(), false);
 				}
-				int len = strBuilder.length();
-				// trim the last ","
-				strBuilder.deleteCharAt(len - 1);
-				strBuilder.append("]");
-				return strBuilder.toString();
 			}
 		}
 
