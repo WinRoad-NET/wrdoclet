@@ -59,6 +59,7 @@
 						-springcontextconfigpath ${project.basedir}/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml
 						-excludedurlsxpath //:beans/mvc:interceptors/mvc:interceptor/:bean/:property/:list/:value
 					</additionalparam>
+					<extrasourcepath>D:/winroad/wrdoclet/wrdoclet-beans/src/main/java</extrasourcepath>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -87,6 +88,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.winroad</groupId>
+			<artifactId>wrdoclet-beans</artifactId>
+			<version>1.0.7-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Jackson JSON Mapper -->

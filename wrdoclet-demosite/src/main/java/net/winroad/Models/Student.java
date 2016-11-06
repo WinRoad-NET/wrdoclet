@@ -1,5 +1,7 @@
 package net.winroad.Models;
 
+import net.winroad.beans.School;
+
 /**
  * 学生
  * @author AdamsLi
@@ -7,18 +9,6 @@ package net.winroad.Models;
  * @memo init create
  */
 public class Student extends Person {
-	public String getSchoolName() {
-		return schoolName;
-	}
-
-	/**
-	 * @occurs required
-	 * @param schoolName 学校名称
-	 */
-	public void setSchoolName(String schoolName) {
-		this.schoolName = schoolName;
-	}
-
 	public String getSno() {
 		return sno;
 	}
@@ -38,6 +28,14 @@ public class Student extends Person {
 		this.sno = sno;
 	}
 
-	private String schoolName;
+	public School getSchool() {
+		return school;
+	}
+
+	public void setSchool(School school) {
+		this.school = school;
+	}
+
+	private School school;
 	private String sno;
 }
