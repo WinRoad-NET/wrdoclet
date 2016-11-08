@@ -59,7 +59,7 @@
 						-springcontextconfigpath ${project.basedir}/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml
 						-excludedurlsxpath //:beans/mvc:interceptors/mvc:interceptor/:bean/:property/:list/:value
 					</additionalparam>
-					<extrasourcepath>D:/winroad/wrdoclet/wrdoclet-beans/src/main/java</extrasourcepath>
+					<sourcepath>${project.basedir}/../wrdoclet-beans/src/main/java;${project.basedir}/src/main/java</sourcepath>
 				</configuration>
 			</plugin>
 		</plugins>
