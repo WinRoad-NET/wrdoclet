@@ -411,6 +411,7 @@ public abstract class AbstractDocBuilder {
 		}
 
 		FieldDoc[] fieldDocs = classDoc.fields(false);
+		HashMap<String, String> privateFieldValidator = new HashMap<>();
 		HashMap<String, String> privateFieldDesc = new HashMap<String, String>();
 		for (FieldDoc fieldDoc : fieldDocs) {
 			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
@@ -422,7 +423,7 @@ public abstract class AbstractDocBuilder {
 					param.setFields(this.getFields(fieldDoc.type(), paramType,
 							processingClasses));
 				}
-				param.setDescription(fieldDoc.commentText());
+				param.setDescription(this.getFieldDescription(fieldDoc));
 				param.setHistory(new ModificationHistory(this
 						.parseModificationRecords(fieldDoc.tags())));
 				param.setParameterOccurs(this.parseParameterOccurs(fieldDoc
@@ -430,6 +431,7 @@ public abstract class AbstractDocBuilder {
 				result.add(param);
 			} else {
 				privateFieldDesc.put(fieldDoc.name(), fieldDoc.commentText());
+				privateFieldValidator.put(fieldDoc.name(), this.getFieldValidatorDesc(fieldDoc));
 			}
 		}
 
@@ -472,6 +474,8 @@ public abstract class AbstractDocBuilder {
 				if (StringUtils.isEmpty(param.getDescription())) {
 					param.setDescription(privateFieldDesc.get(param.getName()));
 				}
+				
+				param.setDescription(param.getDescription() == null ? privateFieldValidator.get(param.getName()) : param.getDescription() + " " + privateFieldValidator.get(param.getName()));
 
 				param.setParameterOccurs(this.parseParameterOccurs(methodDoc
 						.tags(WROccursTaglet.NAME)));
@@ -479,6 +483,44 @@ public abstract class AbstractDocBuilder {
 			}
 		}
 		return result;
+	}
+	
+	protected String getFieldDescription(FieldDoc fieldDoc) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append(fieldDoc.commentText());
+		strBuilder.append(" ");
+		strBuilder.append(this.getFieldValidatorDesc(fieldDoc));
+		return strBuilder.toString();
+	}
+	
+	protected String getFieldValidatorDesc(FieldDoc fieldDoc) {
+		StringBuilder strBuilder = new StringBuilder();
+		for(AnnotationDesc annotationDesc : fieldDoc.annotations()) {
+			if(annotationDesc.annotationType().qualifiedTypeName()
+					.startsWith("org.hibernate.validator.constraints") ||
+				annotationDesc.annotationType().qualifiedTypeName()
+					.startsWith("javax.validation.constraints")
+					) {
+				strBuilder.append("@");
+				strBuilder.append(annotationDesc.annotationType().name());
+				if(annotationDesc.elementValues().length > 0) {
+					strBuilder.append("(");
+					boolean isFirstElement = true;
+					for(AnnotationDesc.ElementValuePair elementValuePair : annotationDesc.elementValues()) {
+						if(!isFirstElement) {
+							strBuilder.append(",");
+						}
+						strBuilder.append(elementValuePair.element().name());
+						strBuilder.append("=");
+						strBuilder.append(elementValuePair.value());
+						isFirstElement = false;
+					}
+					strBuilder.append(")");
+				}
+				strBuilder.append(" ");
+			}
+		}
+		return strBuilder.toString();		
 	}
 
 	protected String getTypeName(Type typeToProcess, boolean ignoreSuperType) {

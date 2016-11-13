@@ -1,5 +1,10 @@
 package net.winroad.Models;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import net.winroad.beans.School;
 
 /**
@@ -36,6 +41,9 @@ public class Student extends Person {
 		this.school = school;
 	}
 
+	@NotNull
+	@Valid
 	private School school;
+	@NotEmpty(message = "sno should not be empty")
 	private String sno;
 }

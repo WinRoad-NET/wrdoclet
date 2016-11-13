@@ -3,6 +3,12 @@ package net.winroad.Models;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class Clazz {
@@ -50,8 +56,14 @@ public class Clazz {
 		this.relatedClasses = relatedClasses;
 	}
 
+	@NotNull(message = "name should not be null")
+	@Length(min = 3, max = 10)
 	private String name;
+	@NotEmpty
+	@Valid
 	private List<Student> students;
+	@NotEmpty
+	@Valid
 	private List<Clazz> relatedClasses;
 	@SuppressFBWarnings(value="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD", justification = "just for demo")
 	public Map.Entry<Address, List<Person>> properties;

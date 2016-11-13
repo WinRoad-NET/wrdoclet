@@ -53,13 +53,23 @@ public class Test {
 				"net.winroad.Models",
 				"net.winroad.dubbo",
 				"org.springframework.web.bind.annotation",
+				"org.hibernate.validator.constraints",
+				"javax.validation.constraints",
 				"net.winroad.beans",
 				//"-nodeprecated",
 				"-classpath",
 				new File(
 						System.getProperty("user.home"),
 						".m2/repository/org/springframework/spring-web/3.2.3.RELEASE/spring-web-3.2.3.RELEASE.jar")
-						.getAbsolutePath(),
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/org/hibernate/hibernate-validator/5.3.2.Final/hibernate-validator-5.3.2.Final.jar")
+						.getAbsolutePath().toString(),
 				"-d",
 				new File(System.getProperty("user.dir"), "target/doc")
 						.getAbsolutePath() };

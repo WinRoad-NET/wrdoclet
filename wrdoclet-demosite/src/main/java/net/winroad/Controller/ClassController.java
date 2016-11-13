@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import net.winroad.Models.Clazz;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +38,7 @@ public class ClassController extends BaseController {
 	// @memo fix bug
 	@RequestMapping(value = "/class/add", method = RequestMethod.POST)
 	public @ResponseBody
-	Clazz addClass(@RequestBody Clazz clazz, HttpServletRequest httpRequest,
+	Clazz addClass(@RequestBody @NotNull Clazz clazz, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {
 		return clazz;
 	}
@@ -54,7 +57,7 @@ public class ClassController extends BaseController {
 	 */
 	@RequestMapping(value = "/class/addlist", method = RequestMethod.POST)
 	public @ResponseBody
-	boolean addClassList(@RequestBody List<Clazz> clazz, HttpServletRequest httpRequest,
+	boolean addClassList(@RequestBody @NotEmpty @Valid List<Clazz> clazz, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {
 		return true;
 	}
@@ -72,7 +75,7 @@ public class ClassController extends BaseController {
 	 */
 	@RequestMapping(value = "/class/del", method = RequestMethod.POST)
 	public @ResponseBody
-	Clazz delClass(@RequestBody Clazz clazz, HttpServletRequest httpRequest,
+	Clazz delClass(@RequestBody @NotNull Clazz clazz, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {
 		return clazz;
 	}

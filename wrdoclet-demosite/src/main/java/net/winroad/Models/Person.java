@@ -1,5 +1,7 @@
 package net.winroad.Models;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -41,6 +43,7 @@ public class Person {
 		this.name = test;
 	}
 
+	@NotEmpty(message = "name should not be empty")
 	public String getName() {
 		return name;
 	}
