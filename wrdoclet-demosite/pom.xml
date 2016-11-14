@@ -46,7 +46,7 @@
 					<docletArtifact>
 						<groupId>net.winroad</groupId>
 						<artifactId>wrdoclet</artifactId>
-						<version>1.0.7-SNAPSHOT</version>
+						<version>1.0.8-SNAPSHOT</version>
 					</docletArtifact>
 					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
 					<additionalparam>
