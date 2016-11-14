@@ -361,6 +361,21 @@ public abstract class AbstractDocBuilder {
 		return false;
 	}
 
+	protected boolean isParameterizedTypeInStopClasses(Type type) {
+		if(!this.isInStopClasses(type.asClassDoc())) {
+			return false;
+		}
+		ParameterizedType pt = type.asParameterizedType();
+		if(pt != null) {
+			for(Type arg : pt.typeArguments()) {
+				if(!this.isParameterizedTypeInStopClasses(arg)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	protected List<APIParameter> getFields(Type type, ParameterType paramType,
 			HashSet<String> processingClasses) {
 		processingClasses.add(type.toString());
@@ -369,16 +384,18 @@ public abstract class AbstractDocBuilder {
 			ParameterizedType pt = type.asParameterizedType();
 			if (pt != null && pt.typeArguments().length > 0) {
 				for (Type arg : pt.typeArguments()) {
-					APIParameter tmp = new APIParameter();
-					tmp.setName(arg.simpleTypeName());
-					tmp.setType(this.getTypeName(arg, false));
-					tmp.setDescription("");
-					tmp.setParentTypeArgument(true);
-					if (!processingClasses.contains(arg.qualifiedTypeName())) {
-						tmp.setFields(this.getFields(arg, paramType,
-								processingClasses));
+					if(!this.isParameterizedTypeInStopClasses(arg)) {
+						APIParameter tmp = new APIParameter();
+						tmp.setName(arg.simpleTypeName());
+						tmp.setType(this.getTypeName(arg, false));
+						tmp.setDescription("");
+						tmp.setParentTypeArgument(true);
+						if (!processingClasses.contains(arg.qualifiedTypeName())) {
+							tmp.setFields(this.getFields(arg, paramType,
+									processingClasses));
+						}
+						result.add(tmp);
 					}
-					result.add(tmp);
 				}
 			}
 

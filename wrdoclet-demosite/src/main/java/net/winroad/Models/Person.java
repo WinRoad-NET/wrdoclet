@@ -1,5 +1,7 @@
 package net.winroad.Models;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -21,6 +23,7 @@ public class Person {
 	private String LOGOURL;
 	private int xIndex;
 	private Address address;
+	private List<String> friendNames;
 	
 	public final static String PET_PHRASE = "MY GOD!";
 	@SuppressFBWarnings(value="SS_SHOULD_BE_STATIC", justification = "just for demo")
@@ -112,5 +115,13 @@ public class Person {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public List<String> getFriendNames() {
+		return friendNames;
+	}
+
+	public void setFriendNames(List<String> friendNames) {
+		this.friendNames = friendNames;
 	}
 }
