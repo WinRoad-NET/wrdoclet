@@ -60,6 +60,7 @@
 						-excludedurlsxpath //:beans/mvc:interceptors/mvc:interceptor/:bean/:property/:list/:value
 					</additionalparam>
 					<sourcepath>${project.basedir}/../wrdoclet-beans/src/main/java;${project.basedir}/src/main/java</sourcepath>
+					<subpackages>net.winroad.Controller</subpackages>
 				</configuration>
 			</plugin>
 		</plugins>
