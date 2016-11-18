@@ -135,6 +135,7 @@ function loadSearchBarOptions(){
 				}
 
 				loadBranchOptions(systemSelectedIndex, Request.QueryString("branch"));
+				searchCloud();
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				if(textStatus === "timeout") {
