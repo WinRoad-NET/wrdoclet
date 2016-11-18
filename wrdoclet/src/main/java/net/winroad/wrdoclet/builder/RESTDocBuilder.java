@@ -126,21 +126,25 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	@Override
 	protected RequestMapping parseRequestMapping(MethodDoc methodDoc) {
 		ClassDoc controllerClass = methodDoc.containingClass();
-		AnnotationDesc[] baseAnnotations = controllerClass.annotations();
-		RequestMapping baseMapping = this.parseRequestMapping(baseAnnotations);
-		if (baseMapping == null) {
-			Tag[] tags = controllerClass.tags(WRAPITaglet.NAME);
-			if (tags.length > 0) {
-				baseMapping = this.parseRequestMapping(tags[0]);
-			}
+		RequestMapping baseMapping = null;
+		Tag[] tags = controllerClass.tags(WRAPITaglet.NAME);
+		if (tags.length > 0) {
+			baseMapping = this.parseRequestMapping(tags[0]);
 		}
-		AnnotationDesc[] annotations = methodDoc.annotations();
-		RequestMapping mapping = this.parseRequestMapping(annotations);
+
+		if (baseMapping == null) {
+			AnnotationDesc[] baseAnnotations = controllerClass.annotations();
+			baseMapping = this.parseRequestMapping(baseAnnotations);
+		}
+
+		RequestMapping mapping = null;
+		Tag[] methodTags = methodDoc.tags(WRAPITaglet.NAME);
+		if (methodTags.length > 0) {
+			mapping = this.parseRequestMapping(methodTags[0]);
+		}
 		if (mapping == null) {
-			Tag[] tags = methodDoc.tags(WRAPITaglet.NAME);
-			if (tags.length > 0) {
-				mapping = this.parseRequestMapping(tags[0]);
-			}
+			AnnotationDesc[] annotations = methodDoc.annotations();
+			mapping = this.parseRequestMapping(annotations);
 		}
 		RequestMapping result;
 		if (baseMapping == null) {

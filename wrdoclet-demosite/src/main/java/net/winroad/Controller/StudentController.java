@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class StudentController {
 	/**
 	 * @param name the name of student.
+	 * @api GET v1/name.{json|html}
 	 * @return the student object.
 	 */
 	@Deprecated
