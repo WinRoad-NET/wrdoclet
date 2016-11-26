@@ -60,6 +60,32 @@ function searchCloud() {
 		});
 };
 
+function deleteBranch() {
+	var url = Global.searchEngine + '/update/?stream.body=<delete><query>systemName:' + $("#system").find("option:selected").text() +' AND branchName:' + $("#branch").find("option:selected").text() + '</query></delete>&stream.contentType=text/xml;charset=utf-8&commit=true';
+	$.ajax({
+			type:'get',
+			dataType: "xml",
+			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+			url: encodeURI(url),
+			timeout: 1000,
+			success: function(data){
+				alert("道哥出手，一本不留");
+				loadSearchBarOptions($("#system").find("option:selected").text());
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				if(textStatus === "timeout") {
+					alert("道哥超时了，让他歇会再试吧。");
+				} else {
+					var str = '道哥出错啦！';
+					for(var p in errorThrown) {
+						str += p + "=" + errorThrown[p] + ";";
+					}
+					alert(str);
+				}
+			}
+		});
+}
+
 function searchMore(tagName, searchStart) {
 	var url = Global.searchEngine + '/search?wt=json&json.wrf=?&fq=tags:' + tagName + '&start=' + searchStart + '&rows=' + Global.searchRows;
 	if(!!Global.searchContent) {
@@ -387,6 +413,9 @@ window.onload=function(){
 	}
 	if(location.host != "") {
 		$("#returnbtn").css('display','none'); 
+	}
+	if(Request.QueryString("admin") != "show") {
+		$("#deletebtn").css('display','none'); 		
 	}
 	if(Request.QueryString("filter") == "true") {
 		$("#tagfilter").css('display','inline');

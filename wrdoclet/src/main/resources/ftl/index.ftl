@@ -49,6 +49,7 @@
 
 		<input id="searchbtn" value="云端问道" onclick='searchCloud()' type="submit"/>	
 		<input id="returnbtn" value="本地取经" onclick='returnLocal()' type="submit"/>
+		<input id="deletebtn" value="焚毁经书" onclick='if(confirm("确定要焚毁" + $("#system").find("option:selected").text() + " " + $("#branch").find("option:selected").text() +  "吗?"))deleteBranch()' type="submit"/>	
 	</div>
 </div>
 
