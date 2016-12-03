@@ -67,7 +67,6 @@ function deleteBranch() {
 			dataType: "xml",
 			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			url: encodeURI(url),
-			timeout: 1000,
 			success: function(data){
 				alert("道哥出手，一本不留");
 				loadSearchBarOptions($("#system").find("option:selected").text());
@@ -137,7 +136,6 @@ function loadSearchBarOptions(){
 			dataType: "jsonp",
 			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			url: encodeURI(url),
-			timeout: 1000,
 			success: function(data){
 				var systemSelect = document.getElementById("system");
 				systemSelect.options.length = 0;  
