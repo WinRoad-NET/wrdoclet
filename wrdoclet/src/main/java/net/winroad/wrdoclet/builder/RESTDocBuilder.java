@@ -127,6 +127,8 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 	protected RequestMapping parseRequestMapping(MethodDoc methodDoc) {
 		ClassDoc controllerClass = methodDoc.containingClass();
 		RequestMapping baseMapping = null;
+		boolean controllerCustomizedMapping = false;
+		boolean actionCustomizedMapping = false;
 		Tag[] tags = controllerClass.tags(WRAPITaglet.NAME);
 		if (tags.length > 0) {
 			baseMapping = this.parseRequestMapping(tags[0]);
@@ -135,6 +137,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		if (baseMapping == null) {
 			AnnotationDesc[] baseAnnotations = controllerClass.annotations();
 			baseMapping = this.parseRequestMapping(baseAnnotations);
+			controllerCustomizedMapping = false;
+		} else {
+			controllerCustomizedMapping = true;
 		}
 
 		RequestMapping mapping = null;
@@ -145,6 +150,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		if (mapping == null) {
 			AnnotationDesc[] annotations = methodDoc.annotations();
 			mapping = this.parseRequestMapping(annotations);
+			actionCustomizedMapping = false;
+		} else {
+			actionCustomizedMapping = true;
 		}
 		RequestMapping result;
 		if (baseMapping == null) {
@@ -152,8 +160,10 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 		} else if (mapping == null) {
 			result = baseMapping;
 		} else {
-			mapping.setUrl(net.winroad.wrdoclet.utils.Util.urlConcat(
-					baseMapping.getUrl(), mapping.getUrl()));
+			if(!actionCustomizedMapping || controllerCustomizedMapping) {
+				mapping.setUrl(net.winroad.wrdoclet.utils.Util.urlConcat(
+						baseMapping.getUrl(), mapping.getUrl()));
+			}
 			if (baseMapping.getMethodType() != null) {
 				if (mapping.getMethodType() != null) {
 					mapping.setMethodType(baseMapping.getMethodType() + ","
