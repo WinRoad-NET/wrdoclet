@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import net.winroad.beans.School;
 
 /**
@@ -44,6 +46,8 @@ public class Student extends Person {
 	@NotNull
 	@Valid
 	private School school;
+	
+	@JsonProperty("studentNo")
 	@NotEmpty(message = "sno should not be empty")
 	private String sno;
 }

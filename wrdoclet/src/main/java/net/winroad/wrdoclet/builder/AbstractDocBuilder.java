@@ -44,6 +44,7 @@ import org.xml.sax.SAXException;
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
+import com.sun.javadoc.MemberDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.ParameterizedType;
@@ -430,6 +431,8 @@ public abstract class AbstractDocBuilder {
 		FieldDoc[] fieldDocs = classDoc.fields(false);
 		HashMap<String, String> privateFieldValidator = new HashMap<>();
 		HashMap<String, String> privateFieldDesc = new HashMap<String, String>();
+		HashMap<String, String> privateJsonField = new HashMap<String, String>();
+		
 		for (FieldDoc fieldDoc : fieldDocs) {
 			if (fieldDoc.isPublic() && !fieldDoc.isStatic()) {
 				APIParameter param = new APIParameter();
@@ -448,6 +451,10 @@ public abstract class AbstractDocBuilder {
 				result.add(param);
 			} else {
 				privateFieldDesc.put(fieldDoc.name(), fieldDoc.commentText());
+				String jsonField = this.getJsonField(fieldDoc);
+				if(jsonField != null) {
+					privateJsonField.put(fieldDoc.name(), jsonField);
+				}
 				privateFieldValidator.put(fieldDoc.name(), this.getFieldValidatorDesc(fieldDoc));
 			}
 		}
@@ -460,6 +467,12 @@ public abstract class AbstractDocBuilder {
 							.isSetterMethod(methodDoc))) {
 				APIParameter param = new APIParameter();
 				param.setName(this.getFieldNameOfAccesser(methodDoc.name()));
+				String jsonField = this.getJsonField(methodDoc);
+				if(jsonField != null) {
+					param.setName(jsonField);
+				} else if(privateJsonField.containsKey(param.getName())) {
+					param.setName(privateJsonField.get(param.getName()));
+				}
 				Type typeToProcess = null;
 				if (paramType == ParameterType.Request) {
 					// set method only has one parameter.
@@ -508,6 +521,36 @@ public abstract class AbstractDocBuilder {
 		strBuilder.append(" ");
 		strBuilder.append(this.getFieldValidatorDesc(fieldDoc));
 		return strBuilder.toString();
+	}
+	
+	protected String getJsonField(MemberDoc memberDoc) {
+		for(AnnotationDesc annotationDesc : memberDoc.annotations()) {
+			if(annotationDesc.annotationType().qualifiedTypeName()
+					.startsWith("com.fasterxml.jackson.annotation.JsonProperty")) {
+				if(annotationDesc.elementValues().length > 0) {
+					for(AnnotationDesc.ElementValuePair elementValuePair : annotationDesc.elementValues()) {
+						if(elementValuePair.element().name().equals("value") && 
+								!StringUtils.isEmpty(elementValuePair.value().toString()) &&
+								!"\"\"".equals(elementValuePair.value().toString())) {
+							return elementValuePair.value().toString().replace("\"", "");
+						}
+					}
+				}
+			}
+			if(annotationDesc.annotationType().qualifiedTypeName()
+					.startsWith("com.alibaba.fastjson.annotation.JSONField")) {
+				if(annotationDesc.elementValues().length > 0) {
+					for(AnnotationDesc.ElementValuePair elementValuePair : annotationDesc.elementValues()) {
+						if(elementValuePair.element().name().equals("name") && 
+								!StringUtils.isEmpty(elementValuePair.value().toString()) &&
+								!"\"\"".equals(elementValuePair.value().toString())) {
+							return elementValuePair.value().toString().replace("\"", "");
+						}
+					}
+				}
+			}			
+		}
+		return null;		
 	}
 	
 	protected String getFieldValidatorDesc(FieldDoc fieldDoc) {
