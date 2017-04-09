@@ -3,11 +3,11 @@
   <parent>
     <groupId>net.winroad</groupId>
     <artifactId>wrdoclet-parent</artifactId>
-    <version>1.0.9</version>
+    <version>1.0.10-SNAPSHOT</version>
   </parent>
   <groupId>net.winroad</groupId>
   <artifactId>wrdoclet-beans</artifactId>
-  <version>1.0.9</version>
+  <version>1.0.10-SNAPSHOT</version>
   <name>beans</name>
   <description>beans for services</description>
 	

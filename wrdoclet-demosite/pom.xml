@@ -3,11 +3,11 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.0.9</version>
+		<version>1.0.10-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>wrdoclet-demosite</artifactId>
-	<version>1.0.9</version>
+	<version>1.0.10-SNAPSHOT</version>
 	<name>demo site</name>
 	<description>demo site for wrdoclet</description>
 	<properties>
@@ -105,7 +105,7 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>wrdoclet-beans</artifactId>
-			<version>1.0.9</version>
+			<version>1.0.10-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Jackson JSON Mapper -->
