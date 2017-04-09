@@ -42,8 +42,9 @@ import com.sun.tools.doclets.internal.toolkit.util.Util;
 
 /**
  * @author AdamsLee NOTE: WRDoc cannot cover API which returning objects whose
- *         type is unknown on API definition (known until runtime). e.g.
- * @RequestMapping(value = "/update", method = RequestMethod.POST) public @ResponseBody
+ *         type is unknown on API definition (known until runtime). 
+ * 			e.g. @RequestMapping(value = "/update", method = RequestMethod.POST) 
+ * 					public @ResponseBody
  *                       Object updateStudent(Student student) { return student;
  *                       }
  */

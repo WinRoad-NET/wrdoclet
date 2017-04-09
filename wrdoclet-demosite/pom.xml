@@ -50,7 +50,7 @@
 					<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
 					<docletArtifact>
 						<groupId>net.winroad</groupId>
-						<artifactId>wrdoclet</artifactId>
+						<artifactId>wrdoclet4jdk8</artifactId>
 						<version>1.0.9-SNAPSHOT</version>
 					</docletArtifact>
 					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
@@ -58,7 +58,6 @@
 						-systemname ${wrdoclet.systemname} 
 						-branchname ${wrdoclet.branchname} 
 						-buildid ${wrdoclet.buildid}
-						-encoding utf-8 
 						-charset utf-8 
 						-d ../../../../../wrdoclet-gh-pages/apidocs-demosite
 						-springcontextconfigpath ${project.basedir}/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.tools.JavaFileManager;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.sun.javadoc.ClassDoc;
@@ -15,8 +17,13 @@ import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.ProgramElementDoc;
 import com.sun.javadoc.RootDoc;
+import com.sun.javadoc.SourcePosition;
 import com.sun.tools.doclets.internal.toolkit.Configuration;
+import com.sun.tools.doclets.internal.toolkit.Content;
 import com.sun.tools.doclets.internal.toolkit.util.MessageRetriever;
+import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javadoc.RootDocImpl;
 
 /**
  * Configure the output based on the command line options.
@@ -179,6 +186,7 @@ public class ConfigurationImpl extends Configuration {
 	 * recognize. It then calls
 	 * {@link #validOptions(String[][], DocErrorReporter)} to validate them.
 	 * <b>Note:</b><br>
+	 * <blockquote>
 	 * The options arrive as case-sensitive strings. For options that are not
 	 * case-sensitive, use toLowerCase() on the option string before comparing
 	 * it. </blockquote>
@@ -388,5 +396,32 @@ public class ConfigurationImpl extends Configuration {
 			return ((com.sun.tools.javadoc.RootDocImpl) root).getLocale();
 		else
 			return Locale.getDefault();
+	}
+
+	@Override
+	public JavaFileManager getFileManager() {
+        if (fileManager == null) {
+            if (root instanceof RootDocImpl)
+                fileManager = ((RootDocImpl) root).getFileManager();
+            else
+                fileManager = new JavacFileManager(new Context(), false, null);
+        }
+        return fileManager;
+	}
+
+    private JavaFileManager fileManager;
+    
+	@Override
+	public Content newContent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean showMessage(SourcePosition pos, String key) {
+        if (root instanceof RootDocImpl) {
+            return pos == null || ((RootDocImpl) root).showTagMessages();
+        }
+        return true;
 	}
 }

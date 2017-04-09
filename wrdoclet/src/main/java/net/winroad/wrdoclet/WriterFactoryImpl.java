@@ -4,6 +4,7 @@ import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.Type;
+import com.sun.tools.doclets.internal.toolkit.AnnotationTypeFieldWriter;
 import com.sun.tools.doclets.internal.toolkit.AnnotationTypeOptionalMemberWriter;
 import com.sun.tools.doclets.internal.toolkit.AnnotationTypeRequiredMemberWriter;
 import com.sun.tools.doclets.internal.toolkit.AnnotationTypeWriter;
@@ -15,9 +16,12 @@ import com.sun.tools.doclets.internal.toolkit.FieldWriter;
 import com.sun.tools.doclets.internal.toolkit.MemberSummaryWriter;
 import com.sun.tools.doclets.internal.toolkit.MethodWriter;
 import com.sun.tools.doclets.internal.toolkit.PackageSummaryWriter;
+import com.sun.tools.doclets.internal.toolkit.ProfilePackageSummaryWriter;
+import com.sun.tools.doclets.internal.toolkit.ProfileSummaryWriter;
 import com.sun.tools.doclets.internal.toolkit.PropertyWriter;
 import com.sun.tools.doclets.internal.toolkit.SerializedFormWriter;
 import com.sun.tools.doclets.internal.toolkit.util.ClassTree;
+import com.sun.tools.javac.jvm.Profile;
 
 public class WriterFactoryImpl implements WRWriterFactory {
 
@@ -100,6 +104,28 @@ public class WriterFactoryImpl implements WRWriterFactory {
 	}
 
 	public SerializedFormWriter getSerializedFormWriter() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AnnotationTypeFieldWriter getAnnotationTypeFieldWriter(
+			AnnotationTypeWriter arg0) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProfilePackageSummaryWriter getProfilePackageSummaryWriter(
+			PackageDoc arg0, PackageDoc arg1, PackageDoc arg2, Profile arg3)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProfileSummaryWriter getProfileSummaryWriter(Profile arg0,
+			Profile arg1, Profile arg2) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -305,7 +305,7 @@ public class HtmlDoclet extends AbstractDoclet {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				throw new DocletAbortException();
+				throw new DocletAbortException(e.getMessage());
 			}
 		}
 

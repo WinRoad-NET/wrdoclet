@@ -93,6 +93,7 @@ public abstract class AbstractDoclet {
 	 *            the RootDoc of source to document.
 	 * @param classtree
 	 *            the data structure representing the class tree.
+	 * @throws Exception builderFactory may throw exception
 	 */
 	protected void generateOtherFiles(RootDoc root, ClassTree classtree)
 			throws Exception {
@@ -110,6 +111,7 @@ public abstract class AbstractDoclet {
 	 * 
 	 * @param classtree
 	 *            the data structure representing the class tree.
+	 * @throws Exception blablabla
 	 */
 	protected abstract void generatePackageFiles(ClassTree classtree)
 			throws Exception;
@@ -119,6 +121,8 @@ public abstract class AbstractDoclet {
 	 * 
 	 * @param classtree
 	 *            the data structure representing the class tree.
+	 * @param arr 
+	 * 				classdocs.
 	 */
 	protected abstract void generateClassFiles(ClassDoc[] arr,
 			ClassTree classtree);
