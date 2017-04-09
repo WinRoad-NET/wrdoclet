@@ -53,7 +53,7 @@
 					<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
 					<docletArtifact>
 						<groupId>net.winroad</groupId>
-						<artifactId>wrdoclet</artifactId>
+						<artifactId>wrdoclet4jdk7</artifactId>
 						<version>1.0.9-SNAPSHOT</version>
 					</docletArtifact>
 					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->

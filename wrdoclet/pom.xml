@@ -7,7 +7,7 @@
 		<version>1.0.9-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>wrdoclet</artifactId>
+	<artifactId>wrdoclet4jdk7</artifactId>
     <version>1.0.9-SNAPSHOT</version>
 	<name>wrdoclet</name>
 	<description>winroad doclet</description>
