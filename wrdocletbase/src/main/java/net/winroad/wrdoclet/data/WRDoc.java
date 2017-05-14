@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.winroad.wrdoclet.ConfigurationImpl;
+import net.winroad.wrdoclet.AbstractConfiguration;
 import net.winroad.wrdoclet.builder.AbstractDocBuilder;
 import net.winroad.wrdoclet.builder.DubboDocBuilder;
 import net.winroad.wrdoclet.builder.RESTDocBuilder;
@@ -59,7 +59,7 @@ public class WRDoc {
 		this.logger.debug("RESTDocBuilder loaded.");
 		this.builders.add(new SOAPDocBuilder(this));
 		this.logger.debug("SOAPDocBuilder loaded.");
-		String dubboConfigPath = ((ConfigurationImpl) this.configuration).dubboconfigpath;
+		String dubboConfigPath = ((AbstractConfiguration) this.configuration).dubboconfigpath;
 		if (dubboConfigPath != null && !dubboConfigPath.isEmpty()) {
 			this.builders.add(new DubboDocBuilder(this));
 			this.logger.debug("DubboDocBuilder loaded with config path:" + dubboConfigPath);

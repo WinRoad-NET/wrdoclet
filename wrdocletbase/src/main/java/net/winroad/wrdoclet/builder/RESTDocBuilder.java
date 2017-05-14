@@ -10,7 +10,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import net.winroad.wrdoclet.ConfigurationImpl;
+import net.winroad.wrdoclet.AbstractConfiguration;
 import net.winroad.wrdoclet.data.APIParameter;
 import net.winroad.wrdoclet.data.ParameterOccurs;
 import net.winroad.wrdoclet.data.ParameterType;
@@ -42,8 +42,9 @@ import com.sun.tools.doclets.internal.toolkit.util.Util;
 
 /**
  * @author AdamsLee NOTE: WRDoc cannot cover API which returning objects whose
- *         type is unknown on API definition (known until runtime). e.g.
- * @RequestMapping(value = "/update", method = RequestMethod.POST) public @ResponseBody
+ *         type is unknown on API definition (known until runtime). 
+ * 			e.g. @RequestMapping(value = "/update", method = RequestMethod.POST) 
+ * 					public @ResponseBody
  *                       Object updateStudent(Student student) { return student;
  *                       }
  */
@@ -58,9 +59,9 @@ public class RESTDocBuilder extends AbstractDocBuilder {
 
 	protected List<String> getExcludedUrls(Configuration configuration) {
 		List<String> excludedUrls = new LinkedList<String>();
-		String contextConfigPath = ((ConfigurationImpl) configuration).springcontextconfigpath;
+		String contextConfigPath = ((AbstractConfiguration) configuration).springcontextconfigpath;
 		if (!StringUtils.isBlank(contextConfigPath)) {
-			String excludedUrlsXpath = ((ConfigurationImpl) configuration).excludedurlsxpath;
+			String excludedUrlsXpath = ((AbstractConfiguration) configuration).excludedurlsxpath;
 			try {
 				Document contextConfig = readXMLConfig(contextConfigPath);
 				XPath xPath = XPathFactory.newInstance().newXPath();

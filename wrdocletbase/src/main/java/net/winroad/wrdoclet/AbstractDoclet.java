@@ -83,9 +83,11 @@ public abstract class AbstractDoclet {
 		configuration.tagletManager.printReport();
 	}
 
-	protected abstract void generateWRDocFiles(RootDoc root, WRDoc wrDoc)
+	public abstract void generateWRDocFiles(RootDoc root, WRDoc wrDoc)
 			throws Exception;
 
+	public abstract void resetConfiguration();
+	
 	/**
 	 * Generate additional documentation that is added to the API documentation.
 	 * 
@@ -93,6 +95,7 @@ public abstract class AbstractDoclet {
 	 *            the RootDoc of source to document.
 	 * @param classtree
 	 *            the data structure representing the class tree.
+	 * @throws Exception builderFactory may throw exception
 	 */
 	protected void generateOtherFiles(RootDoc root, ClassTree classtree)
 			throws Exception {
@@ -110,6 +113,7 @@ public abstract class AbstractDoclet {
 	 * 
 	 * @param classtree
 	 *            the data structure representing the class tree.
+	 * @throws Exception blablabla
 	 */
 	protected abstract void generatePackageFiles(ClassTree classtree)
 			throws Exception;
@@ -119,6 +123,8 @@ public abstract class AbstractDoclet {
 	 * 
 	 * @param classtree
 	 *            the data structure representing the class tree.
+	 * @param arr 
+	 * 				classdocs.
 	 */
 	protected abstract void generateClassFiles(ClassDoc[] arr,
 			ClassTree classtree);

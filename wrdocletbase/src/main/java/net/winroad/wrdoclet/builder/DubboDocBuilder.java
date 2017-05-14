@@ -8,7 +8,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import net.winroad.wrdoclet.ConfigurationImpl;
+import net.winroad.wrdoclet.AbstractConfiguration;
 import net.winroad.wrdoclet.data.APIParameter;
 import net.winroad.wrdoclet.data.ParameterOccurs;
 import net.winroad.wrdoclet.data.ParameterType;
@@ -38,7 +38,7 @@ public class DubboDocBuilder extends AbstractServiceDocBuilder {
 	protected List<String> getDubboInterfaces() {
 		List<String> result = new LinkedList<String>();
 		try {
-			Document dubboConfig = readXMLConfig(((ConfigurationImpl) this.wrDoc
+			Document dubboConfig = readXMLConfig(((AbstractConfiguration) this.wrDoc
 					.getConfiguration()).dubboconfigpath);
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			xPath.setNamespaceContext(new UniversalNamespaceCache(dubboConfig,

@@ -3,11 +3,11 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.0.10-SNAPSHOT</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>wrdoclet-demosite</artifactId>
-	<version>1.0.10-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>demo site</name>
 	<description>demo site for wrdoclet</description>
 	<properties>
@@ -50,15 +50,14 @@
 					<doclet>net.winroad.wrdoclet.HtmlDoclet</doclet>
 					<docletArtifact>
 						<groupId>net.winroad</groupId>
-						<artifactId>wrdoclet4jdk7</artifactId>
-						<version>1.0.9-SNAPSHOT</version>
+						<artifactId>wrdoclet</artifactId>
+						<version>1.1.0-SNAPSHOT</version>
 					</docletArtifact>
 					<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
 					<additionalparam>
 						-systemname ${wrdoclet.systemname} 
 						-branchname ${wrdoclet.branchname} 
 						-buildid ${wrdoclet.buildid}
-						-encoding utf-8 
 						-charset utf-8 
 						-d ../../../../../wrdoclet-gh-pages/apidocs-demosite
 						-springcontextconfigpath ${project.basedir}/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml
@@ -105,7 +104,7 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>wrdoclet-beans</artifactId>
-			<version>1.0.10-SNAPSHOT</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Jackson JSON Mapper -->

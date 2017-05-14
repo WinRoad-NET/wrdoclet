@@ -199,8 +199,7 @@ public abstract class AbstractDocBuilder {
 	}
 
 	/**
-	 * 
-	 * @param url
+	 * @param url url of API.
 	 * @return 0 for anonymous allowed, 1 for authentication needed, others for
 	 *         not specified.
 	 */
