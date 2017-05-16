@@ -17,7 +17,6 @@
 	
 	<modules>
 		<module>wrdoclet</module>
-		<module>wrdocletbase</module>
 		<module>wrdoclet-beans</module>
 		<module>wrdoclet-demosite</module>
 		<module>wrdoclet-demoservice</module>
