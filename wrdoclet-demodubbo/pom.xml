@@ -65,6 +65,7 @@
 						-dubboconfigpath ${project.basedir}/src/main/resources/provider.xml
 						-d ../../../../../wrdoclet-gh-pages/apidocs-demodubbo
 					</additionalparam>
+					<sourcepath>${project.basedir}/../wrdoclet-demodubbostub/src/main/java;${project.basedir}/src/main/java</sourcepath>
 				</configuration>
 			</plugin>			
 		</plugins>
@@ -153,6 +154,11 @@
 			<groupId>com.netflix.curator</groupId>
 			<artifactId>curator-framework</artifactId>
 			<version>1.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.winroad</groupId>
+			<artifactId>wrdoclet-demodubbostub</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
