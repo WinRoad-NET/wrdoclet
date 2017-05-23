@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>net.winroad</groupId>
 		<artifactId>wrdoclet-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>wrdoclet-demodubbo</artifactId>
@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>wrdoclet-demodubbostub</artifactId>
-			<version>1.1.0-SNAPSHOT</version>
+			<version>1.1.0</version>
 		</dependency>
 	</dependencies>
 </project>
