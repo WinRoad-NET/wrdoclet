@@ -4,7 +4,12 @@
 
 wrdoclet是基于javadoc doclet的，用来自动化生成接口文档的工具。相比于javadoc自带的doclet，其隐藏了内部实现细节，只暴露调用方需要关心的接口细节。目前主要支持的服务框架是Spring MVC，JAX-WS的SOAP服务，dubbo服务。生成接口文档后还可以与solr、jenkins集成，实现文档搜索以及自动化发布的功能。
 
-因依赖于jdk的tools.jar包，工具目前只能在jdk 1.7编译通过。jdk 1.6存在严重bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6709246 因此无法支持。jdk 1.8也已经支持。但因为依赖的jdk库并不向下兼容，因此另外建了一个分支，同时jar包名字也改为wrdoclet4jdk8以便区分。而支持jdk1.7的jar包名字也改为wrdoclet4jdk7。
+因依赖于jdk的tools.jar包，jdk 1.6存在严重bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6709246 因此无法支持。目前最新的版本已支持jdk 1.7和1.8。为支持不同版本的jdk，部分代码分拆到另外的独立项目中以方便编译。
+
+wrdocletbase(https://github.com/WinRoad-NET/wrdocletbase) 是基础模块.
+htmldoclet4jdk7(https://github.com/WinRoad-NET/htmldoclet4jdk7) 是基于wrdocletbase的针对jdk1.7的模块
+htmldoclet4jdk8(https://github.com/WinRoad-NET/htmldoclet4jdk8) 是基于wrdocletbase的针对jdk1.8的模块
+wrdoclet 依赖于以上3个模块，在运行时根据运行环境的jdk版本采用不同的模块来生成文档。
 
 **生成的接口文档示例请参见：http://wrdoclet.weirong.li/ 或者 http://winroad-net.github.io/wrdoclet/**
 
