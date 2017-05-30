@@ -9,4 +9,18 @@
 	<artifactId>wrdoclet-demodubbostub</artifactId>
 	<version>1.1.1-SNAPSHOT</version>
 	<description>dubbo stub for demodubbo</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+		</dependency>
+         
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+	</dependencies>	
 </project>

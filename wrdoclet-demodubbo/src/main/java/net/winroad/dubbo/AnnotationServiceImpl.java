@@ -15,4 +15,9 @@ public class AnnotationServiceImpl implements AnnotationService {
 		}
 		return false;
 	}
+
+	@Override
+	public BaseResponse changePassword(ChangePasswordRequest request) {
+		return null;
+	}
 }

@@ -55,6 +55,8 @@ public class Test {
 				"org.springframework.web.bind.annotation",
 				"org.hibernate.validator.constraints",
 				"javax.validation.constraints",
+				"lombok",
+				"com.alibaba.dubbo.config.annotation",
 				"net.winroad.beans",
 				//"-nodeprecated",
 				"-classpath",
@@ -69,6 +71,14 @@ public class Test {
 				new File(
 						System.getProperty("user.home"),
 						".m2/repository/org/hibernate/hibernate-validator/5.3.2.Final/hibernate-validator-5.3.2.Final.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/org/projectlombok/lombok/1.16.16/lombok-1.16.16.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/com/alibaba/dubbo/2.5.3/dubbo-2.5.3.jar")
 						.getAbsolutePath().toString(),
 				"-d",
 				new File(System.getProperty("user.dir"), "target/doc")

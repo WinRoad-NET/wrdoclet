@@ -9,4 +9,11 @@ public interface AnnotationService {
 	 * @return 是否登录成功 
 	 */
 	boolean login(String username, String password);	
+	
+	/**
+	 * 修改密码
+	 * @param request 请求
+	 * @return 响应报文
+	 */
+	BaseResponse changePassword(ChangePasswordRequest request);
 }
