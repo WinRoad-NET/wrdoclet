@@ -1,9 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.winroad</groupId>
-	<artifactId>wrdoclet-parent</artifactId>
+	<artifactId>wrdoclet</artifactId>
 	<version>1.1.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
+
 	<name>wrdoclet</name>
 	<url>https://github.com/WinRoad-NET/wrdoclet</url>
 	<description>wrdoclet is a javadoc doclet that tries to generate API doc for Spring MVC service, JAX-WS service, dubbo service</description>
@@ -14,15 +15,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
 	</properties>  
-	
-	<modules>
-		<module>wrdoclet</module>
-		<module>wrdoclet-beans</module>
-		<module>wrdoclet-demosite</module>
-		<module>wrdoclet-demoservice</module>
-		<module>wrdoclet-demodubbostub</module>
-		<module>wrdoclet-demodubbo</module>
-	</modules>
 	
 	<developers>
 		<developer>
@@ -93,6 +85,68 @@
          </profile> 
      </profiles>  
  
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-asian</artifactId>
+			<version>5.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf.tool</groupId>
+			<artifactId>xmlworker</artifactId>
+			<version>5.5.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.pegdown</groupId>
+			<artifactId>pegdown</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.winroad</groupId>
+			<artifactId>wrdocletbase</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
+		</dependency>		
+		<dependency>
+			<groupId>net.winroad</groupId>
+			<artifactId>htmldoclet4jdk7</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>net.winroad</groupId>
+					<artifactId>wrdocletbase</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>		
+		<dependency>
+			<groupId>net.winroad</groupId>
+			<artifactId>htmldoclet4jdk8</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>net.winroad</groupId>
+					<artifactId>wrdocletbase</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>	
+	</dependencies>
+	
      <build> 
          <plugins> 
 			 <plugin> 
@@ -179,6 +233,38 @@
                  <artifactId>versions-maven-plugin</artifactId> 
                  <version>2.2</version> 
              </plugin> 
+			 
+             <plugin> 
+                 <groupId>org.apache.maven.plugins</groupId> 
+                 <artifactId>maven-shade-plugin</artifactId> 
+                 <version>1.6</version> 
+                 <configuration> 
+                     <createDependencyReducedPom>false</createDependencyReducedPom> 
+                     <filters> 
+                         <filter> 
+                             <artifact>*:*</artifact> 
+                             <excludes> 
+                                 <exclude>META-INF/*.SF</exclude> 
+                                 <exclude>META-INF/*.DSA</exclude> 
+                                 <exclude>META-INF/*.RSA</exclude> 
+                             </excludes> 
+                         </filter> 
+                     </filters> 
+                 </configuration> 
+                 <executions> 
+                     <execution> 
+                         <phase>package</phase> 
+                         <goals> 
+                             <goal>shade</goal> 
+                         </goals> 
+                         <configuration> 
+                             <transformers> 
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" /> 
+                             </transformers> 
+                         </configuration> 
+                     </execution> 
+                 </executions> 
+             </plugin> 			 
          </plugins> 
      </build> 
 	 
