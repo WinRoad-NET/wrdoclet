@@ -37,17 +37,17 @@ public class Test {
 				"http://127.0.0.1:8080/solr/apidocs",
 				"-buildid",
 				"003",
-				"-dubboconfigpath",
-				"D:/Git/wrdoclet/wrdoclet-demodubbo/src/main/resources/provider.xml",
+				//"-dubboconfigpath",
+				//"D:/winroad/wrdoclet-demo/wrdoclet-demodubbo/src/main/resources/provider.xml",
 				"-springcontextconfigpath",
 				//"C:/Users/AdamsLi/Downloads/webApplicationContext.xml",	
-				"D:/Git/wrdoclet/wrdoclet-demosite/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml",
+				"D:/winroad/wrdoclet-demo/wrdoclet-demosite/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml",
 				//"-excludedurlsxpath",
 				//"//:beans/mvc:interceptors/mvc:interceptor/:bean/:property/:list/:value",				
 				"-sourcepath",
-				"D:/winroad/wrdoclet/wrdoclet-demodubbo/src/main/java;D:/winroad/wrdoclet/wrdoclet-demodubbostub/src/main/java",
-				//"D:/Git/wrdoclet/wrdoclet-demoservice/src/main/java",
-				//"D:/winroad/wrdoclet/wrdoclet-demosite/src/main/java;D:/winroad/wrdoclet/wrdoclet-beans/src/main/java",
+				//"D:/winroad/wrdoclet-demo/wrdoclet-demodubbo/src/main/java;D:/winroad/wrdoclet-demo/wrdoclet-demodubbostub/src/main/java",
+				//"D:/winroad/wrdoclet-demo/wrdoclet-demoservice/src/main/java",
+				"D:/winroad/wrdoclet-demo/wrdoclet-demosite/src/main/java;D:/winroad/wrdoclet-demo/wrdoclet-beans/src/main/java",
 				"net.winroad.Controller",
 				"net.winroad.Service",
 				"net.winroad.Models",
@@ -62,7 +62,39 @@ public class Test {
 				"-classpath",
 				new File(
 						System.getProperty("user.home"),
-						".m2/repository/org/springframework/spring-web/3.2.3.RELEASE/spring-web-3.2.3.RELEASE.jar")
+						".m2/repository/org/springframework/spring-web/4.3.5.RELEASE/spring-web-4.3.5.RELEASE.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/org/springframework/spring-webmvc/4.3.5.RELEASE/spring-webmvc-4.3.5.RELEASE.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/org/springframework/spring-core/4.3.5.RELEASE/spring-core-4.3.5.RELEASE.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/org/springframework/spring-context/4.3.5.RELEASE/spring-context-4.3.5.RELEASE.jar")
+						.getAbsolutePath().toString() + ";" +
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/com/fasterxml/jackson/core/jackson-core/2.8.6/jackson-core-2.8.6.jar")
+						.getAbsolutePath().toString() + ";" +						
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.8.6/jackson-annotations-2.8.6.jar")
+						.getAbsolutePath().toString() + ";" +						
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/com/fasterxml/jackson/core/jackson-databind/2.8.6/jackson-databind-2.8.6.jar")
+						.getAbsolutePath().toString() + ";" +						
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/com/google/code/findbugs/findbugs/3.0.1/findbugs-3.0.1.jar")
+						.getAbsolutePath().toString() + ";" +						
+				new File(
+						System.getProperty("user.home"),
+						".m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar")
 						.getAbsolutePath().toString() + ";" +
 				new File(
 						System.getProperty("user.home"),
