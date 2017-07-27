@@ -11,7 +11,7 @@ htmldoclet4jdk7(https://github.com/WinRoad-NET/htmldoclet4jdk7) 是基于wrdocle
 htmldoclet4jdk8(https://github.com/WinRoad-NET/htmldoclet4jdk8) 是基于wrdocletbase的针对jdk1.8的模块
 wrdoclet 依赖于以上3个模块，在运行时根据运行环境的jdk版本采用不同的模块来生成文档。
 
-**生成的接口文档示例请参见：http://wrdoclet.weirong.li/ 或者 http://winroad-net.github.io/wrdoclet/**
+**生成的接口文档示例请参见：http://wrdocletdemo.winroad.net/ **
 
 
 This doclet tries to generate API doc for Spring MVC service, JAX-WS service, dubbo service.
