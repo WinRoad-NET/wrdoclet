@@ -9,7 +9,7 @@
         <meta name="generator" content="wrdoclet" />
         <meta name="tags" content="${tags}" />
         <meta name="brief" content="${openAPI.brief}" />
-        <#if openAPI.requestMapping.methodType??>
+        <#if openAPI.requestMapping.url??>
     		<meta name="APIUrl" content="${openAPI.requestMapping.url}" />
     	<#else>
     		<meta name="APIUrl" content="" />
