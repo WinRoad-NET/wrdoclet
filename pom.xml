@@ -14,6 +14,7 @@
 		<!-- 文件拷贝时的编码 -->  
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
+		<wrdoclet.base.version>1.1.2</wrdoclet.base.version>
 	</properties>  
 	
 	<developers>
@@ -121,12 +122,12 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>wrdocletbase</artifactId>
-			<version>1.1.2-SNAPSHOT</version>
+			<version>${wrdoclet.base.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>htmldoclet4jdk7</artifactId>
-			<version>1.1.2-SNAPSHOT</version>
+			<version>${wrdoclet.base.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>net.winroad</groupId>
@@ -137,7 +138,7 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>htmldoclet4jdk8</artifactId>
-			<version>1.1.2-SNAPSHOT</version>
+			<version>${wrdoclet.base.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>net.winroad</groupId>
