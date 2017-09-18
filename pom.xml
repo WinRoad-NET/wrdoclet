@@ -14,7 +14,7 @@
 		<!-- 文件拷贝时的编码 -->  
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
-		<wrdoclet.base.version>1.1.3</wrdoclet.base.version>
+		<wrdoclet.base.version>1.1.3-SNAPSHOT</wrdoclet.base.version>
 	</properties>  
 	
 	<developers>
