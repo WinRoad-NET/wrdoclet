@@ -13,6 +13,7 @@ wrdoclet 依赖于以上3个模块，在运行时根据运行环境的jdk版本�
 
 **生成的接口文档示例请参见：http://wrdocletdemo.winroad.net/ **
 
+击链接加入群【问道】：https://jq.qq.com/?_wv=1027&k=5p3XY0m
 
 This doclet tries to generate API doc for Spring MVC service, JAX-WS service, dubbo service.
 
