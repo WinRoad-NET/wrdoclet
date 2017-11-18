@@ -52,6 +52,7 @@ public class Test {
 				"net.winroad.Service",
 				"net.winroad.Models",
 				"net.winroad.dubbo",
+				"net.winroad.MQ",
 				"org.springframework.web.bind.annotation",
 				"org.hibernate.validator.constraints",
 				"javax.validation.constraints",
