@@ -6,6 +6,8 @@ wrdoclet是基于javadoc doclet的，用来自动化生成接口文档的工具�
 
 因依赖于jdk的tools.jar包，jdk 1.6存在严重bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6709246 因此无法支持。目前最新的版本已支持jdk 1.7和1.8。为支持不同版本的jdk，部分代码分拆到另外的独立项目中以方便编译。
 
+jdk1.9 https://docs.oracle.com/javase/9/docs/api/jdk/javadoc/doclet/package-summary.html#migration 对doclet这块进行了大规模的重写。因此wrdoclet暂时无法支持jdk1.9。目前正在改造中，敬请期待。
+
 wrdocletbase(https://github.com/WinRoad-NET/wrdocletbase) 是基础模块.
 htmldoclet4jdk7(https://github.com/WinRoad-NET/htmldoclet4jdk7) 是基于wrdocletbase的针对jdk1.7的模块
 htmldoclet4jdk8(https://github.com/WinRoad-NET/htmldoclet4jdk8) 是基于wrdocletbase的针对jdk1.8的模块
