@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.winroad</groupId>
 	<artifactId>wrdoclet</artifactId>
-	<version>1.1.6-SNAPSHOT</version>
+	<version>1.1.6</version>
 	<packaging>jar</packaging>
 
 	<name>wrdoclet</name>
@@ -36,7 +36,7 @@
          <connection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</connection> 
          <developerConnection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</developerConnection> 
          <url>https://github.com/WinRoad-NET/wrdoclet.git</url> 
-         <tag>v1.0.9</tag> 
+         <tag>wrdoclet-1.1.6</tag> 
     </scm> 
  
      <issueManagement> 
