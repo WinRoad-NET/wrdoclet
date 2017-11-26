@@ -8,6 +8,7 @@ import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 public class Test {
 	public static void main(String[] args) {
+		String workbenchPath = "c:/workbench";
 		String[] docArgs = new String[] {
 				"-doclet",
 				//net.winroad.wrdoclet.PdfDoclet.class.getName(),
@@ -38,16 +39,16 @@ public class Test {
 				"-buildid",
 				"003",
 				//"-dubboconfigpath",
-				//"D:/winroad/wrdoclet-demo/wrdoclet-demodubbo/src/main/resources/provider.xml",
+				//workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbo/src/main/resources/provider.xml",
 				"-springcontextconfigpath",
 				//"C:/Users/AdamsLi/Downloads/webApplicationContext.xml",	
-				"D:/winroad/wrdoclet-demo/wrdoclet-demosite/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml",
+				workbenchPath + "/wrdoclet-demo/wrdoclet-demosite/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml",
 				//"-excludedurlsxpath",
 				//"//:beans/mvc:interceptors/mvc:interceptor/:bean/:property/:list/:value",				
 				"-sourcepath",
-				//"D:/winroad/wrdoclet-demo/wrdoclet-demodubbo/src/main/java;D:/winroad/wrdoclet-demo/wrdoclet-demodubbostub/src/main/java",
-				//"D:/winroad/wrdoclet-demo/wrdoclet-demoservice/src/main/java",
-				"D:/winroad/wrdoclet-demo/wrdoclet-demosite/src/main/java;D:/winroad/wrdoclet-demo/wrdoclet-beans/src/main/java",
+				//workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbo/src/main/java;" + workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbostub/src/main/java",
+				//workbenchPath + "/wrdoclet-demo/wrdoclet-demoservice/src/main/java",
+				workbenchPath + "/wrdoclet-demo/wrdoclet-demosite/src/main/java;" + workbenchPath + "/wrdoclet-demo/wrdoclet-beans/src/main/java",
 				"net.winroad.Controller",
 				"net.winroad.Service",
 				"net.winroad.Models",
