@@ -1,6 +1,6 @@
 # wrdoclet(问道)
 
-**使用手册：http://wrdoclet.winroad.net/**
+**使用手册：http://wrdoclet.winroad.net/  ** :(有时需要翻墙)
 
 wrdoclet是基于javadoc doclet的，用来自动化生成接口文档的工具。相比于javadoc自带的doclet，其隐藏了内部实现细节，只暴露调用方需要关心的接口细节。目前主要支持的服务框架是Spring MVC，JAX-WS的SOAP服务，dubbo服务。生成接口文档后还可以与solr、jenkins集成，实现文档搜索以及自动化发布的功能。
 
@@ -128,7 +128,7 @@ supported dubbo service example:
 			<docletArtifact>
 				<groupId>net.winroad</groupId>
 				<artifactId>wrdoclet</artifactId>
-				<version>1.0.5-SNAPSHOT</version>
+				<version>1.1.5</version>
 			</docletArtifact>
 			<useStandardDocletOptions>false</useStandardDocletOptions><!-- important ! -->
 			<additionalparam>
