@@ -28,6 +28,7 @@
   <script  src="js/jquery-1.11.3.min.js"></script>
   <script  src="js/colResizable-1.5.min.js"></script>
   <script type="text/javascript">
+    OASV3 = ${OASV3};
 	$(function(){
 		$("#reqTable").colResizable({
 			liveDrag:true, 
