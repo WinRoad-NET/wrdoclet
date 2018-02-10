@@ -8,7 +8,7 @@ import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 public class Test {
 	public static void main(String[] args) {
-		String workbenchPath = "c:/workbench";
+		String workbenchPath = "d:/workspace";
 		String[] docArgs = new String[] {
 				"-doclet",
 				//net.winroad.wrdoclet.PdfDoclet.class.getName(),
@@ -46,9 +46,9 @@ public class Test {
 				//"-excludedurlsxpath",
 				//"//:beans/mvc:interceptors/mvc:interceptor/:bean/:property/:list/:value",				
 				"-sourcepath",
-				workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbo/src/main/java;" + workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbostub/src/main/java",
+				//workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbo/src/main/java;" + workbenchPath + "/wrdoclet-demo/wrdoclet-demodubbostub/src/main/java",
 				//workbenchPath + "/wrdoclet-demo/wrdoclet-demoservice/src/main/java",
-				//workbenchPath + "/wrdoclet-demo/wrdoclet-demosite/src/main/java;" + workbenchPath + "/wrdoclet-demo/wrdoclet-beans/src/main/java",
+				workbenchPath + "/wrdoclet-demo/wrdoclet-demosite/src/main/java;" + workbenchPath + "/wrdoclet-demo/wrdoclet-beans/src/main/java",
 				"net.winroad.Controller",
 				"net.winroad.Service",
 				"net.winroad.Models",

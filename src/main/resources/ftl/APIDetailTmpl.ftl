@@ -1,7 +1,15 @@
 <#include "modifyHisTmpl.ftl">
 <#include "paramTableTmpl.ftl">
   <p class="qualifiedName">
-    	<font size='5'>☞</font>&nbsp;${openAPI.qualifiedName}
+    	<font size='5'>☞</font>&nbsp;${openAPI.qualifiedName}&nbsp;
+      <a style="cursor:pointer;text-decoration:underline;"
+         onclick="return fx('http://jsfiddle.net//echo/html/',
+                       'post',
+                       'someNameWithoutSpaces',
+                       '',
+                       'html',
+                       OASV3
+                       )">[OASV3]</a>
   </p>
     <#if openAPI.description??>
 	    <h3>
