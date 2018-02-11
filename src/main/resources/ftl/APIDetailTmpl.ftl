@@ -2,8 +2,8 @@
 <#include "paramTableTmpl.ftl">
   <p class="qualifiedName">
     	<font size='5'>☞</font>&nbsp;${openAPI.qualifiedName}&nbsp;
-      <a style="cursor:pointer;text-decoration:underline;"
-         onclick="return fx('http://jsfiddle.net//echo/html/',
+      <a title="https://github.com/OAI/OpenAPI-Specification/" style="cursor:pointer;text-decoration:underline;"
+         onclick="return fx('http://jsfiddle.net/echo/html/',
                        'post',
                        'someNameWithoutSpaces',
                        '',
