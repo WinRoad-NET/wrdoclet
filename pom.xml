@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.winroad</groupId>
 	<artifactId>wrdoclet</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<packaging>jar</packaging>
 
 	<name>wrdoclet</name>
@@ -36,7 +36,7 @@
          <connection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</connection> 
          <developerConnection>scm:git:git@github.com:WinRoad-NET/wrdoclet.git</developerConnection> 
          <url>https://github.com/WinRoad-NET/wrdoclet.git</url> 
-         <tag>v1.0.9</tag> 
+         <tag>wrdoclet-1.2.0</tag> 
     </scm> 
  
      <issueManagement> 
@@ -121,12 +121,12 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>wrdocletbase</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
+			<version>1.2.0</version>
 		</dependency>		
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>htmldoclet4jdk7</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
+			<version>1.2.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>net.winroad</groupId>
@@ -137,7 +137,7 @@
 		<dependency>
 			<groupId>net.winroad</groupId>
 			<artifactId>htmldoclet4jdk8</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
+			<version>1.2.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>net.winroad</groupId>
