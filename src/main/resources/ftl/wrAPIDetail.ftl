@@ -92,7 +92,8 @@
 				<#if branchName?? && branchName != "">
 				<li> Branch : <strong>${branchName}</strong> | </li>
 				</#if>
-				<li> Powered by <strong>winroad</strong></li>
+				<li> Powered by <strong>winroad</strong> | </li>
+				<li> <a href="http://www.winroad.net/donate" target="_blank">打赏</a> </li>
 			</ul>
 		</div>
     </body>
