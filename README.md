@@ -1,4 +1,5 @@
 # wrdoclet(问道)
+[![Build Status](https://travis-ci.org/WinRoad-NET/wrdoclet.svg?branch=master)](https://travis-ci.org/WinRoad-NET/wrdoclet)
 
 **使用手册：http://wrdoclet.winroad.net/  ** :(有时需要翻墙)
 
