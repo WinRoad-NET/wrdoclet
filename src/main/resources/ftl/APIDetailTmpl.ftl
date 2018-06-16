@@ -48,6 +48,15 @@
       <#if openAPI.requestMapping.url??>
       	<div class="openAPIUrl">
         	${openAPI.requestMapping.url?html}
+        	<#if openAPI.requestMapping.headers??>
+        		<span>headers="${openAPI.requestMapping.headers?html}"</span>
+        	</#if>
+        	<#if openAPI.requestMapping.params??>
+        		<span>params="${openAPI.requestMapping.params?html}"</span>
+        	</#if>
+        	<#if openAPI.requestMapping.consumes??>
+        		<span>consumes="${openAPI.requestMapping.consumes?html}"</span>
+        	</#if>
         </div>
       </#if>
     </div>
