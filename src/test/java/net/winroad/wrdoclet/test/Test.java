@@ -8,7 +8,7 @@ import net.winroad.wrdoclet.taglets.WRTagTaglet;
 
 public class Test {
 	public static void main(String[] args) {
-		String workbenchPath = "c:/workbench";
+		String workbenchPath = "c:/workbench/wrdoclet";
 		String[] docArgs = new String[] {
 				"-doclet",
 				//net.winroad.wrdoclet.PdfDoclet.class.getName(),

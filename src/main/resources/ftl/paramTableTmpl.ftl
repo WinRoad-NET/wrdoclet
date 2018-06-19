@@ -38,6 +38,28 @@
         </#if>
       </td>
       <td>
+        <#if field.example??>
+<pre>
+        	<#if field.example.summary??>
+${field.example.summary}
+        	</#if>
+        	<#if field.example.description??>
+${field.example.description}
+        	</#if>
+        	<#if field.example.value??>
+示例：
+${field.example.value}
+        	</#if>
+        	<#if field.example.externalValue??>
+示例：
+${field.example.externalValue}
+        	</#if>
+</pre>        	
+        </#if>
+
+        <#if field.example?? && field.history?? && field.history.modificationRecordList?size != 0 >
+        	<hr>
+        </#if>
         <#if field.history?? && field.history.modificationRecordList?size != 0 >
           <table class="innerTable">
             <@modifyHistoryMacro modificationRecordList=field.history.modificationRecordList />
@@ -70,7 +92,7 @@
             是否必须
           </th>
           <th style="width: 30%;">
-            修订记录
+            示例及修订记录
           </th>
         </tr>
       </thead>
@@ -99,7 +121,7 @@
             是否必须
           </th>
           <th style="width: 30%;">
-            修订记录
+            示例及修订记录
           </th>
         </tr>
       </thead>
